@@ -1,0 +1,386 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2A9AFA4A1F4F4DC600B86F49 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9AFA491F4F4DC600B86F49 /* AppDelegate.swift */; };
+		2A9AFA4C1F4F4DC600B86F49 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9AFA4B1F4F4DC600B86F49 /* ViewController.swift */; };
+		2A9AFA4F1F4F4DC600B86F49 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A9AFA4D1F4F4DC600B86F49 /* Main.storyboard */; };
+		2A9AFA511F4F4DC600B86F49 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A9AFA501F4F4DC600B86F49 /* Assets.xcassets */; };
+		2A9AFA541F4F4DC600B86F49 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A9AFA521F4F4DC600B86F49 /* LaunchScreen.storyboard */; };
+		2C92C96832E4CC561850D46E /* Pods_Telepic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5541979CB7346D8B9127109 /* Pods_Telepic.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2A9AFA461F4F4DC600B86F49 /* Telepic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Telepic.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A9AFA491F4F4DC600B86F49 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2A9AFA4B1F4F4DC600B86F49 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2A9AFA4E1F4F4DC600B86F49 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2A9AFA501F4F4DC600B86F49 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2A9AFA531F4F4DC600B86F49 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2A9AFA551F4F4DC600B86F49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		57F0175D7FE62023A86E28FC /* Pods-Telepic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telepic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Telepic/Pods-Telepic.debug.xcconfig"; sourceTree = "<group>"; };
+		853CCFC10405AAC95016F671 /* Pods-Telepic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telepic.release.xcconfig"; path = "Pods/Target Support Files/Pods-Telepic/Pods-Telepic.release.xcconfig"; sourceTree = "<group>"; };
+		C5541979CB7346D8B9127109 /* Pods_Telepic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Telepic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2A9AFA431F4F4DC600B86F49 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C92C96832E4CC561850D46E /* Pods_Telepic.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2A9AFA3D1F4F4DC600B86F49 = {
+			isa = PBXGroup;
+			children = (
+				2A9AFA481F4F4DC600B86F49 /* Telepic */,
+				2A9AFA471F4F4DC600B86F49 /* Products */,
+				A0B2E34C62EDCF7F67A8C012 /* Pods */,
+				FDD1A74034749E62C1E4A0B2 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		2A9AFA471F4F4DC600B86F49 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2A9AFA461F4F4DC600B86F49 /* Telepic.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2A9AFA481F4F4DC600B86F49 /* Telepic */ = {
+			isa = PBXGroup;
+			children = (
+				2A9AFA491F4F4DC600B86F49 /* AppDelegate.swift */,
+				2A9AFA4B1F4F4DC600B86F49 /* ViewController.swift */,
+				2A9AFA4D1F4F4DC600B86F49 /* Main.storyboard */,
+				2A9AFA501F4F4DC600B86F49 /* Assets.xcassets */,
+				2A9AFA521F4F4DC600B86F49 /* LaunchScreen.storyboard */,
+				2A9AFA551F4F4DC600B86F49 /* Info.plist */,
+			);
+			path = Telepic;
+			sourceTree = "<group>";
+		};
+		A0B2E34C62EDCF7F67A8C012 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				57F0175D7FE62023A86E28FC /* Pods-Telepic.debug.xcconfig */,
+				853CCFC10405AAC95016F671 /* Pods-Telepic.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		FDD1A74034749E62C1E4A0B2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C5541979CB7346D8B9127109 /* Pods_Telepic.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2A9AFA451F4F4DC600B86F49 /* Telepic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A9AFA581F4F4DC600B86F49 /* Build configuration list for PBXNativeTarget "Telepic" */;
+			buildPhases = (
+				644E1969F3AFD8D986BA80B6 /* [CP] Check Pods Manifest.lock */,
+				2A9AFA421F4F4DC600B86F49 /* Sources */,
+				2A9AFA431F4F4DC600B86F49 /* Frameworks */,
+				2A9AFA441F4F4DC600B86F49 /* Resources */,
+				154382BFA98A245DBEA51995 /* [CP] Embed Pods Frameworks */,
+				F7FF8CAF9B0780B6E3EBE715 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Telepic;
+			productName = Telepic;
+			productReference = 2A9AFA461F4F4DC600B86F49 /* Telepic.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2A9AFA3E1F4F4DC600B86F49 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0830;
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = "Telepic LLC";
+				TargetAttributes = {
+					2A9AFA451F4F4DC600B86F49 = {
+						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = 88M8AT4J5D;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 2A9AFA411F4F4DC600B86F49 /* Build configuration list for PBXProject "Telepic" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2A9AFA3D1F4F4DC600B86F49;
+			productRefGroup = 2A9AFA471F4F4DC600B86F49 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2A9AFA451F4F4DC600B86F49 /* Telepic */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2A9AFA441F4F4DC600B86F49 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A9AFA541F4F4DC600B86F49 /* LaunchScreen.storyboard in Resources */,
+				2A9AFA511F4F4DC600B86F49 /* Assets.xcassets in Resources */,
+				2A9AFA4F1F4F4DC600B86F49 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		154382BFA98A245DBEA51995 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Telepic/Pods-Telepic-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		644E1969F3AFD8D986BA80B6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		F7FF8CAF9B0780B6E3EBE715 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Telepic/Pods-Telepic-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2A9AFA421F4F4DC600B86F49 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A9AFA4C1F4F4DC600B86F49 /* ViewController.swift in Sources */,
+				2A9AFA4A1F4F4DC600B86F49 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		2A9AFA4D1F4F4DC600B86F49 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2A9AFA4E1F4F4DC600B86F49 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		2A9AFA521F4F4DC600B86F49 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2A9AFA531F4F4DC600B86F49 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2A9AFA561F4F4DC600B86F49 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2A9AFA571F4F4DC600B86F49 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2A9AFA591F4F4DC600B86F49 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 57F0175D7FE62023A86E28FC /* Pods-Telepic.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 88M8AT4J5D;
+				INFOPLIST_FILE = Telepic/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.TelepicLLC.Telepic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		2A9AFA5A1F4F4DC600B86F49 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 853CCFC10405AAC95016F671 /* Pods-Telepic.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 88M8AT4J5D;
+				INFOPLIST_FILE = Telepic/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.TelepicLLC.Telepic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2A9AFA411F4F4DC600B86F49 /* Build configuration list for PBXProject "Telepic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A9AFA561F4F4DC600B86F49 /* Debug */,
+				2A9AFA571F4F4DC600B86F49 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2A9AFA581F4F4DC600B86F49 /* Build configuration list for PBXNativeTarget "Telepic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A9AFA591F4F4DC600B86F49 /* Debug */,
+				2A9AFA5A1F4F4DC600B86F49 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2A9AFA3E1F4F4DC600B86F49 /* Project object */;
+}
