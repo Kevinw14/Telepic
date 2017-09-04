@@ -11,5 +11,8 @@ target 'Telepic' do
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'RSKImageCropper'
+  pod 'FacebookCore'
+  pod 'FacebookLogin'
+  pod 'FacebookShare'
 
 end
