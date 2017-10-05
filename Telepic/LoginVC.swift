@@ -7,29 +7,50 @@
 //
 
 import UIKit
+import FacebookCore
+import FacebookLogin
+import FirebaseAuth
 
 class LoginVC: UIViewController {
-
+    
+    @IBOutlet weak var facebookButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    @IBAction func facebookButtonTapped(_ sender: Any) {
+        let loginManager = LoginManager()
+        loginManager.logIn([.publicProfile], viewController: self) { (loginResult) in
+            switch loginResult {
+            case .failed(let error):
+                print(error)
+            case .cancelled:
+                print("User cancelled login.")
+            case .success(let grantedPermissions, let declinedPermissions, let accessToken):
+                print("Logged in!")
+                
+                let credential = FacebookAuthProvider.credential(withAccessToken: accessToken.authenticationToken)
+                Auth.auth().signIn(with: credential, completion: { (user, error) in
+                    if let error = error {
+                        print(error)
+                        return
+                    }
+                    // user is signed in
+                    UserController.shared.currentUser.usingFacebook = true
+                    print("successfully signed in using firebase")
+                })
+            }
+        }
     }
-    */
-
+    
+    @IBAction func continueWithEmailButtonTapped(_ sender: Any) {
+        DispatchQueue.main.async {
+            let emailLoginVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "EmailLoginVC") as! EmailLoginVC
+            emailLoginVC.isHeroEnabled = true
+            emailLoginVC.heroModalAnimationType = .slide(direction: .left)
+            self.hero_replaceViewController(with: emailLoginVC)
+        }
+    }
 }

@@ -14,5 +14,5 @@ target 'Telepic' do
   pod 'FacebookCore'
   pod 'FacebookLogin'
   pod 'FacebookShare'
-
+  pod 'Fusuma'
 end
