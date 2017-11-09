@@ -7,15 +7,17 @@
 //
 
 import UIKit
+import Kingfisher
 
 class NotificationCell: UITableViewCell {
 
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var photoImageView: UIImageView!
+    @IBOutlet weak var acceptButton: UIButton!
+    @IBOutlet weak var declineButton: UIButton!
     
-    var notification: String?
-    var user: String?
+    var notification: EventNotification?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -24,22 +26,53 @@ class NotificationCell: UITableViewCell {
         
     }
 
+    @IBAction func acceptButtonTapped(_ sender: Any) {
+        guard let uid = notification?.userID else { return }
+        FirebaseController.shared.addFriend(withUID: uid)
+    }
+    
+    @IBAction func declineButtonTapped(_ sender: Any) {
+        
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
     }
     
-    func setLabel() {
-        if let notification = notification, let user = user {
-            
-            let userStringRange = (notification as NSString).range(of: user)
-            
-            let attributedString = NSMutableAttributedString(string: notification, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 14)])
-            
-            attributedString.setAttributes([NSFontAttributeName : UIFont.boldSystemFont(ofSize: 14), NSForegroundColorAttributeName : UIColor.black], range: userStringRange)
-            
-            messageLabel.attributedText = attributedString
+    func setUp() {
+        guard let notification = notification else { return }
+        
+        switch notification.type {
+        case .newfriendRequest:
+            self.acceptButton.isHidden = false
+            self.declineButton.isHidden = false
+            self.photoImageView.alpha = 0
+        default:
+            self.acceptButton.isHidden = true
+            self.declineButton.isHidden = true
+            self.photoImageView.alpha = 1
+        }
+
+        let userStringRange = (notification.message as NSString).range(of: notification.username)
+        
+        let attributedString = NSMutableAttributedString(string: notification.message, attributes: [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 14)])
+        
+        attributedString.setAttributes([NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor : UIColor.black], range: userStringRange)
+        
+        messageLabel.attributedText = attributedString
+        
+        let avatarURL = URL(string: notification.avatarURL)
+        avatarImageView.kf.setImage(with: avatarURL, placeholder: #imageLiteral(resourceName: "avatar-1"), options: nil, progressBlock: nil) { (image, error, cache, url) in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+        }
+        
+        if let mediaURL = notification.mediaURL {
+            let url = URL(string: mediaURL)
+            photoImageView.kf.setImage(with: url)
         }
     }
 

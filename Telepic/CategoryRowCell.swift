@@ -36,10 +36,10 @@ extension CategoryRowCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "thumbnailCell", for: indexPath) as? ThumbnailCell else { return UICollectionViewCell() }
         
-        if let image = thumbnails[indexPath.row].photo {
-            
-            cell.thumbnailImageView.image = image
-        }
+//        if let image = thumbnails[indexPath.row].photo {
+//            
+//            cell.thumbnailImageView.image = image
+//        }
         
         return cell
     }

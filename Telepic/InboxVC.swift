@@ -7,37 +7,87 @@
 //
 
 import UIKit
+import CoreLocation
+import AVKit
+import SVProgressHUD
 
 class InboxVC: UIViewController {
 
-    let item1 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "michaelbart", senderAvatar: #imageLiteral(resourceName: "avatar"), creator: "stephaniejoyce", creatorAvatar: #imageLiteral(resourceName: "avatar2"), daysRemaining: 2, commentsRef: "22j9jfs", mapRef: "j24j209jf")
-    let item2 = InboxItem(photo: #imageLiteral(resourceName: "photo2"), sender: "stephaniejoyce", senderAvatar: #imageLiteral(resourceName: "avatar2"), creator: "michaelbart", creatorAvatar: #imageLiteral(resourceName: "avatar"), daysRemaining: 3, commentsRef: "j3oij2f", mapRef: "jfo23j209f")
-    let item3 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "stevejobs", senderAvatar: #imageLiteral(resourceName: "avatar3"), creator: "donaldtrump", creatorAvatar: #imageLiteral(resourceName: "avatar4"), daysRemaining: 4, commentsRef: "jfiajfelei", mapRef: "jofij293")
-    let item4 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "michaelbart", senderAvatar: #imageLiteral(resourceName: "avatar"), creator: "stephaniejoyce", creatorAvatar: #imageLiteral(resourceName: "avatar2"), daysRemaining: 2, commentsRef: "22j9jfs", mapRef: "j24j209jf")
-    let item5 = InboxItem(photo: #imageLiteral(resourceName: "photo2"), sender: "stephaniejoyce", senderAvatar: #imageLiteral(resourceName: "avatar2"), creator: "michaelbart", creatorAvatar: #imageLiteral(resourceName: "avatar"), daysRemaining: 3, commentsRef: "j3oij2f", mapRef: "jfo23j209f")
-    let item6 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "stevejobs", senderAvatar: #imageLiteral(resourceName: "avatar3"), creator: "donaldtrump", creatorAvatar: #imageLiteral(resourceName: "avatar4"), daysRemaining: 4, commentsRef: "jfiajfelei", mapRef: "jofij293")
-    
     var inboxItems = [InboxItem]()
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var exploreButton: UIButton!
+    @IBOutlet weak var emptyInboxImageView: UIImageView!
+    @IBOutlet weak var emptyInboxLabel: UILabel!
+
+    
+    weak var delegate: ControlTabBarDelegate?
+    var mediaItem: MediaItem?
+    
+    let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        inboxItems = [item1, item2, item3, item4, item5, item6]
+        SVProgressHUD.show()
+        
+        tableView.isHidden = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateInbox), name: Notifications.newInboxItem, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: Notifications.didLoadInbox, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showEmptyInboxView), name: Notifications.inboxIsEmpty, object: nil)
+
+        FirebaseController.shared.loadInboxItems()
+        FirebaseController.shared.fetchInboxItems()
+        FirebaseController.shared.isInboxEmpty()
         
         tableView.reloadData()
+        
+        requestAuthorization()
     }
-
+    
+    @IBAction func exploreButtonTapped(_ sender: Any) {
+        delegate?.moveToExploreTab()
+    }
+    
+    @IBAction func addFriendButtonTapped(_ sender: Any) {
+        let addFriendVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "AddFriendVC") as! AddFriendVC
+        self.present(addFriendVC, animated: true, completion: nil)
+    }
+    
+    @objc func updateInbox() {
+        self.tableView.isHidden = false
+        emptyInboxLabel.isHidden = true
+        emptyInboxImageView.isHidden = true
+        exploreButton.isHidden = true
+        
+        SVProgressHUD.dismiss()
+        inboxItems = FirebaseController.shared.inboxItems
+        //self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+        self.tableView.reloadData()
+    }
+    
+    @objc func reloadData() {
+        inboxItems = FirebaseController.shared.inboxItems
+        if !inboxItems.isEmpty {
+            self.tableView.isHidden = false
+            self.tableView.reloadData()
+        }
+    }
+    
+    @objc func showEmptyInboxView() {
+        SVProgressHUD.dismiss()
+        emptyInboxLabel.isHidden = false
+        emptyInboxImageView.isHidden = false
+        exploreButton.isHidden = false
+    }
+    
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-        
-    }
-
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//    }
 }
 
 extension InboxVC: UITableViewDelegate, UITableViewDataSource {
@@ -56,7 +106,7 @@ extension InboxVC: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension InboxVC: FullscreenViewDelegate {
+extension InboxVC: InboxItemDelegate {
     
     func goFullscreen(_ imageView: UIImageView) {
         let fullscreenView = UIImageView(image: imageView.image)
@@ -67,11 +117,122 @@ extension InboxVC: FullscreenViewDelegate {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissFullscreen))
         fullscreenView.addGestureRecognizer(tapGesture)
         self.view.addSubview(fullscreenView)
-        self.navigationController?.isNavigationBarHidden = true
     }
     
-    func dismissFullscreen(_ sender: UITapGestureRecognizer) {
-        self.navigationController?.isNavigationBarHidden = false
+    @objc func dismissFullscreen(_ sender: UITapGestureRecognizer) {
         sender.view?.removeFromSuperview()
+    }
+    
+    func presentVideoFullScreen(controller: AVPlayerViewController) {
+        self.present(controller, animated: true) {
+            controller.player?.play()
+        }
+    }
+    
+    func forwardItem(_ inboxItem: InboxItem) {
+        let sendVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: "SendVC") as! SendVC
+        sendVC.inboxItemBeingSent = inboxItem
+        sendVC.isForwardingItem = true
+        present(sendVC, animated: true, completion: nil)
+    }
+    
+    func recordUserLocation(forItemID itemID: String) {
+        getUserLocation()
+        
+        // Add location to Array of coordinates for itemID in global mediaItems
+        
+        // Set the item in the current user's inbox to "opened"
+        if let location = locationManager.location {
+            let lat = location.coordinate.latitude
+            let long = location.coordinate.longitude
+            FirebaseController.shared.setItemOpened(forItemID: itemID, latitude: lat, longitude: long)
+        }
+        
+    }
+    
+    func segueToMapVC(withItemID itemID: String) {
+        DispatchQueue.main.async {
+            FirebaseController.shared.fetchMediaItem(forItemID: itemID, completion: { (mediaItem) in
+                let mapNavVC = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "MapNavVC") as! UINavigationController
+                let mapVC = mapNavVC.viewControllers.first as! MapVC
+                mapVC.mediaItem = mediaItem
+                self.present(mapNavVC, animated: true, completion: nil)
+            })
+        }
+        //performSegue(withIdentifier: "toMapVC", sender: nil)
+    }
+    
+    func segueToProfileVC(withUID uid: String) {
+        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController() as! ProfileVC
+        
+        DispatchQueue.main.async {
+            FirebaseController.shared.fetchUser(uid: uid, completion: { (user) in
+                profileVC.user = user
+                profileVC.userID = uid
+                NotificationCenter.default.post(Notification(name: Notifications.didLoadUser))
+            })
+        }
+        self.navigationController?.pushViewController(profileVC, animated: true)
+    }
+    
+    func segueToCommentsVC(withItemID itemID: String) {
+        let commentsVC = UIStoryboard(name: "Comments", bundle: nil).instantiateInitialViewController() as! CommentsVC
+        commentsVC.mediaItemID = itemID
+        commentsVC.isModal = true
+        self.present(commentsVC, animated: true, completion: nil)
+    }
+}
+
+protocol ControlTabBarDelegate: class {
+    func moveToExploreTab()
+}
+
+extension InboxVC: CLLocationManagerDelegate {
+    
+    func requestAuthorization() {
+        locationManager.requestWhenInUseAuthorization()
+    }
+    
+    func getUserLocation() {
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+            
+            // We only want to request a one-time delivery of the user's location
+            locationManager.requestLocation()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            print(location.coordinate)
+            
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .denied {
+            showLocationDisabledPopUp()
+        }
+    }
+    
+    func showLocationDisabledPopUp() {
+        let alertController = UIAlertController(title: "Location Access Disabled", message: "We need your location to record where items in your inbox are opened.", preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        let openAction = UIAlertAction(title: "Open Settings", style: .default) { (action) in
+            if let url = URL(string: UIApplicationOpenSettingsURLString) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }
+        alertController.addAction(openAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error.localizedDescription)
     }
 }

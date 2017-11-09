@@ -7,21 +7,23 @@
 //
 
 import UIKit
+import Tabman
+import Pageboy
 
-class NotificationsVC: UIViewController {
-
-    @IBOutlet weak var tableView: UITableView!
+class NotificationsVC: TabChildVC {
     
-    var users = ["michaelbart"]
-    var notifications = [String]()
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        notifications = ["\(users[0]) forwarded one of your photos.", "\(users[0]) sent you a photo!", "\(users[0]) sent you a photo!", "\(users[0]) forwarded one of your photos."]
         
+        NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: Notifications.newEventNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: Notifications.didLoadFriendRequests, object: nil)
     }
     
+    @objc func updateData() {
+        tableView.reloadData()
+    }
 
     /*
     // MARK: - Navigation
@@ -38,20 +40,30 @@ class NotificationsVC: UIViewController {
 extension NotificationsVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return notifications.count
+        return FirebaseController.shared.eventNotifications.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "notificationCell") as? NotificationCell else { return UITableViewCell() }
         
-        cell.notification = notifications[indexPath.row]
-        cell.user = users[0]
-        if indexPath.row % 2 == 0 {
-            cell.photoImageView.image = #imageLiteral(resourceName: "photo2")
-        }
-        
-        cell.setLabel()
+        cell.notification = FirebaseController.shared.eventNotifications[indexPath.row]
+        cell.setUp()
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let notification = FirebaseController.shared.eventNotifications[indexPath.row]
+        switch notification.type {
+        case .forward:
+            print("Forward Notification")
+        case .friendAcceptedRequest:
+            print("Friend has accepted friend request")
+        case .newfriendRequest:
+            print("Received a new friend request")
+        case .newInboxItem:
+            print("Received a new inbox item")
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

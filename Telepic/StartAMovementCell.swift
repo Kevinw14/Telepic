@@ -11,7 +11,7 @@ import UIKit
 class StartAMovementCell: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
-    var thumbnails = [InboxItem]()
+    var mediaItems = [MediaItem]()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -30,16 +30,14 @@ class StartAMovementCell: UITableViewCell {
 extension StartAMovementCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return thumbnails.count
+        return mediaItems.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "thumbnailCell", for: indexPath) as? ThumbnailCell else { return UICollectionViewCell() }
         
-        if let image = thumbnails[indexPath.row].photo {
-            
-            cell.thumbnailImageView.image = image
-        }
+
+        
         
         return cell
     }

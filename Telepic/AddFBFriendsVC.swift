@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FacebookCore
 
 class AddFBFriendsVC: UIViewController {
 
@@ -18,13 +19,77 @@ class AddFBFriendsVC: UIViewController {
     
     var tempFriends = ["Michael Bart", "Stephanie Joyce", "Steve Jobs", "Donald Trump"]
     var avatars = [#imageLiteral(resourceName: "avatar"),#imageLiteral(resourceName: "avatar2"),#imageLiteral(resourceName: "avatar3"),#imageLiteral(resourceName: "avatar4")]
+    var friends = [Any]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.reloadData()
         
+        let connection = GraphRequestConnection()
+        let params = ["fields": "id, first_name, last_name, middle_name, name, email, picture"]
+        let request = GraphRequest(graphPath: "me/friends", parameters: params)
+        
+        connection.add(request) { response, result in
+            switch result {
+            case .success(let response):
+                print("Graph Request Succeeded: \(response)")
+            case .failed(let error):
+                print("Graph Request Failed: \(error.localizedDescription)")
+            }
+        }
+
+        connection.start()
+//        makeFBRequestToPath(path: "me/taggable_friends", withParameters: params, success: { (results) in
+//            print("Found friends are: \(String(describing: results))")
+//        }) { (error) in
+//            print("Something went wrong: \(String(describing: error?.localizedDescription))")
+//        }
+        
+        
     }
+    
+//    func makeFBRequestToPath(path: String, withParameters parameters: [String:Any], success successBlock: @escaping ([Any]?) -> (), failure failureBlock: @escaping (Error?) -> ()) {
+//        // store results of multiple requests
+//        let receivedDataStorage = [Any]()
+//
+//        // run requests with array to store results in
+//        performRequestFromPath(path: path, parameters: parameters, storage: receivedDataStorage, success: successBlock, failure: failureBlock)
+//    }
+//
+//    func performRequestFromPath(path: String, parameters: [String:Any], storage: [Any], success successBlock: @escaping ([Any]?) -> (), failure failureBlock: @escaping (Error?) -> ()) {
+//
+//        var storage = storage
+//        let request = GraphRequest(graphPath: path, parameters: parameters)
+//        request.start { (response, result) in
+//            switch result {
+//            case .success(let response):
+//
+//                guard let responseDictionary = response.dictionaryValue else { return }
+//
+//                if let data = responseDictionary["data"] as? [String:Any] {
+//
+//                    storage.append(data)
+//                    if let paging = data["paging"] as? [String:Any] {
+//                        if let cursors = paging["cursors"] as? [String:Any] {
+//                            if let after = cursors["after"] as? String {
+//                                let paramsOfNextPage = ["fields": "id, first_name, last_name, middle_name, name, email, picture", "after": "\(after)"]
+//                                self.performRequestFromPath(path: path, parameters: paramsOfNextPage, storage: storage, success: successBlock, failure: failureBlock)
+//                                return
+//                            }
+//                        }
+//                    }
+//                    successBlock(storage)
+//                }
+//
+//
+//
+//            case .failed(let error):
+//                print("Graph Request Failed: \(error.localizedDescription)")
+//                failureBlock(error)
+//            }
+//        }
+//    }
     
     @IBAction func backButtonTapped(_ sender: Any) {
     }

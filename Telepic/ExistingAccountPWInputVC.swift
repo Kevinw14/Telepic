@@ -7,19 +7,21 @@
 //
 
 import UIKit
+import Firebase
+import SVProgressHUD
 
 class ExistingAccountPWInputVC: UIViewController {
 
     @IBOutlet weak var promptLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var passwordTextField: UITextField!
-    @IBOutlet weak var spacerHeightConstraint: NSLayoutConstraint!
     
-    var userEmail: String?
-    
+    var userEmail = UserController.shared.currentUser.email
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        passwordTextField.becomeFirstResponder()
         passwordTextField.tintColor = .white
     }
 
@@ -29,26 +31,31 @@ class ExistingAccountPWInputVC: UIViewController {
         if let userEmail = userEmail {
             promptLabel.text = "Welcome back,\n\(userEmail)"
         }
+    }
+}
+
+extension ExistingAccountPWInputVC: LoginChildDelegate {
+    func getNextVC(completion: @escaping (UIViewController) -> Void) {
+        guard let userEmail = userEmail, let password = passwordTextField.text, password != "" else {
+            print("Empty fields.")
+            return
+        }
+        self.passwordTextField.resignFirstResponder()
         
-        passwordTextField.becomeFirstResponder()
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
-    }
-    
-    @IBAction func backButtonTapped(_ sender: Any) {
-        let emailLoginVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "EmailLoginVC") as! EmailLoginVC
-        emailLoginVC.isHeroEnabled = true
-        emailLoginVC.heroModalAnimationType = .slide(direction: .right)
-        self.hero_replaceViewController(with: emailLoginVC)
-    }
-    
-    func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            let keyboardHeight = keyboardSize.height
-            if Constant.keyboardHeight == 0.0 {
-                Constant.keyboardHeight = keyboardHeight + 8
+        SVProgressHUD.show()
+        Auth.auth().signIn(withEmail: userEmail, password: password) { (user, error) in
+            
+            SVProgressHUD.dismiss()
+            if let error = error {
+                print(error.localizedDescription)
+                return
             }
-            spacerHeightConstraint.constant = Constant.keyboardHeight
+
+            if let user = user {
+                print("Signed in as user: \(user)")
+                let nextVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: Identifiers.tabBarController)
+                completion(nextVC)
+            }
         }
     }
-
 }

@@ -93,7 +93,7 @@ extension UISearchBar {
     func setPlaceholderTextColor(color: UIColor) {
         
         if let textField = getSearchBarTextField() {
-            textField.attributedPlaceholder = NSAttributedString(string: self.placeholder != nil ? self.placeholder! : "", attributes: [NSForegroundColorAttributeName: color])
+            textField.attributedPlaceholder = NSAttributedString(string: self.placeholder != nil ? self.placeholder! : "", attributes: [NSAttributedStringKey.foregroundColor: color])
         }
     }
     
@@ -169,6 +169,126 @@ extension ZoomScale {
         default: // Less than 13
             return 88
         }
+    }
+}
+
+extension UIImage{
+    
+    func resizeImageWith(newSize: CGSize) -> UIImage {
+        
+        let horizontalRatio = newSize.width / size.width
+        let verticalRatio = newSize.height / size.height
+        
+        let ratio = max(horizontalRatio, verticalRatio)
+        let newSize = CGSize(width: size.width * ratio, height: size.height * ratio)
+        UIGraphicsBeginImageContextWithOptions(newSize, true, 0)
+        draw(in: CGRect(origin: CGPoint(x: 0, y: 0), size: newSize))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage!
+    }
+    
+    func circularImage(size: CGSize?) -> UIImage {
+        let newSize = size ?? self.size
+        
+        let minEdge = min(newSize.height, newSize.width)
+        let size = CGSize(width: minEdge, height: minEdge)
+        
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        let context = UIGraphicsGetCurrentContext()
+        
+        self.draw(in: CGRect(origin: CGPoint.zero, size: size), blendMode: .copy, alpha: 1.0)
+        
+        context!.setBlendMode(.copy)
+        context!.setFillColor(UIColor.clear.cgColor)
+        
+        let rectPath = UIBezierPath(rect: CGRect(origin: CGPoint.zero, size: size))
+        let circlePath = UIBezierPath(ovalIn: CGRect(origin: CGPoint.zero, size: size))
+        rectPath.append(circlePath)
+        rectPath.usesEvenOddFillRule = true
+        rectPath.fill()
+        
+        let result = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return result!
+    }
+    
+    
+}
+extension DateFormatter {
+    /**
+     Formats a date as the time since that date (e.g., “Last week, yesterday, etc.”).
+     
+     - Parameter from: The date to process.
+     - Parameter numericDates: Determines if we should return a numeric variant, e.g. "1 month ago" vs. "Last month".
+     
+     - Returns: A string with formatted `date`.
+     */
+    func timeSince(from: NSDate, numericDates: Bool = false) -> String {
+        let calendar = Calendar.current
+        let now = NSDate()
+        let earliest = now.earlierDate(from as Date)
+        let latest = earliest == now as Date ? from : now
+        let components = calendar.dateComponents([.year, .weekOfYear, .month, .day, .hour, .minute, .second], from: earliest, to: latest as Date)
+        
+        var result = ""
+        
+        if components.year! >= 2 {
+            result = "\(components.year!) years ago"
+        } else if components.year! >= 1 {
+            if numericDates {
+                result = "1 year ago"
+            } else {
+                result = "Last year"
+            }
+        } else if components.month! >= 2 {
+            result = "\(components.month!) months ago"
+        } else if components.month! >= 1 {
+            if numericDates {
+                result = "1 month ago"
+            } else {
+                result = "Last month"
+            }
+        } else if components.weekOfYear! >= 2 {
+            result = "\(components.weekOfYear!) weeks ago"
+        } else if components.weekOfYear! >= 1 {
+            if numericDates {
+                result = "1 week ago"
+            } else {
+                result = "Last week"
+            }
+        } else if components.day! >= 2 {
+            result = "\(components.day!) days ago"
+        } else if components.day! >= 1 {
+            if numericDates {
+                result = "1 day ago"
+            } else {
+                result = "Yesterday"
+            }
+        } else if components.hour! >= 2 {
+            result = "\(components.hour!) hours ago"
+        } else if components.hour! >= 1 {
+            if numericDates {
+                result = "1 hour ago"
+            } else {
+                result = "An hour ago"
+            }
+        } else if components.minute! >= 2 {
+            result = "\(components.minute!) minutes ago"
+        } else if components.minute! >= 1 {
+            if numericDates {
+                result = "1 minute ago"
+            } else {
+                result = "A minute ago"
+            }
+        } else if components.second! >= 3 {
+            result = "\(components.second!) seconds ago"
+        } else {
+            result = "Just now"
+        }
+        
+        return result
     }
 }
 

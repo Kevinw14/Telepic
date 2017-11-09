@@ -7,60 +7,203 @@
 //
 
 import UIKit
+import Hero
+import Kingfisher
+import FirebaseAuth
+import SVProgressHUD
 
-class ProfileVC: UIViewController {
+class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
     
     @IBOutlet weak var numberOfFriendsLabel: UILabel!
-    @IBOutlet weak var milesTraveledLabel: UILabel!
     @IBOutlet weak var forwardsLabel: UILabel!
+    @IBOutlet weak var bioLabel: UILabel!
+    @IBOutlet weak var uploadsLabel: UILabel!
+    @IBOutlet weak var settingsButton: UIButton!
+    @IBOutlet weak var groupButton: UIButton!
+    @IBOutlet weak var coverView: UIView!
     
     @IBOutlet weak var collectionView: UICollectionView!
     
+    var imagePicker: UIImagePickerController!
     var thumbnails = [InboxItem]()
-    let item1 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "michaelbart", senderAvatar: #imageLiteral(resourceName: "avatar"), creator: "stephaniejoyce", creatorAvatar: #imageLiteral(resourceName: "avatar2"), daysRemaining: 2, commentsRef: "22j9jfs", mapRef: "j24j209jf")
-    let item2 = InboxItem(photo: #imageLiteral(resourceName: "photo2"), sender: "stephaniejoyce", senderAvatar: #imageLiteral(resourceName: "avatar2"), creator: "michaelbart", creatorAvatar: #imageLiteral(resourceName: "avatar"), daysRemaining: 3, commentsRef: "j3oij2f", mapRef: "jfo23j209f")
-    let item3 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "stevejobs", senderAvatar: #imageLiteral(resourceName: "avatar3"), creator: "donaldtrump", creatorAvatar: #imageLiteral(resourceName: "avatar4"), daysRemaining: 4, commentsRef: "jfiajfelei", mapRef: "jofij293")
-    let item4 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "michaelbart", senderAvatar: #imageLiteral(resourceName: "avatar"), creator: "stephaniejoyce", creatorAvatar: #imageLiteral(resourceName: "avatar2"), daysRemaining: 2, commentsRef: "22j9jfs", mapRef: "j24j209jf")
-    let item5 = InboxItem(photo: #imageLiteral(resourceName: "photo2"), sender: "stephaniejoyce", senderAvatar: #imageLiteral(resourceName: "avatar2"), creator: "michaelbart", creatorAvatar: #imageLiteral(resourceName: "avatar"), daysRemaining: 3, commentsRef: "j3oij2f", mapRef: "jfo23j209f")
-    let item6 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "stevejobs", senderAvatar: #imageLiteral(resourceName: "avatar3"), creator: "donaldtrump", creatorAvatar: #imageLiteral(resourceName: "avatar4"), daysRemaining: 4, commentsRef: "jfiajfelei", mapRef: "jofij293")
-    let item7 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "michaelbart", senderAvatar: #imageLiteral(resourceName: "avatar"), creator: "stephaniejoyce", creatorAvatar: #imageLiteral(resourceName: "avatar2"), daysRemaining: 2, commentsRef: "22j9jfs", mapRef: "j24j209jf")
-    let item8 = InboxItem(photo: #imageLiteral(resourceName: "photo2"), sender: "stephaniejoyce", senderAvatar: #imageLiteral(resourceName: "avatar2"), creator: "michaelbart", creatorAvatar: #imageLiteral(resourceName: "avatar"), daysRemaining: 3, commentsRef: "j3oij2f", mapRef: "jfo23j209f")
-    let item9 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "stevejobs", senderAvatar: #imageLiteral(resourceName: "avatar3"), creator: "donaldtrump", creatorAvatar: #imageLiteral(resourceName: "avatar4"), daysRemaining: 4, commentsRef: "jfiajfelei", mapRef: "jofij293")
-    let item10 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "michaelbart", senderAvatar: #imageLiteral(resourceName: "avatar"), creator: "stephaniejoyce", creatorAvatar: #imageLiteral(resourceName: "avatar2"), daysRemaining: 2, commentsRef: "22j9jfs", mapRef: "j24j209jf")
-    let item11 = InboxItem(photo: #imageLiteral(resourceName: "photo2"), sender: "stephaniejoyce", senderAvatar: #imageLiteral(resourceName: "avatar2"), creator: "michaelbart", creatorAvatar: #imageLiteral(resourceName: "avatar"), daysRemaining: 3, commentsRef: "j3oij2f", mapRef: "jfo23j209f")
-    let item12 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "stevejobs", senderAvatar: #imageLiteral(resourceName: "avatar3"), creator: "donaldtrump", creatorAvatar: #imageLiteral(resourceName: "avatar4"), daysRemaining: 4, commentsRef: "jfiajfelei", mapRef: "jofij293")
-    let item13 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "michaelbart", senderAvatar: #imageLiteral(resourceName: "avatar"), creator: "stephaniejoyce", creatorAvatar: #imageLiteral(resourceName: "avatar2"), daysRemaining: 2, commentsRef: "22j9jfs", mapRef: "j24j209jf")
-    let item14 = InboxItem(photo: #imageLiteral(resourceName: "photo2"), sender: "stephaniejoyce", senderAvatar: #imageLiteral(resourceName: "avatar2"), creator: "michaelbart", creatorAvatar: #imageLiteral(resourceName: "avatar"), daysRemaining: 3, commentsRef: "j3oij2f", mapRef: "jfo23j209f")
-    let item15 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "stevejobs", senderAvatar: #imageLiteral(resourceName: "avatar3"), creator: "donaldtrump", creatorAvatar: #imageLiteral(resourceName: "avatar4"), daysRemaining: 4, commentsRef: "jfiajfelei", mapRef: "jofij293")
-    let item16 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "michaelbart", senderAvatar: #imageLiteral(resourceName: "avatar"), creator: "stephaniejoyce", creatorAvatar: #imageLiteral(resourceName: "avatar2"), daysRemaining: 2, commentsRef: "22j9jfs", mapRef: "j24j209jf")
-    let item17 = InboxItem(photo: #imageLiteral(resourceName: "photo2"), sender: "stephaniejoyce", senderAvatar: #imageLiteral(resourceName: "avatar2"), creator: "michaelbart", creatorAvatar: #imageLiteral(resourceName: "avatar"), daysRemaining: 3, commentsRef: "j3oij2f", mapRef: "jfo23j209f")
-    let item18 = InboxItem(photo: #imageLiteral(resourceName: "photo1"), sender: "stevejobs", senderAvatar: #imageLiteral(resourceName: "avatar3"), creator: "donaldtrump", creatorAvatar: #imageLiteral(resourceName: "avatar4"), daysRemaining: 4, commentsRef: "jfiajfelei", mapRef: "jofij293")
-    
+    var user: [String:Any]?
+    var userID: String?
+    var uploads = [Upload]()
+    var forwards = 0
+    var isCurrentUser = false
+   
     let itemsPerRow: CGFloat = 3
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        thumbnails = [item1,item2,item3,item4,item5,item6,item7,item8,item9,item10,item11,item12,item13,item14,item15,item16,item17,item18]
+        
+        if isCurrentUser {
+            SVProgressHUD.show()
+            guard let currentUID = Auth.auth().currentUser?.uid else { return }
+            DispatchQueue.main.async {
+                FirebaseController.shared.fetchUser(uid: currentUID, completion: { (user) in
+                    self.user = user
+                    NotificationCenter.default.post(Notification(name: Notifications.didLoadUser))
+                })
+            }
+        }
+        
+        imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
+    
+        self.groupButton.isHidden = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(setUpViews), name: Notifications.didLoadUser, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(getUploads), name: Notifications.didUploadMedia, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(getUserData), name: Notifications.userDataChanged, object: nil)
         
         self.collectionView.register(UINib(nibName: "ThumbnailCell", bundle: nil), forCellWithReuseIdentifier: "thumbnailCell")
         
-        collectionView.reloadData()
-        
-        avatarImageView.image = #imageLiteral(resourceName: "avatar")
         avatarImageView.clipsToBounds = true
         avatarImageView.layer.cornerRadius = avatarImageView.frame.width / 2
     }
     
-    @IBAction func settingsButtonTapped(_ sender: Any) {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
+        if isCurrentUser {
+            self.groupButton.isHidden = false
+            self.settingsButton.setImage(#imageLiteral(resourceName: "settings"), for: .normal)
+            self.groupButton.setImage(#imageLiteral(resourceName: "groupAdd"), for: .normal)
+        }
+    }
+    
+    @objc func setUpViews() {
+        DispatchQueue.main.async {
+            
+            guard let userDict = self.user else { return }
+            if let uploadsDict = userDict["uploads"] as? [String:[String:Any]] {
+                var uploads = [Upload]()
+                for (key, value) in uploadsDict {
+                    let upload = Upload(uid: key, dict: value)
+                    uploads.append(upload)
+                }
+                self.uploads = uploads.sorted { $0.timestamp > $1.timestamp }
+                self.uploadsLabel.text = "\(uploads.count)"
+                self.collectionView.reloadData()
+            }
+            
+            let username = userDict["username"] as! String
+            let avatarURL = userDict["avatarURL"] as? String ?? "n/a"
+            let bio = userDict["bio"] as? String ?? "Add a bio."
+            
+            if let forwards = userDict["forwardCount"] as? Int { self.forwards = forwards }
+            if let friends = userDict["friends"] as? [String:Any] {
+                self.numberOfFriendsLabel.text = "\(friends.count)"
+                if friends[(Auth.auth().currentUser?.uid)!] == nil {
+                    self.groupButton.isHidden = false
+                }
+            }
+            
+            // Store in user defaults for quicker loading
+            
+            self.usernameLabel.text = username
+            self.bioLabel.text = bio
+            self.forwardsLabel.text = "\(self.uploads.count + self.forwards)"
+            
+            let url = URL(string: avatarURL)
+            self.avatarImageView.kf.setImage(with: url, placeholder: #imageLiteral(resourceName: "avatar-1"), options: nil, progressBlock: nil) { (image, error, cacheType, imageURL) in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+            }
+            self.coverView.isHidden = true
+            SVProgressHUD.dismiss()
+        }
+    }
+    
+    @objc func getUploads() {
+        if let uid = Auth.auth().currentUser?.uid {
+            
+            FirebaseController.shared.fetchUser(uid: uid, completion: { (userDict) in
+                self.user = userDict
+                
+                if let uploadsDict = userDict["uploads"] as? [String:[String:Any]] {
+                    var uploads = [Upload]()
+                    for (key, value) in uploadsDict {
+                        let upload = Upload(uid: key, dict: value)
+                        uploads.append(upload)
+                    }
+                    self.uploads = uploads.sorted { $0.timestamp > $1.timestamp }
+                    self.uploadsLabel.text = "\(uploads.count)"
+                    self.forwardsLabel.text = "\(uploads.count + self.forwards)"
+                    self.collectionView.reloadData()
+                }
+            })
+        }
+    }
+    
+    @objc func getUserData() {
+        if let uid = Auth.auth().currentUser?.uid {
+            
+            FirebaseController.shared.fetchUser(uid: uid) { (userDict) in
+                self.user = userDict
+                
+                let username = userDict["username"] as! String
+                let avatarURL = userDict["avatarURL"] as? String ?? "n/a"
+                let bio = userDict["bio"] as? String ?? "Edit your profile to add a bio."
+                
+                if let forwards = userDict["forwardCount"] as? Int { self.forwards = forwards }
+                if let friends = userDict["friends"] as? [String:Any] { self.numberOfFriendsLabel.text = "\(friends.count)" }
+                
+                // Store in user defaults for quicker loading
+                
+                self.usernameLabel.text = username
+                self.bioLabel.text = bio
+                self.forwardsLabel.text = "\(self.uploads.count + self.forwards)"
+                
+                let url = URL(string: avatarURL)
+                self.avatarImageView.kf.setImage(with: url, placeholder: #imageLiteral(resourceName: "avatar-1"), options: nil, progressBlock: nil) { (image, error, cacheType, imageURL) in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
+    
+    @IBAction func avatarButtonTapped(_ sender: Any) {
+        if isCurrentUser {
+            present(imagePicker, animated: true, completion: nil)
+        } else {
+            
+        }
+    }
+    
+    @IBAction func settingsButtonTapped(_ sender: Any) {
+        if isCurrentUser {
+            // segue to settings view
+            let settingsContainerVC = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "SettingsContainerVC") as! SettingsContainerVC
+            self.navigationController?.pushViewController(settingsContainerVC, animated: true)
+        } else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
     
     @IBAction func groupButtonTapped(_ sender: Any) {
-        
+        if isCurrentUser {
+            let groupsVC = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "GroupsVC") as! GroupsVC
+            self.navigationController?.pushViewController(groupsVC, animated: true)
+        } else {
+            let alertController = UIAlertController(title: "Add Friend", message: "Would you like to send a friend request?", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "Send", style: .default, handler: { (_) in
+                print("Add friend")
+                guard let uid = self.userID else { return }
+                FirebaseController.shared.sendFriendRequest(toUID: uid)
+                self.groupButton.isHidden = true
+            }))
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
 
     /*
@@ -74,21 +217,81 @@ class ProfileVC: UIViewController {
     */
 }
 
+extension ProfileVC {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        var avatarImage: UIImage
+        
+        if let possibleImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
+            avatarImage = possibleImage
+        } else if let possibleImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+            avatarImage = possibleImage
+        } else {
+            return
+        }
+        
+        picker.dismiss(animated: true) {
+            var imageCropVC: RSKImageCropViewController!
+            imageCropVC = RSKImageCropViewController(image: avatarImage, cropMode: .circle)
+            imageCropVC.delegate = self
+            self.present(imageCropVC, animated: true, completion: nil)
+        }
+    }
+}
+
+extension ProfileVC: RSKImageCropViewControllerDelegate {
+    func imageCropViewControllerDidCancelCrop(_ controller: RSKImageCropViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect) {
+        self.avatarImageView.image = croppedImage
+        dismiss(animated: true, completion: nil)
+        
+        let imageData = UIImagePNGRepresentation(croppedImage)
+        FirebaseController.shared.uploadProfilePhoto(data: imageData!)
+    }
+}
+
 extension ProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return thumbnails.count
+        return uploads.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "thumbnailCell", for: indexPath) as? ThumbnailCell else { return UICollectionViewCell() }
+
+        let upload = uploads[indexPath.row]
+        let urlString = upload.type == "video" ?  upload.thumbnailURL : upload.downloadURL
+        let url = URL(string: urlString)
         
-        cell.thumbnailImageView.image = thumbnails[indexPath.row].photo
+        cell.thumbnailImageView.kf.setImage(with: url, placeholder: nil, options: nil, progressBlock: nil) { (image, error, cacheType, imageURL) in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+        }
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ThumbnailCell else { return }
+        
+        if let image = cell.thumbnailImageView.image {
+            FirebaseController.shared.fetchMediaItem(forItemID: uploads[indexPath.row].uid, completion: { (item) in
+                FirebaseController.shared.currentMediaItem = item
+                FirebaseController.shared.photoToPresent = cell.thumbnailImageView
+                
+                NotificationCenter.default.post(Notification(name: Notifications.didLoadMediaItem))
+            })
+        }
     }
 }
 

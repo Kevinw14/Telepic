@@ -14,5 +14,7 @@ struct User {
     var password: String?
     var username: String?
     
+    var uid: String?
+    
     var usingFacebook = false
 }

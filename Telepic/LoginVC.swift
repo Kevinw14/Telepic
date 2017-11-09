@@ -10,6 +10,7 @@ import UIKit
 import FacebookCore
 import FacebookLogin
 import FirebaseAuth
+import Hero
 
 class LoginVC: UIViewController {
     
@@ -22,7 +23,7 @@ class LoginVC: UIViewController {
     
     @IBAction func facebookButtonTapped(_ sender: Any) {
         let loginManager = LoginManager()
-        loginManager.logIn([.publicProfile], viewController: self) { (loginResult) in
+        loginManager.logIn([.publicProfile, .userFriends], viewController: self) { (loginResult) in
             switch loginResult {
             case .failed(let error):
                 print(error)
@@ -39,6 +40,20 @@ class LoginVC: UIViewController {
                     }
                     // user is signed in
                     UserController.shared.currentUser.usingFacebook = true
+                    
+                    // if user has a username continue to inbox
+                    if let user = user {
+                        FirebaseController.shared.isUsernameStored(uid: user.uid, completion: { (result) in
+                            if result {
+                                self.performSegue(withIdentifier: "existingFBUserInbox", sender: nil)
+                            } else {
+                                let nextVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: Identifiers.loginContainerVC) as! LoginContainerVC
+                                nextVC.isUsingEmail = false
+                                self.navigationController?.pushViewController(nextVC, animated: true)
+                            }
+                        })
+                    }
+                    
                     print("successfully signed in using firebase")
                 })
             }
@@ -46,11 +61,10 @@ class LoginVC: UIViewController {
     }
     
     @IBAction func continueWithEmailButtonTapped(_ sender: Any) {
-        DispatchQueue.main.async {
-            let emailLoginVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "EmailLoginVC") as! EmailLoginVC
-            emailLoginVC.isHeroEnabled = true
-            emailLoginVC.heroModalAnimationType = .slide(direction: .left)
-            self.hero_replaceViewController(with: emailLoginVC)
-        }
+        UserController.shared.currentUser.usingFacebook = false
+
+        let nextVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: Identifiers.loginContainerVC) as! LoginContainerVC
+        nextVC.isUsingEmail = true
+        self.navigationController?.pushViewController(nextVC, animated: true)
     }
 }

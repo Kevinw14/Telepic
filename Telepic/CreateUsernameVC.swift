@@ -8,13 +8,13 @@
 
 import UIKit
 import Firebase
+import SVProgressHUD
 
 class CreateUsernameVC: UIViewController {
 
     @IBOutlet weak var promptLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var usernameTextField: UITextField!
-    @IBOutlet weak var spacerHeightConstraint: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,11 +26,11 @@ class CreateUsernameVC: UIViewController {
         super.viewWillAppear(true)
         
         usernameTextField.becomeFirstResponder()
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
     }
-    
-    @IBAction func nextButtonTapped(_ sender: Any) {
-        
+}
+
+extension CreateUsernameVC: LoginChildDelegate {
+    func getNextVC(completion: @escaping (UIViewController) -> Void) {
         guard let username = usernameTextField.text else { return }
         
         if username.characters.count <= 24 {
@@ -38,69 +38,59 @@ class CreateUsernameVC: UIViewController {
             UserController.shared.currentUser.username = username
             
             if UserController.shared.currentUser.usingFacebook {
-                // create user using facebook
                 
                 // store username on firebase
+                guard let uid = Auth.auth().currentUser?.uid else { return }
                 
-                let addFBFriendsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddFBFriendsVC")
-                addFBFriendsVC.isHeroEnabled = true
-                addFBFriendsVC.heroModalAnimationType = .slide(direction: .left)
-                self.usernameTextField.resignFirstResponder()
-                self.hero_replaceViewController(with: addFBFriendsVC)
+                SVProgressHUD.show()
+                FirebaseController.shared.verifyUniqueUsername(username, completion: { (isUnique) in
+                    if isUnique {
+                        self.usernameTextField.resignFirstResponder()
+                        FirebaseController.shared.storeUsername(username, uid: uid)
+                        SVProgressHUD.dismiss()
+                        let nextVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: Identifiers.tabBarVC)
+                        completion(nextVC)
+                    } else {
+                        SVProgressHUD.dismiss()
+                        print("Username is already taken.")
+                    }
+                })
+//                let addFBFriendsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddFBFriendsVC")
+//                completion(addFBFriendsVC)
                 
             } else {
                 // create user using email & password
                 guard let email = UserController.shared.currentUser.email,
                     let password = UserController.shared.currentUser.password else { return }
                 
-                print("Loading...")
+                SVProgressHUD.show()
                 
                 DispatchQueue.main.async {
-                    Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
-                        if let error = error {
-                            print(error.localizedDescription)
+                    FirebaseController.shared.verifyUniqueUsername(username, completion: { (isUnique) in
+                        if isUnique {
+                            Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
+                                SVProgressHUD.dismiss()
+                                guard let uid = user?.uid else { return }
+                                if let error = error {
+                                    print(error.localizedDescription)
+                                } else {
+                                    self.usernameTextField.resignFirstResponder()
+                                    FirebaseController.shared.storeUsername(username, uid: uid)
+                                    let nextVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: Identifiers.tabBarVC)
+                                    completion(nextVC)
+                                }
+                            })
                         } else {
-                            print("finished loading...")
-                            
-                            // store username on firebase
-                            
-                            
-                            self.performSegue(withIdentifier: "newUserInbox", sender: nil)
+                            SVProgressHUD.dismiss()
+                            print("Username is already taken.")
                         }
                     })
                 }
-                
+                SVProgressHUD.dismiss()
                 print("Still loading...")
             }
-            
-            
         } else {
             print("username is too long")
         }
     }
-    
-    @IBAction func backButtonTapped(_ sender: Any) {
-        let newAccountPWInputVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "NewAccountPWInputVC") as! NewAccountPWInputVC
-        newAccountPWInputVC.isHeroEnabled = true
-        newAccountPWInputVC.heroModalAnimationType = .slide(direction: .right)
-        self.hero_replaceViewController(with: newAccountPWInputVC)
-    }
-    
-    func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            let keyboardHeight = keyboardSize.height
-            if Constant.keyboardHeight == 0.0 {
-                Constant.keyboardHeight = keyboardHeight + 8
-            }
-            spacerHeightConstraint.constant = Constant.keyboardHeight
-        }
-    }
-    
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-    }
-
 }

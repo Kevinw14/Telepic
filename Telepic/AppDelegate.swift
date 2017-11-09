@@ -10,17 +10,47 @@ import UIKit
 import Firebase
 import FacebookCore
 import FBSDKCoreKit
+import UserNotifications
+import SVProgressHUD
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
 
     var window: UIWindow?
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        SVProgressHUD.setBackgroundColor(UIColor.clear)
         FirebaseApp.configure()
+        
+        UNUserNotificationCenter.current().delegate = self
+        
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: {_, _ in })
+        application.registerForRemoteNotifications()
+        
+        let token = Messaging.messaging().fcmToken
+        print("FCM token: \(token ?? "")")
+        
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let homeStoryboard: UIStoryboard = UIStoryboard(name: "Home", bundle: nil)
+        
+        if Auth.auth().currentUser != nil {
+            // User is signed in.
+            self.window?.rootViewController = homeStoryboard.instantiateViewController(withIdentifier: "TabBarVC") as! TabBarVC
+        } else {
+            // No user is signed in.
+            window?.rootViewController = mainStoryboard.instantiateInitialViewController()
+        }
+        self.window?.makeKeyAndVisible()
+        
         return true
+    }
+    
+    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+        print("Firebase registration token: \(fcmToken)")
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
