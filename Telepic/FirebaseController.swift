@@ -274,11 +274,18 @@ class FirebaseController {
         })
     }
     
-    func removeMediaItem(withID id: String) {
+    func removeMediaItem(withID itemID: String) {
         guard let currentUID = Auth.auth().currentUser?.uid else { return }
-        self.ref.child("mediaItems").child(id).removeValue()
+        self.ref.child("mediaItems").child(itemID).child("mapReference").observeSingleEvent(of: .value) { (snapshot) in
+            guard let mapReferenceDict = snapshot.value as? [String:Any] else { return }
+            
+            for userID in mapReferenceDict.keys {
+                self.ref.child("users").child(userID).child("inboxItems").child(itemID).removeValue()
+            }
+        }
+        self.ref.child("mediaItems").child(itemID).removeValue()
         
-        self.ref.child("users").child(currentUID).child(id).removeValue()
+        self.ref.child("users").child(currentUID).child("uploads").child(itemID).removeValue()
     }
     
     func setItemOpened(inboxItem: InboxItem, latitude: Double, longitude: Double) {
@@ -663,6 +670,9 @@ class FirebaseController {
                     Comment(dict: value)
                 }
                 completion(comments.sorted { $0.timestamp < $1.timestamp })
+            } else {
+                print("comments don't exist")
+                NotificationCenter.default.post(Notification(name: Notifications.emptyComments))
             }
         }
     }
@@ -950,7 +960,7 @@ class FirebaseController {
         }
     }
     
-    func sendPhoto(caption: String?, data: Data, toUserIDs: [String], currentLocation: [String:Double]) {
+    func sendPhoto(caption: String?, data: Data, type: String, toUserIDs: [String], currentLocation: [String:Double]) {
         
         guard let currentUser = Auth.auth().currentUser else { return }
         
@@ -981,7 +991,7 @@ class FirebaseController {
                 for uid in toUserIDs {
                     
                     var inboxItem: [String:Any] = [
-                        "type": "photo",
+                        "type": type,
                         "downloadURL": downloadURL,
                         "thumbnailURL": "n/a",
                         "opened": false,
@@ -1012,7 +1022,7 @@ class FirebaseController {
                 
                 var mediaItem: [String:Any] = [
                     "timestamp": dateSent,
-                    "type": "photo",
+                    "type": type,
                     "creatorAvatarURL": creatorAvatarURL,
                     "creatorUsername": creatorUsername,
                     "creatorID": currentUID,

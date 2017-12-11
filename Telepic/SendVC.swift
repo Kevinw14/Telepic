@@ -28,6 +28,7 @@ class SendVC: UIViewController {
     var caption: String?
     var isForwardingItem = false
     var isFromMapVC = false
+    var currentType: String?
     
     var isSelectingGroups = false {
         didSet {
@@ -42,7 +43,6 @@ class SendVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
         self.navigationController?.navigationBar.isHidden = true
         doneButton.setTitle("Forward", for: .normal)
         
@@ -126,7 +126,8 @@ class SendVC: UIViewController {
                 if videoURL != nil, let data = data {
                     FirebaseController.shared.sendVideo(caption: caption ?? nil, videoURL: videoURL!, thumbnailData: data, toUserIDs: selectedFriendIDs!, currentLocation: ["latitude": lat, "longitude": long])
                 } else if let data = data {
-                    FirebaseController.shared.sendPhoto(caption: caption ?? nil, data: data, toUserIDs: selectedFriendIDs!, currentLocation: ["latitude": lat, "longitude": long])
+                    guard let type = currentType else { return }
+                    FirebaseController.shared.sendPhoto(caption: caption ?? nil, data: data, type: type, toUserIDs: selectedFriendIDs!, currentLocation: ["latitude": lat, "longitude": long])
                 }
             }
         }

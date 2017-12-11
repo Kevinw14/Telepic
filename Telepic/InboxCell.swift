@@ -87,6 +87,11 @@ class InboxCell: UITableViewCell {
             photoImageView.kf.setImage(with: photoURL)
             playButton.isHidden = true
             fullscreenButton.isHidden = true
+        } else if inboxItem.type == "gif" {
+            let gifImage = UIImage.gif(url: inboxItem.downloadURL)
+            photoImageView.image = gifImage
+            playButton.isHidden = true
+            fullscreenButton.isHidden = true
         } else {
             let thumbnailURL = URL(string: inboxItem.thumbnailURL)
             photoImageView.kf.setImage(with: thumbnailURL)

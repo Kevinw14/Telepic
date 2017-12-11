@@ -133,6 +133,7 @@ extension TabBarController: GalleryControllerDelegate {
                 if let gif = UIImage.gif(data: imageData) {
                     selectedImage = gif
                     captionVC.isGif = true
+                    captionVC.data = imageData
                     captionVC.image = selectedImage
                     let navController = UINavigationController(rootViewController: captionVC)
                     controller.present(navController, animated: true, completion: nil)

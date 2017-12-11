@@ -50,6 +50,7 @@ class CommentsVC: UIViewController {
     @IBOutlet weak var postButton: UIButton!
     @IBOutlet weak var commentInputView: UIView!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var emptyCommentsView: UIView!
     
     var comments = [Comment]() {
         didSet {
@@ -93,12 +94,15 @@ class CommentsVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showEmptyCommentsView), name: Notifications.emptyComments, object: nil)
         
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGestureHandler))
         
         guard let mediaItemID = mediaItemID else { return }
         FirebaseController.shared.fetchComments(forMediaItemID: mediaItemID) { (comments) in
             self.comments = comments
+            self.tableView.isHidden = false
+            self.emptyCommentsView.isHidden = true
         }
         
         let titleAttrs = [
@@ -118,6 +122,11 @@ class CommentsVC: UIViewController {
         super.viewWillAppear(animated)
         
         self.tabBarController?.tabBar.isHidden = true
+    }
+    
+    @objc func showEmptyCommentsView() {
+        self.tableView.isHidden = true
+        self.emptyCommentsView.isHidden = false
     }
     
     @objc func goBack() {

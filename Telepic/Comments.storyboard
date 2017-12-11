@@ -12,6 +12,7 @@
         <array key="AvenirNext.ttc">
             <string>AvenirNext-DemiBold</string>
             <string>AvenirNext-Medium</string>
+            <string>AvenirNext-Regular</string>
         </array>
     </customFonts>
     <scenes>
@@ -92,6 +93,37 @@
                                     <outlet property="delegate" destination="wA9-vM-IwB" id="b7b-1t-X5r"/>
                                 </connections>
                             </tableView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oYf-28-uNd">
+                                <rect key="frame" x="0.0" y="101.5" width="375" height="200"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="K90-rC-X7G">
+                                        <rect key="frame" x="88.5" y="37.5" width="197.5" height="125.5"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ion-android-create - Ionicons" translatesAutoresizingMaskIntoConstraints="NO" id="Aru-Qb-qFq">
+                                                <rect key="frame" x="74.5" y="0.0" width="49" height="49"/>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="It's quiet in here." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sYc-Wv-oqX">
+                                                <rect key="frame" x="22.5" y="61" width="152.5" height="27.5"/>
+                                                <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="20"/>
+                                                <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Be the first to comment!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C45-x8-UKW">
+                                                <rect key="frame" x="0.0" y="100.5" width="197.5" height="25"/>
+                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="18"/>
+                                                <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.97647058823529409" green="0.97647058823529409" blue="0.97647058823529409" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="K90-rC-X7G" firstAttribute="centerY" secondItem="oYf-28-uNd" secondAttribute="centerY" id="fjZ-kM-EBT"/>
+                                    <constraint firstItem="K90-rC-X7G" firstAttribute="centerX" secondItem="oYf-28-uNd" secondAttribute="centerX" id="qpi-S2-Zm8"/>
+                                    <constraint firstAttribute="height" constant="200" id="rlQ-w3-V3e"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G5l-V4-dia">
                                 <rect key="frame" x="0.0" y="553" width="375" height="50"/>
                                 <subviews>
@@ -137,7 +169,10 @@
                         </subviews>
                         <color key="backgroundColor" red="0.97647058823529409" green="0.97647058823529409" blue="0.97647058823529409" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="oYf-28-uNd" firstAttribute="leading" secondItem="jxU-w5-MxA" secondAttribute="leading" id="7ga-y8-Hpo"/>
+                            <constraint firstItem="oYf-28-uNd" firstAttribute="centerY" secondItem="Snd-SC-rQu" secondAttribute="centerY" constant="-100" id="Jiz-UO-CIu"/>
                             <constraint firstItem="YrU-Bo-mfH" firstAttribute="top" secondItem="jxU-w5-MxA" secondAttribute="top" id="Qa9-6u-HK0"/>
+                            <constraint firstItem="oYf-28-uNd" firstAttribute="trailing" secondItem="jxU-w5-MxA" secondAttribute="trailing" id="Qg4-hd-ufD"/>
                             <constraint firstAttribute="bottom" secondItem="G5l-V4-dia" secondAttribute="bottom" id="TaH-WD-Qks"/>
                             <constraint firstItem="G5l-V4-dia" firstAttribute="leading" secondItem="Snd-SC-rQu" secondAttribute="leading" id="V5m-r8-Dk9"/>
                             <constraint firstItem="G5l-V4-dia" firstAttribute="top" secondItem="YrU-Bo-mfH" secondAttribute="bottom" id="a87-JY-sks"/>
@@ -154,6 +189,7 @@
                     <connections>
                         <outlet property="bottomConstraint" destination="TaH-WD-Qks" id="DZ9-Ge-IKX"/>
                         <outlet property="commentInputView" destination="G5l-V4-dia" id="fyE-cv-BVk"/>
+                        <outlet property="emptyCommentsView" destination="oYf-28-uNd" id="mkb-PT-h91"/>
                         <outlet property="inputTextView" destination="bcB-yf-ny9" id="SPr-P8-Vrt"/>
                         <outlet property="postButton" destination="g2O-0l-2al" id="RNI-4l-Z22"/>
                         <outlet property="tableView" destination="YrU-Bo-mfH" id="B4P-cZ-f5V"/>
@@ -186,5 +222,6 @@
     </scenes>
     <resources>
         <image name="avatar-1" width="512" height="512"/>
+        <image name="ion-android-create - Ionicons" width="49" height="49"/>
     </resources>
 </document>

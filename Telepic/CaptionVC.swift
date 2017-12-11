@@ -23,6 +23,7 @@ class CaptionVC: UIViewController, UITextViewDelegate {
     var videoURL: URL?
     var thumbnail: UIImage?
     var isGif = false
+    var data: Data?
     
     var keyboardShowing = true
     var tapGestureRecognizer: UITapGestureRecognizer!
@@ -126,10 +127,18 @@ class CaptionVC: UIViewController, UITextViewDelegate {
     
     @objc func done() {
         let sendVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: Identifiers.sendVC) as! SendVC
-        sendVC.caption = self.captionTextView.text == "Write a caption..." ? "" : self.captionTextView.text
+        sendVC.caption = self.captionTextView.text == "Write a caption..." ? nil : self.captionTextView.text
         if let thumbnail = thumbnail { sendVC.data = UIImageJPEGRepresentation(thumbnail, 1.0)}
-        if let image = image { sendVC.data = UIImageJPEGRepresentation(image, 1.0) }
-        if let videoURL = videoURL, let thumbnail = thumbnail { sendVC.videoURL = videoURL; sendVC.data = UIImageJPEGRepresentation(thumbnail, 1.0) }
+        if let image = image {
+            if let data = data {
+                sendVC.data = data
+                sendVC.currentType = "gif"
+            } else {
+                sendVC.data = UIImageJPEGRepresentation(image, 1.0)
+                sendVC.currentType = "photo"
+            }
+        }
+        if let videoURL = videoURL, let thumbnail = thumbnail { sendVC.videoURL = videoURL; sendVC.data = UIImageJPEGRepresentation(thumbnail, 1.0); sendVC.currentType = "video" }
         self.navigationController?.pushViewController(sendVC, animated: true)
     }
     

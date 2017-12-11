@@ -406,13 +406,19 @@ extension ProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
         
         let url = URL(string: urlString)
         
-        cell.thumbnailImageView.kf.setImage(with: url, placeholder: nil, options: nil, progressBlock: nil) { (image, error, cacheType, imageURL) in
-            if let error = error {
-                print(error.localizedDescription)
-            }
+        if upload.type == "gif" {
+            let gifImage = UIImage.gif(url: urlString)
+            cell.thumbnailImageView.image = gifImage
+        } else {
             
-            if upload.type == "video" {
-                cell.playButton.isHidden = false
+            cell.thumbnailImageView.kf.setImage(with: url, placeholder: nil, options: nil, progressBlock: nil) { (image, error, cacheType, imageURL) in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                
+                if upload.type == "video" {
+                    cell.playButton.isHidden = false
+                }
             }
         }
         

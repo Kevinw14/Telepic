@@ -29,4 +29,5 @@ struct Notifications {
     static let emptyNotifications = Notification.Name("EmptyNotifications")
     static let reloadNotifications = Notification.Name("ReloadNotifications")
     static let stopPlayer = Notification.Name("StopPlayer")
+    static let emptyComments = Notification.Name("EmptyComments")
 }
