@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import FirebaseAuth
 
 class SendVC: UIViewController {
 
@@ -16,12 +17,15 @@ class SendVC: UIViewController {
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var friendsButton: UIButton!
     @IBOutlet weak var groupsButton: UIButton!
+    @IBOutlet weak var backButton: UIButton!
     
     let locationManager = CLLocationManager()
     
     var inboxItemBeingSent: InboxItem?
+    var mediaItemBeingSent: MediaItem?
     var data: Data?
     var videoURL: URL?
+    var caption: String?
     var isForwardingItem = false
     var isFromMapVC = false
     
@@ -37,22 +41,27 @@ class SendVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 
-        setNeedsStatusBarAppearanceUpdate()
+        self.navigationController?.navigationBar.isHidden = true
+        doneButton.setTitle("Forward", for: .normal)
         
-        if isForwardingItem { doneButton.setTitle("Forward", for: .normal) }
+        if let item = inboxItemBeingSent {
+            FirebaseController.shared.fetchValidForwardTargets(itemID: item.itemID, creatorID: item.creatorID)
+        }
+        if let item = mediaItemBeingSent {
+            FirebaseController.shared.fetchValidForwardTargets(itemID: item.itemID, creatorID: item.creatorID)
+        }
         
-//        if let itemID = inboxItemBeingSent?.itemID {
-//            FirebaseController.shared.fetchReceivableFriendIDs(forItemID: itemID)
-//        }
-        
-        FirebaseController.shared.fetchFriends()
+        if !isForwardingItem {
+            FirebaseController.shared.fetchFriends(uid: Auth.auth().currentUser!.uid)
+            NotificationCenter.default.addObserver(self, selector: #selector(notifySelectFriendsVC), name: Notifications.didLoadFriends, object: nil)
+        }
     }
     
-    
-    
-    override var prefersStatusBarHidden: Bool {
-        return true
+    @objc func notifySelectFriendsVC() {
+        FirebaseController.shared.validForwardTargets = FirebaseController.shared.friends
+        NotificationCenter.default.post(name: Notifications.didLoadValidTargets, object: self)
     }
     
     @IBAction func friendsButtonTapped(_ sender: Any) {
@@ -77,6 +86,12 @@ class SendVC: UIViewController {
         }
     }
     
+    @IBAction func backButtonTapped(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
+        //self.navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
+    
     @IBAction func doneButtonTapped(_ sender: Any) {
         
         var selectedFriendIDs: [String]?
@@ -92,22 +107,26 @@ class SendVC: UIViewController {
         
         if isForwardingItem {
             
-            guard let item = inboxItemBeingSent else { return }
-            
-            FirebaseController.shared.forwardInboxItem(item, toFriendIDs: selectedFriendIDs!)
+            if inboxItemBeingSent == nil {
+                if let item = mediaItemBeingSent {
+                    FirebaseController.shared.forwardMediaItem(item, toFriendIDs: selectedFriendIDs!)
+                }
+            } else {
+                FirebaseController.shared.forwardInboxItem(inboxItemBeingSent!, toFriendIDs: selectedFriendIDs!)
+            }
             
         } else {
             getUserLocation()
             
             // Set the item in the current user's inbox to "opened"
-            if let location = locationManager.location, let data = data {
+            if let location = locationManager.location {
                 let lat = location.coordinate.latitude
                 let long = location.coordinate.longitude
                 
-                if videoURL != nil {
-                    FirebaseController.shared.sendVideo(videoURL: videoURL!, thumbnailData: data, toUserIDs: selectedFriendIDs!, currentLocation: ["latitude": lat, "longitude": long])
-                } else {
-                    FirebaseController.shared.sendPhoto(data: data, toUserIDs: selectedFriendIDs!, currentLocation: ["latitude": lat, "longitude": long])
+                if videoURL != nil, let data = data {
+                    FirebaseController.shared.sendVideo(caption: caption ?? nil, videoURL: videoURL!, thumbnailData: data, toUserIDs: selectedFriendIDs!, currentLocation: ["latitude": lat, "longitude": long])
+                } else if let data = data {
+                    FirebaseController.shared.sendPhoto(caption: caption ?? nil, data: data, toUserIDs: selectedFriendIDs!, currentLocation: ["latitude": lat, "longitude": long])
                 }
             }
         }

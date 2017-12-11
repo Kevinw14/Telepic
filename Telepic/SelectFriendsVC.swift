@@ -19,8 +19,7 @@ class SelectFriendsVC: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
 
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: Notifications.didLoadFriends, object: nil)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: Notifications.didLoadValidTargets, object: nil)
     }
     
     @objc func reloadData() {
@@ -48,7 +47,7 @@ class SelectFriendsVC: UIViewController {
 extension SelectFriendsVC: SendVCDelegate {
     func getSelectedFriendIDs() -> [String]? {
         guard let indexPaths = tableView.indexPathsForSelectedRows else { return nil }
-        let friendIDs = indexPaths.map { FirebaseController.shared.friends[$0.row].uid }
+        let friendIDs = indexPaths.map { FirebaseController.shared.validForwardTargets[$0.row].uid }
         
         return friendIDs
     }
@@ -56,13 +55,13 @@ extension SelectFriendsVC: SendVCDelegate {
 
 extension SelectFriendsVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return FirebaseController.shared.friends.count
+        return FirebaseController.shared.validForwardTargets.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell") as? FriendCell else { return UITableViewCell() }
         
-        cell.friend = FirebaseController.shared.friends[indexPath.row]
+        cell.friend = FirebaseController.shared.validForwardTargets[indexPath.row]
         cell.setUpCell()
         
         return cell

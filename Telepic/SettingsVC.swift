@@ -8,18 +8,46 @@
 
 import UIKit
 import FirebaseAuth
+import Stevia
 
 class SettingsVC: UITableViewController {
 
+    lazy var backBarButton: UIBarButtonItem = {
+        let btn = UIButton(type: .system)
+        btn.setImage(#imageLiteral(resourceName: "backArrowDark"), for: .normal)
+        btn.height(40)
+        btn.width(40)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 0, left: -20, bottom: 0, right: 0)
+        btn.addTarget(self, action: #selector(goBack), for: .touchUpInside)
+        return UIBarButtonItem(customView: btn)
+    }()
+    
+    var user: [String:Any]?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+        self.tableView.contentInsetAdjustmentBehavior = .never
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        self.navigationItem.title = "Settings"
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let titleAttrs = [
+            NSAttributedStringKey.foregroundColor: UIColor(hexString: "333333"),
+            NSAttributedStringKey.font: UIFont(name: "AvenirNext-DemiBold", size: 18)
+        ]
+        
+        self.navigationController?.navigationBar.titleTextAttributes = titleAttrs
+        
+        self.navigationItem.leftBarButtonItem = backBarButton
+    }
+    
+    @objc func goBack() {
+        self.navigationController?.popViewController(animated: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -132,14 +160,20 @@ class SettingsVC: UITableViewController {
     }
     */
 
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        if segue.identifier == "toEditProfileVC" {
+            if let destination = segue.destination as? EditProfileVC, let user = user {
+                let username = user["username"] as! String
+                let bio = user["bio"] as? String ?? "Edit your bio."
+                destination.username = username
+                destination.bio = bio
+            }
+        }
     }
-    */
 
 }

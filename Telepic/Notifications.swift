@@ -16,6 +16,7 @@ struct Notifications {
     static let didLoadUsers = Notification.Name("DidLoadUsers")
     static let didLoadFriendRequests = Notification.Name("DidLoadFriendRequests")
     static let didLoadFriends = Notification.Name("DidLoadFriends")
+    static let didLoadValidTargets = Notification.Name("DidLoadValidTargets")
     static let didUploadMedia = Notification.Name("DidUploadMedia")
     static let userDataChanged = Notification.Name("UserDataChanged")
     static let didLoadMediaItem = Notification.Name("DidLoadMediaItem")
@@ -25,4 +26,7 @@ struct Notifications {
     static let didLoadUser = Notification.Name("DidLoadUser")
     static let didLoadComments = Notification.Name("DidLoadComments")
     static let isSelectingMembers = Notification.Name("IsSelectingMembers")
+    static let emptyNotifications = Notification.Name("EmptyNotifications")
+    static let reloadNotifications = Notification.Name("ReloadNotifications")
+    static let stopPlayer = Notification.Name("StopPlayer")
 }

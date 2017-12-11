@@ -109,9 +109,9 @@ class VideoVC: UIViewController {
         
         sendVC.data = getThumbnail()
         // thumbnail url
-        sendVC.isHeroEnabled = true
-        sendVC.heroModalAnimationType = .slide(direction: .left)
-        self.hero_replaceViewController(with: sendVC)
+//        sendVC.isHeroEnabled = true
+//        sendVC.heroModalAnimationType = .slide(direction: .left)
+//        self.hero_replaceViewController(with: sendVC)
     }
     
     func compressVideo(inputURL: URL, outputURL: URL, handler:@escaping (_ exportSession: AVAssetExportSession?)-> Void) {

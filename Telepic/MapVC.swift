@@ -11,13 +11,25 @@ import MapKit
 
 class MapVC: UIViewController {
 
+    @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var mapView: MKMapView!
-    var mediaItem: MediaItem?
-    var annotations = [UserAnnotation]()
+    var mediaItem: MediaItem? {
+        didSet {
+            if isViewLoaded {
+                setUp()
+            }
+        }
+    }
+    var annotations = [UserAnnotation]() {
+        didSet {
+            mapView.addAnnotations(annotations)
+        }
+    }
     
     @IBOutlet weak var forwardsLabel: UILabel!
     @IBOutlet weak var creatorUsernameLabel: UILabel!
     @IBOutlet weak var milesTraveledLabel: UILabel!
+    @IBOutlet weak var numberOfCommentsLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,24 +38,55 @@ class MapVC: UIViewController {
         mapView.register(UserAnnotationView.self,
                          forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
         
+        
+        //        let sortedAnnotations = annotations.sorted { $0.timestamp < $1.timestamp }
+        //        var numberedAnnotations = [MKAnnotation]()
+        //        for (index, value) in sortedAnnotations.enumerated() {
+        //            value.position = "\(index + 1)"
+        //            numberedAnnotations.append(value)
+        //        }
+        //        mapView.addAnnotations(numberedAnnotations)
+        setUp()
+    }
+    
+    func setUp() {
         setUpViews()
         createAnnotations()
-        mapView.addAnnotations(annotations)
         calculateMilesTraveled()
     }
     
-    @IBAction func creatorTapped(_ sender: Any) {
-        segueToProfileVC()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.navigationBar.isHidden = true
+        self.navigationItem.hidesBackButton = true
+        self.navigationController?.navigationBar.backgroundColor = .clear
+        self.tabBarController?.tabBar.isHidden = true
     }
     
-    func segueToProfileVC() {
+    @IBAction func creatorTapped(_ sender: Any) {
         guard let mediaItem = mediaItem else { return }
-        let creatorID = mediaItem.creatorID
-        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController() as! ProfileVC
+        segueToProfileVC(uid: mediaItem.creatorID, username: mediaItem.creatorUsername)
+    }
+    
+    @IBAction func forwardsTapped(_ sender: Any) {
+        let forwardListVC = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: Identifiers.forwardListVC) as! ForwardListVC
+        guard let forwardList = mediaItem?.forwardList else { return }
+        forwardListVC.users = forwardList.map({ (key, value) in
+            return Forwarder(uid: key, dict: value)
+        })
+        self.navigationController?.pushViewController(forwardListVC, animated: true)
+    }
+    
+    func segueToProfileVC(uid: String, username: String) {
+        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: Identifiers.profileVC) as! ProfileVC
+        profileVC.isCurrentUser = false
+        profileVC.username = username
+        profileVC.userID = uid
+        
         DispatchQueue.main.async {
-            FirebaseController.shared.fetchUser(uid: creatorID, completion: { (user) in
+            FirebaseController.shared.fetchUser(uid: uid, completion: { (user) in
                 profileVC.user = user
-                profileVC.userID = creatorID
                 NotificationCenter.default.post(Notification(name: Notifications.didLoadUser))
             })
         }
@@ -52,45 +95,60 @@ class MapVC: UIViewController {
     }
     
     func setUpViews() {
+
         guard let mediaItem = mediaItem else { return }
+        FirebaseController.shared.fetchComments(forMediaItemID: mediaItem.itemID, completion: { (comments) in
+            self.numberOfCommentsLabel.isHidden = false
+            self.numberOfCommentsLabel.text = "\(comments.count)"
+        })
+        
         forwardsLabel.text = "\(mediaItem.forwards)"
         creatorUsernameLabel.text = "\(mediaItem.creatorUsername)"
+        milesTraveledLabel.text = String(format: "%.1f", mediaItem.milesTraveled)
     }
     
     func calculateMilesTraveled() {
-        let locations = annotations.map { CLLocation(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude) }
-        var previousLocation: CLLocation?
-        var distance = 0.0
-        for location in locations {
-            if let previousLocation = previousLocation {
-                distance += location.distance(from: previousLocation)
-            }
-            previousLocation = location
-        }
-        let milesTraveled = distance * 0.000621371
-        milesTraveledLabel.text = String(format: "%.1f", milesTraveled)
+//        let locations = annotations.map { CLLocation(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude) }
+//        var previousLocation: CLLocation?
+//        var distance = 0.0
+//        for location in locations {
+//            if let previousLocation = previousLocation {
+//                distance += location.distance(from: previousLocation)
+//            }
+//            previousLocation = location
+//        }
+//        let milesTraveled = distance * 0.000621371
+//
+//        milesTraveledLabel.text = String(format: "%.1f", milesTraveled)
     }
     
     func createAnnotations() {
         guard let mapRef = mediaItem?.mapReference else { return }
         for (key, value) in mapRef {
             let userID = key
-            guard let lat = value["latitude"] as? Double,
-                let long = value["longitude"] as? Double,
-                let avatarURL = value["avatarURL"] as? String,
-                let username = value["username"] as? String,
-                let timestamp = value["timestamp"] as? Double else {
-                print("Error retrieving values for MapRef.")
-                return
-            }
-            let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-            let userAnnotation = UserAnnotation(title: username, userID: userID, avatarURL: avatarURL, coordinate: coordinate, forwards: 0, timestamp: timestamp)
-            self.annotations.append(userAnnotation)
+            FirebaseController.shared.fetchUser(uid: userID, completion: { (user) in
+                
+                guard let lat = value["latitude"] as? Double,
+                    let long = value["longitude"] as? Double,
+                    let username = user["username"] as? String,
+                    let timestamp = value["timestamp"] as? Double else {
+                        print("Error retrieving values for MapRef.")
+                        return
+                }
+                
+                let avatarURL = user["avatarURL"] as? String ?? "n/a"
+                let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                let userAnnotation = UserAnnotation(title: username, userID: userID, avatarURL: avatarURL, coordinate: coordinate, forwards: 0, timestamp: timestamp)
+                
+                if userID == self.mediaItem?.creatorID { userAnnotation.isCreator = true }
+                self.annotations.append(userAnnotation)
+            })
         }
     }
-    
-    @IBAction func closeButtonTapped(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+    @IBAction func backButtonTapped(_ sender: Any) {
+        self.tabBarController?.tabBar.isHidden = false
+        self.navigationController?.navigationBar.isHidden = false
+        _ = self.navigationController?.popViewController(animated: true)
     }
     
     @IBAction func unwindToMapVC(segue: UIStoryboardSegue) { }
@@ -103,12 +161,14 @@ class MapVC: UIViewController {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         if segue.identifier == "toSendVC" {
-            guard let sendVC = segue.destination as? SendVC else { return }
-            sendVC.isFromMapVC = true
+            guard let sendVC = segue.destination as? SendVC, let mediaItem = mediaItem else { return }
+            sendVC.isForwardingItem = true
+            sendVC.mediaItemBeingSent = mediaItem
         }
         
         if segue.identifier == "toCommentsVC" {
-            guard let commentsVC = segue.destination as? CommentsVC else { return }
+            guard let navVC = segue.destination as? CustomNavigationController else { return }
+            let commentsVC = navVC.childViewControllers[0] as! CommentsVC
             commentsVC.mediaItemID = self.mediaItem?.itemID
         }
     }
@@ -125,7 +185,10 @@ extension MapVC: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        let userAnnotation = view as! UserAnnotationView
+        guard let user = userAnnotation.annotation as? UserAnnotation else { return }
         
-        
+        let uid = user.userID
+        segueToProfileVC(uid: uid, username: "")
     }
 }

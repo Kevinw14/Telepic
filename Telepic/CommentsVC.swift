@@ -50,8 +50,6 @@ class CommentsVC: UIViewController {
     @IBOutlet weak var postButton: UIButton!
     @IBOutlet weak var commentInputView: UIView!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var closeButton: UIButton!
-    @IBOutlet weak var backButton: UIButton!
     
     var comments = [Comment]() {
         didSet {
@@ -61,6 +59,16 @@ class CommentsVC: UIViewController {
     
     var keyboardShowing = false
     var tapGestureRecognizer: UITapGestureRecognizer!
+    
+    lazy var backBarButton: UIBarButtonItem = {
+        let btn = UIButton(type: .system)
+        btn.setImage(#imageLiteral(resourceName: "backArrowDark"), for: .normal)
+        btn.height(40)
+        btn.width(40)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 0, left: -20, bottom: 0, right: 0)
+        btn.addTarget(self, action: #selector(goBack), for: .touchUpInside)
+        return UIBarButtonItem(customView: btn)
+    }()
     
     var mediaItemID: String?
     var isModal = false
@@ -76,13 +84,6 @@ class CommentsVC: UIViewController {
 
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 74
-        
-        self.closeButton.isHidden = true
-        
-        if isModal {
-            self.closeButton.isHidden = false
-            self.backButton.isHidden = true
-        }
         
         postButton.isEnabled = false
         
@@ -100,6 +101,28 @@ class CommentsVC: UIViewController {
             self.comments = comments
         }
         
+        let titleAttrs = [
+            NSAttributedStringKey.foregroundColor: UIColor(hexString: "333333"),
+            NSAttributedStringKey.font: UIFont(name: "AvenirNext-DemiBold", size: 18)
+        ]
+        
+        self.navigationController?.navigationBar.titleTextAttributes = titleAttrs
+        self.navigationItem.leftBarButtonItem = backBarButton
+        
+        
+        self.navigationItem.title = "Comments"
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.tabBarController?.tabBar.isHidden = true
+    }
+    
+    @objc func goBack() {
+        _ = self.navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func postButtonTapped(_ sender: Any) {
@@ -135,10 +158,12 @@ class CommentsVC: UIViewController {
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
         let endFrame = ((notification as Notification).userInfo?[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         
+        print(self.navigationController?.navigationBar.frame.height)
+        
         if keyboardShowing {
-            bottomConstraint.constant = view.bounds.height - endFrame.origin.y
+            bottomConstraint.constant = -((view.bounds.height + 64) - endFrame.origin.y)
         } else {
-            bottomConstraint.constant = view.bounds.height - endFrame.origin.y
+            bottomConstraint.constant = (view.bounds.height + 64) - endFrame.origin.y
         }
         keyboardShowing = !keyboardShowing
         self.view.layoutIfNeeded()
@@ -190,6 +215,30 @@ extension CommentsVC: UITableViewDelegate, UITableViewDataSource {
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
             }
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let comment = comments[indexPath.row]
+        
+        segueToProfileVC(withUID: comment.senderID, username: comment.username)
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func segueToProfileVC(withUID uid: String, username: String) {
+        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController()?.childViewControllers[0] as! ProfileVC
+        
+        profileVC.isCurrentUser = false
+        profileVC.username = username
+        profileVC.userID = uid
+        
+        DispatchQueue.main.async {
+            FirebaseController.shared.fetchUser(uid: uid, completion: { (user) in
+                profileVC.user = user
+                NotificationCenter.default.post(Notification(name: Notifications.didLoadUser))
+            })
+        }
+        self.navigationController?.pushViewController(profileVC, animated: true)
     }
 }
 

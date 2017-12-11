@@ -7,16 +7,56 @@
 //
 
 import UIKit
+import Kingfisher
 
 class CategoryRowCell: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
-    var thumbnails = [InboxItem]()
+    
+    let playButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let image = UIImage(named: "playButton")
+        button.tintColor = .white
+        button.setImage(image, for: .normal)
+        button.isUserInteractionEnabled = false
+        return button
+    }()
+    
+    var mediaItems = [MediaItem]() {
+        didSet {
+            updateMediaItems()
+        }
+    }
+    
+    var isLocalCategory = false
+    
+    var updatedItems = [MediaItem]() {
+        didSet {
+            self.collectionView.reloadData()
+        }
+    }
+    
+    weak var delegate: PresentMediaDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
         self.collectionView.register(UINib(nibName: "ThumbnailCell", bundle: nil), forCellWithReuseIdentifier: "thumbnailCell")
+                
+    }
+    
+    func updateMediaItems() {
+        var updated = [MediaItem]()
+        for mediaItem in mediaItems {
+            FirebaseController.shared.fetchUser(uid: mediaItem.creatorID, completion: { (user) in
+                var updatedItem = mediaItem
+                updatedItem.creatorUsername = user["username"] as! String
+                updatedItem.creatorAvatarURL = user["avatarURL"] as? String ?? "n/a"
+                updated.append(updatedItem)
+                self.updatedItems = updated.sorted { $0.forwards > $1.forwards }
+            })
+        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -30,18 +70,42 @@ class CategoryRowCell: UITableViewCell {
 extension CategoryRowCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return thumbnails.count
+        return updatedItems.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "thumbnailCell", for: indexPath) as? ThumbnailCell else { return UICollectionViewCell() }
         
-//        if let image = thumbnails[indexPath.row].photo {
-//            
-//            cell.thumbnailImageView.image = image
-//        }
+        let item = updatedItems[indexPath.row]
+        
+        let urlString = item.type == "video" ?  item.thumbnailURL : item.downloadURL
+        
+        let url = URL(string: urlString)
+        
+        cell.thumbnailImageView.kf.setImage(with: url, placeholder: nil, options: nil, progressBlock: nil) { (image, error, cacheType, imageURL) in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+            
+            if item.type == "video" {
+                cell.playButton.isHidden = false
+            }
+        }
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ThumbnailCell else { return }
+        
+        let mediaItem = self.updatedItems[indexPath.row]
+        if let imageView = cell.thumbnailImageView {
+            FirebaseController.shared.currentMediaItem = mediaItem
+            FirebaseController.shared.photoToPresent = imageView
+            
+            delegate?.presentMediaViewVC()
+            NotificationCenter.default.post(Notification(name: Notifications.didLoadMediaItem))
+        }
     }
 }
 

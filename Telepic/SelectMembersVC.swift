@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class SelectMembersVC: UIViewController {
 
@@ -17,7 +18,7 @@ class SelectMembersVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        FirebaseController.shared.fetchFriends()
+        if let uid = Auth.auth().currentUser?.uid { FirebaseController.shared.fetchFriends(uid: uid)}
         
         searchBar.tintColor = .white
         searchBar.barTintColor = .white

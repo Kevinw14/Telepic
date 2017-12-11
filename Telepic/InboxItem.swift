@@ -11,6 +11,7 @@ import UIKit
 struct InboxItem {
     var itemID: String
     var type: String
+    var caption: String?
     var downloadURL: String
     var thumbnailURL: String
     var opened: Bool
@@ -23,7 +24,7 @@ struct InboxItem {
     var creatorUsername: String
     var creatorAvatarURL: String
     
-    var daysRemaining: Int
+    var daysRemaining: String
     var timestamp: Double
 //    var videoURL: String
     
@@ -35,6 +36,7 @@ extension InboxItem {
     init(itemID: String, dict: [String:Any]) {
         let itemID = itemID
         let type = dict["type"] as! String
+        let caption = dict["caption"] as? String ?? nil
         let downloadURL = dict["downloadURL"] as! String
         let thumbnailURL = dict["thumbnailURL"] as! String
         let opened = dict["opened"] as! Bool
@@ -52,6 +54,7 @@ extension InboxItem {
         
         self.init(itemID: itemID,
                   type: type,
+                  caption: caption,
                   downloadURL: downloadURL,
                   thumbnailURL: thumbnailURL,
                   opened: opened,
@@ -61,7 +64,7 @@ extension InboxItem {
                   creatorID: creatorID,
                   creatorUsername: creatorUsername,
                   creatorAvatarURL: creatorAvatarURL,
-                  daysRemaining: 3,
+                  daysRemaining: "3d",
                   timestamp: timestamp,
                   commentsRef: "noRef",
                   mapRef: "noRef")

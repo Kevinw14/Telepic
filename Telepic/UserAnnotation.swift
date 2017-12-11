@@ -16,6 +16,8 @@ class UserAnnotation: NSObject, MKAnnotation {
     let forwards: Int
     let avatarURL: String
     let timestamp: Double
+    var isCreator = false
+    var position: String?
     
     init(title: String, userID: String, avatarURL: String, coordinate: CLLocationCoordinate2D, forwards: Int, timestamp: Double) {
         self.title = title
@@ -29,6 +31,6 @@ class UserAnnotation: NSObject, MKAnnotation {
     }
     
     var subtitle: String? {
-        return "Forwards: \(forwards)"
+        return isCreator ? "Creator" : "Forwards: \(forwards)"
     }
 }

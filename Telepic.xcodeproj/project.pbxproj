@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A02B7B31FBDEAFE003B4366 /* FriendListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A02B7B21FBDEAFE003B4366 /* FriendListVC.swift */; };
 		2A06DBFD1F5D967900824E62 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A06DBFC1F5D967900824E62 /* GoogleService-Info.plist */; };
 		2A06DBFF1F5DA4AE00824E62 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A06DBFE1F5DA4AE00824E62 /* LoginVC.swift */; };
 		2A06DC011F5DA6BA00824E62 /* EmailLoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A06DC001F5DA6BA00824E62 /* EmailLoginVC.swift */; };
@@ -34,9 +35,15 @@
 		2A3221F71FB391E90023F68E /* CustomPushTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3221F61FB391E90023F68E /* CustomPushTransition.swift */; };
 		2A3221F91FB392170023F68E /* CustomPopTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3221F81FB392170023F68E /* CustomPopTransition.swift */; };
 		2A3221FB1FB395B20023F68E /* CustomInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3221FA1FB395B20023F68E /* CustomInteractor.swift */; };
+		2A331EDB1FDB010B00C78BAA /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A331EDA1FDB010B00C78BAA /* Filter.swift */; };
+		2A331EDD1FDB012F00C78BAA /* FilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A331EDC1FDB012F00C78BAA /* FilterCollectionViewCell.swift */; };
+		2A331EDF1FDB014C00C78BAA /* FilterPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A331EDE1FDB014C00C78BAA /* FilterPreview.swift */; };
+		2A331EE11FDB016700C78BAA /* FiltersVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A331EE01FDB016700C78BAA /* FiltersVC.swift */; };
+		2A331EE31FDB019000C78BAA /* FiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A331EE21FDB019000C78BAA /* FiltersView.swift */; };
 		2A37A35C1F915E35009354ED /* VideoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A37A35B1F915E35009354ED /* VideoVC.swift */; };
 		2A37A35E1F915ECA009354ED /* PhotoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A37A35D1F915ECA009354ED /* PhotoVC.swift */; };
-		2A37A3601F91632E009354ED /* SwiftyRecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A37A35F1F91632E009354ED /* SwiftyRecordButton.swift */; };
+		2A3A963B1FD5ACCA00BC1D19 /* ZoomTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3A963A1FD5ACCA00BC1D19 /* ZoomTransitioningDelegate.swift */; };
+		2A4044381FBF72AC00A5385D /* ForwardListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4044371FBF72AC00A5385D /* ForwardListVC.swift */; };
 		2A483A261FAA4A6C00C899A4 /* GroupsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A483A251FAA4A6C00C899A4 /* GroupsVC.swift */; };
 		2A4C82DB1F8BDF1900916069 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4C82DA1F8BDF1900916069 /* UserSettings.swift */; };
 		2A4C82DD1F8D190E00916069 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4C82DC1F8D190E00916069 /* Notifications.swift */; };
@@ -44,17 +51,19 @@
 		2A4F57781F76BCB40043A231 /* ExploreSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4F57761F76BCB40043A231 /* ExploreSectionHeaderView.swift */; };
 		2A4F57791F76BCB40043A231 /* ExploreSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A4F57771F76BCB40043A231 /* ExploreSectionHeaderView.xib */; };
 		2A4F577B1F76BD090043A231 /* CategoryRowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4F577A1F76BD090043A231 /* CategoryRowCell.swift */; };
-		2A5475031FB2222600FDFF69 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5475021FB2222600FDFF69 /* ShareViewController.swift */; };
-		2A5475061FB2222600FDFF69 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A5475041FB2222600FDFF69 /* MainInterface.storyboard */; };
-		2A54750A1FB2222600FDFF69 /* TelepicShareExt.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2A5475001FB2222600FDFF69 /* TelepicShareExt.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2A5475161FB3684100FDFF69 /* LoginContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5475151FB3684100FDFF69 /* LoginContainerVC.swift */; };
 		2A5475181FB36C1B00FDFF69 /* Identifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5475171FB36C1B00FDFF69 /* Identifiers.swift */; };
+		2A57CEFE1FB51418006FCEE4 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A57CEFD1FB51418006FCEE4 /* CustomNavigationController.swift */; };
 		2A5BEEE61F75465F00D5009C /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BEEE51F75465F00D5009C /* ProfileVC.swift */; };
 		2A6121781F9287B000C430A3 /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6121771F9287B000C430A3 /* Friend.swift */; };
 		2A66C5501FACC19300F4C512 /* GroupDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A66C54F1FACC19300F4C512 /* GroupDetailVC.swift */; };
 		2A66C5521FACC75B00F4C512 /* SelectFriendsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A66C5511FACC75B00F4C512 /* SelectFriendsVC.swift */; };
 		2A66C5541FACC77900F4C512 /* SelectGroupsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A66C5531FACC77900F4C512 /* SelectGroupsVC.swift */; };
 		2A66C5561FACCEB400F4C512 /* SendPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A66C5551FACCEB400F4C512 /* SendPageVC.swift */; };
+		2A6BDFEC1FBA1F9B00B0B6AD /* VideoPreviewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BDFEB1FBA1F9B00B0B6AD /* VideoPreviewVC.swift */; };
+		2A6BDFEE1FBA259C00B0B6AD /* CaptionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BDFED1FBA259C00B0B6AD /* CaptionVC.swift */; };
+		2A712D5C1FC488E700495637 /* Forwarder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A712D5B1FC488E700495637 /* Forwarder.swift */; };
+		2A712D5E1FC48BA800495637 /* ForwarderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A712D5D1FC48BA800495637 /* ForwarderCell.swift */; };
 		2A7CFF191F6AD78000434E2D /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A7CFF181F6AD78000434E2D /* Home.storyboard */; };
 		2A7CFF1B1F6B09AB00434E2D /* Explore.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A7CFF1A1F6B09AB00434E2D /* Explore.storyboard */; };
 		2A7CFF1D1F6B0BBA00434E2D /* Camera.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A7CFF1C1F6B0BBA00434E2D /* Camera.storyboard */; };
@@ -87,7 +96,6 @@
 		2ABFF18B1F8D63B9008E4026 /* AddFriendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFF18A1F8D63B9008E4026 /* AddFriendCell.swift */; };
 		2ABFF18D1F8E6FF6008E4026 /* SearchableUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFF18C1F8E6FF6008E4026 /* SearchableUser.swift */; };
 		2AC30EA61FA783DB005BF3AD /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC30EA51FA783DB005BF3AD /* CommentCell.swift */; };
-		2AC581C21F71A3C8006312DE /* CameraVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC581C11F71A3C8006312DE /* CameraVC.swift */; };
 		2ACD56211F9A567B0066431E /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACD56201F9A567B0066431E /* Upload.swift */; };
 		2ACF56671F7AA2CB007689D9 /* ThumbnailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACF56651F7AA2CB007689D9 /* ThumbnailCell.swift */; };
 		2ACF56681F7AA2CB007689D9 /* ThumbnailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2ACF56661F7AA2CB007689D9 /* ThumbnailCell.xib */; };
@@ -114,20 +122,11 @@
 		2ADD59B91FABC1E0002FADB1 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD59B81FABC1E0002FADB1 /* Group.swift */; };
 		2AE61F221FACF4DF00D0303B /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE61F211FACF4DF00D0303B /* SettingsVC.swift */; };
 		2AE61F241FACFADE00D0303B /* SettingsContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE61F231FACFADE00D0303B /* SettingsContainerVC.swift */; };
+		2AE696D11FCCA1E9004CD493 /* EditProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE696D01FCCA1E9004CD493 /* EditProfileVC.swift */; };
 		2AE9BDEB1F9690F2007CCF50 /* SendVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9BDEA1F9690F2007CCF50 /* SendVC.swift */; };
 		2AE9BDED1F969945007CCF50 /* FriendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9BDEC1F969945007CCF50 /* FriendCell.swift */; };
 		2C92C96832E4CC561850D46E /* Pods_Telepic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5541979CB7346D8B9127109 /* Pods_Telepic.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		2A5475081FB2222600FDFF69 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2A9AFA3E1F4F4DC600B86F49 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2A5474FF1FB2222600FDFF69;
-			remoteInfo = TelepicShareExt;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		2A54750E1FB2222600FDFF69 /* Embed App Extensions */ = {
@@ -136,7 +135,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				2A54750A1FB2222600FDFF69 /* TelepicShareExt.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -144,6 +142,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2A02B7B21FBDEAFE003B4366 /* FriendListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListVC.swift; sourceTree = "<group>"; };
 		2A06DBFC1F5D967900824E62 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2A06DBFE1F5DA4AE00824E62 /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		2A06DC001F5DA6BA00824E62 /* EmailLoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailLoginVC.swift; sourceTree = "<group>"; };
@@ -171,9 +170,15 @@
 		2A3221F61FB391E90023F68E /* CustomPushTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPushTransition.swift; sourceTree = "<group>"; };
 		2A3221F81FB392170023F68E /* CustomPopTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPopTransition.swift; sourceTree = "<group>"; };
 		2A3221FA1FB395B20023F68E /* CustomInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInteractor.swift; sourceTree = "<group>"; };
+		2A331EDA1FDB010B00C78BAA /* Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
+		2A331EDC1FDB012F00C78BAA /* FilterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCollectionViewCell.swift; sourceTree = "<group>"; };
+		2A331EDE1FDB014C00C78BAA /* FilterPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterPreview.swift; sourceTree = "<group>"; };
+		2A331EE01FDB016700C78BAA /* FiltersVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersVC.swift; sourceTree = "<group>"; };
+		2A331EE21FDB019000C78BAA /* FiltersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersView.swift; sourceTree = "<group>"; };
 		2A37A35B1F915E35009354ED /* VideoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoVC.swift; sourceTree = "<group>"; };
 		2A37A35D1F915ECA009354ED /* PhotoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoVC.swift; sourceTree = "<group>"; };
-		2A37A35F1F91632E009354ED /* SwiftyRecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyRecordButton.swift; sourceTree = "<group>"; };
+		2A3A963A1FD5ACCA00BC1D19 /* ZoomTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomTransitioningDelegate.swift; sourceTree = "<group>"; };
+		2A4044371FBF72AC00A5385D /* ForwardListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardListVC.swift; sourceTree = "<group>"; };
 		2A483A251FAA4A6C00C899A4 /* GroupsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsVC.swift; sourceTree = "<group>"; };
 		2A4C82DA1F8BDF1900916069 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		2A4C82DC1F8D190E00916069 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
@@ -181,20 +186,20 @@
 		2A4F57761F76BCB40043A231 /* ExploreSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSectionHeaderView.swift; sourceTree = "<group>"; };
 		2A4F57771F76BCB40043A231 /* ExploreSectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreSectionHeaderView.xib; sourceTree = "<group>"; };
 		2A4F577A1F76BD090043A231 /* CategoryRowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryRowCell.swift; sourceTree = "<group>"; };
-		2A5475001FB2222600FDFF69 /* TelepicShareExt.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TelepicShareExt.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		2A5475021FB2222600FDFF69 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
-		2A5475051FB2222600FDFF69 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
-		2A5475071FB2222600FDFF69 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2A54750F1FB2225300FDFF69 /* TelepicShareExt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TelepicShareExt.entitlements; sourceTree = "<group>"; };
 		2A5475151FB3684100FDFF69 /* LoginContainerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginContainerVC.swift; sourceTree = "<group>"; };
 		2A5475171FB36C1B00FDFF69 /* Identifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiers.swift; sourceTree = "<group>"; };
 		2A55E65F1F98F6B8002230A1 /* Telepic-BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Telepic-BridgingHeader.h"; sourceTree = "<group>"; };
+		2A57CEFD1FB51418006FCEE4 /* CustomNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
 		2A5BEEE51F75465F00D5009C /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		2A6121771F9287B000C430A3 /* Friend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Friend.swift; sourceTree = "<group>"; };
 		2A66C54F1FACC19300F4C512 /* GroupDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailVC.swift; sourceTree = "<group>"; };
 		2A66C5511FACC75B00F4C512 /* SelectFriendsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFriendsVC.swift; sourceTree = "<group>"; };
 		2A66C5531FACC77900F4C512 /* SelectGroupsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectGroupsVC.swift; sourceTree = "<group>"; };
 		2A66C5551FACCEB400F4C512 /* SendPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendPageVC.swift; sourceTree = "<group>"; };
+		2A6BDFEB1FBA1F9B00B0B6AD /* VideoPreviewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreviewVC.swift; sourceTree = "<group>"; };
+		2A6BDFED1FBA259C00B0B6AD /* CaptionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptionVC.swift; sourceTree = "<group>"; };
+		2A712D5B1FC488E700495637 /* Forwarder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Forwarder.swift; sourceTree = "<group>"; };
+		2A712D5D1FC48BA800495637 /* ForwarderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwarderCell.swift; sourceTree = "<group>"; };
 		2A7CFF181F6AD78000434E2D /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		2A7CFF1A1F6B09AB00434E2D /* Explore.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Explore.storyboard; sourceTree = "<group>"; };
 		2A7CFF1C1F6B0BBA00434E2D /* Camera.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Camera.storyboard; sourceTree = "<group>"; };
@@ -230,7 +235,6 @@
 		2ABFF18A1F8D63B9008E4026 /* AddFriendCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendCell.swift; sourceTree = "<group>"; };
 		2ABFF18C1F8E6FF6008E4026 /* SearchableUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchableUser.swift; sourceTree = "<group>"; };
 		2AC30EA51FA783DB005BF3AD /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
-		2AC581C11F71A3C8006312DE /* CameraVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraVC.swift; sourceTree = "<group>"; };
 		2ACD56201F9A567B0066431E /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		2ACF56651F7AA2CB007689D9 /* ThumbnailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailCell.swift; sourceTree = "<group>"; };
 		2ACF56661F7AA2CB007689D9 /* ThumbnailCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThumbnailCell.xib; sourceTree = "<group>"; };
@@ -257,6 +261,7 @@
 		2ADD59B81FABC1E0002FADB1 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		2AE61F211FACF4DF00D0303B /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		2AE61F231FACFADE00D0303B /* SettingsContainerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsContainerVC.swift; sourceTree = "<group>"; };
+		2AE696D01FCCA1E9004CD493 /* EditProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileVC.swift; sourceTree = "<group>"; };
 		2AE9BDEA1F9690F2007CCF50 /* SendVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendVC.swift; sourceTree = "<group>"; };
 		2AE9BDEC1F969945007CCF50 /* FriendCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendCell.swift; sourceTree = "<group>"; };
 		57F0175D7FE62023A86E28FC /* Pods-Telepic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telepic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Telepic/Pods-Telepic.debug.xcconfig"; sourceTree = "<group>"; };
@@ -265,13 +270,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		2A5474FD1FB2222600FDFF69 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2A9AFA431F4F4DC600B86F49 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -304,6 +302,7 @@
 				2A66C5531FACC77900F4C512 /* SelectGroupsVC.swift */,
 				2A66C5551FACCEB400F4C512 /* SendPageVC.swift */,
 				2A116EC51FB4DA06004B6338 /* TabBarController.swift */,
+				2A57CEFD1FB51418006FCEE4 /* CustomNavigationController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -336,19 +335,21 @@
 				2A3221F61FB391E90023F68E /* CustomPushTransition.swift */,
 				2A3221F81FB392170023F68E /* CustomPopTransition.swift */,
 				2A3221FA1FB395B20023F68E /* CustomInteractor.swift */,
+				2A3A963A1FD5ACCA00BC1D19 /* ZoomTransitioningDelegate.swift */,
 			);
 			name = Transitions;
 			sourceTree = "<group>";
 		};
-		2A5475011FB2222600FDFF69 /* TelepicShareExt */ = {
+		2A331ED91FDB00FD00C78BAA /* Filters */ = {
 			isa = PBXGroup;
 			children = (
-				2A54750F1FB2225300FDFF69 /* TelepicShareExt.entitlements */,
-				2A5475021FB2222600FDFF69 /* ShareViewController.swift */,
-				2A5475041FB2222600FDFF69 /* MainInterface.storyboard */,
-				2A5475071FB2222600FDFF69 /* Info.plist */,
+				2A331EDA1FDB010B00C78BAA /* Filter.swift */,
+				2A331EDC1FDB012F00C78BAA /* FilterCollectionViewCell.swift */,
+				2A331EDE1FDB014C00C78BAA /* FilterPreview.swift */,
+				2A331EE01FDB016700C78BAA /* FiltersVC.swift */,
+				2A331EE21FDB019000C78BAA /* FiltersView.swift */,
 			);
-			path = TelepicShareExt;
+			name = Filters;
 			sourceTree = "<group>";
 		};
 		2A5475101FB363AB00FDFF69 /* Inbox */ = {
@@ -383,6 +384,7 @@
 			isa = PBXGroup;
 			children = (
 				2A2B4D3C1F86A6F500D98F78 /* MapVC.swift */,
+				2A4044371FBF72AC00A5385D /* ForwardListVC.swift */,
 			);
 			name = Map;
 			sourceTree = "<group>";
@@ -390,10 +392,11 @@
 		2A5475141FB363F600FDFF69 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
-				2AC581C11F71A3C8006312DE /* CameraVC.swift */,
 				2A37A35D1F915ECA009354ED /* PhotoVC.swift */,
 				2A37A35B1F915E35009354ED /* VideoVC.swift */,
 				2AA4BFCF1FB4E17F00198D55 /* ImagePickerVC.swift */,
+				2A6BDFEB1FBA1F9B00B0B6AD /* VideoPreviewVC.swift */,
+				2A6BDFED1FBA259C00B0B6AD /* CaptionVC.swift */,
 			);
 			name = Camera;
 			sourceTree = "<group>";
@@ -402,7 +405,6 @@
 			isa = PBXGroup;
 			children = (
 				2A9AFA481F4F4DC600B86F49 /* Telepic */,
-				2A5475011FB2222600FDFF69 /* TelepicShareExt */,
 				2A9AFA471F4F4DC600B86F49 /* Products */,
 				A0B2E34C62EDCF7F67A8C012 /* Pods */,
 				FDD1A74034749E62C1E4A0B2 /* Frameworks */,
@@ -413,7 +415,6 @@
 			isa = PBXGroup;
 			children = (
 				2A9AFA461F4F4DC600B86F49 /* Telepic.app */,
-				2A5475001FB2222600FDFF69 /* TelepicShareExt.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -421,6 +422,7 @@
 		2A9AFA481F4F4DC600B86F49 /* Telepic */ = {
 			isa = PBXGroup;
 			children = (
+				2A331ED91FDB00FD00C78BAA /* Filters */,
 				2A3221F51FB391C90023F68E /* Transitions */,
 				2AA7ACC71F96BF28008FEA34 /* Telepic.entitlements */,
 				2AA77A961F85616C009C2625 /* ModelController */,
@@ -468,6 +470,7 @@
 				2AD298D91F9E8CA20048E29E /* MediaItem.swift */,
 				2ADC73AD1FA11BE3004895C7 /* EventNotification.swift */,
 				2ADD59B81FABC1E0002FADB1 /* Group.swift */,
+				2A712D5B1FC488E700495637 /* Forwarder.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -499,7 +502,6 @@
 				2ACF56651F7AA2CB007689D9 /* ThumbnailCell.swift */,
 				2ACF56661F7AA2CB007689D9 /* ThumbnailCell.xib */,
 				2ACF56691F7AA933007689D9 /* StartAMovementCell.swift */,
-				2A37A35F1F91632E009354ED /* SwiftyRecordButton.swift */,
 				2ACF566F1F7ABA16007689D9 /* NotificationCell.swift */,
 				2ABFF18A1F8D63B9008E4026 /* AddFriendCell.swift */,
 				2AE9BDEC1F969945007CCF50 /* FriendCell.swift */,
@@ -508,6 +510,7 @@
 				2ADD59B21FAB8446002FADB1 /* MemberCell.swift */,
 				2ADD59B41FABBE20002FADB1 /* GroupCell.swift */,
 				2ADD59B61FABBEBE002FADB1 /* AvatarCell.swift */,
+				2A712D5D1FC48BA800495637 /* ForwarderCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -539,6 +542,8 @@
 				2A66C54F1FACC19300F4C512 /* GroupDetailVC.swift */,
 				2AE61F211FACF4DF00D0303B /* SettingsVC.swift */,
 				2AE61F231FACFADE00D0303B /* SettingsContainerVC.swift */,
+				2A02B7B21FBDEAFE003B4366 /* FriendListVC.swift */,
+				2AE696D01FCCA1E9004CD493 /* EditProfileVC.swift */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -566,23 +571,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2A5474FF1FB2222600FDFF69 /* TelepicShareExt */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2A54750D1FB2222600FDFF69 /* Build configuration list for PBXNativeTarget "TelepicShareExt" */;
-			buildPhases = (
-				2A5474FC1FB2222600FDFF69 /* Sources */,
-				2A5474FD1FB2222600FDFF69 /* Frameworks */,
-				2A5474FE1FB2222600FDFF69 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = TelepicShareExt;
-			productName = TelepicShareExt;
-			productReference = 2A5475001FB2222600FDFF69 /* TelepicShareExt.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		2A9AFA451F4F4DC600B86F49 /* Telepic */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2A9AFA581F4F4DC600B86F49 /* Build configuration list for PBXNativeTarget "Telepic" */;
@@ -598,7 +586,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				2A5475091FB2222600FDFF69 /* PBXTargetDependency */,
 			);
 			name = Telepic;
 			productName = Telepic;
@@ -615,16 +602,6 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Telepic LLC";
 				TargetAttributes = {
-					2A5474FF1FB2222600FDFF69 = {
-						CreatedOnToolsVersion = 9.0;
-						DevelopmentTeam = 88M8AT4J5D;
-						ProvisioningStyle = Automatic;
-						SystemCapabilities = {
-							com.apple.ApplicationGroups.iOS = {
-								enabled = 1;
-							};
-						};
-					};
 					2A9AFA451F4F4DC600B86F49 = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = 88M8AT4J5D;
@@ -655,20 +632,11 @@
 			projectRoot = "";
 			targets = (
 				2A9AFA451F4F4DC600B86F49 /* Telepic */,
-				2A5474FF1FB2222600FDFF69 /* TelepicShareExt */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		2A5474FE1FB2222600FDFF69 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2A5475061FB2222600FDFF69 /* MainInterface.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2A9AFA441F4F4DC600B86F49 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -722,6 +690,7 @@
 				"${BUILT_PRODUCTS_DIR}/FacebookLogin/FacebookLogin.framework",
 				"${BUILT_PRODUCTS_DIR}/FacebookShare/FacebookShare.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/Gallery/Gallery.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/MarqueeLabel/MarqueeLabel.framework",
@@ -733,9 +702,7 @@
 				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SteviaLayout/Stevia.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftyCam/SwiftyCam.framework",
 				"${BUILT_PRODUCTS_DIR}/Tabman/Tabman.framework",
-				"${BUILT_PRODUCTS_DIR}/YPImagePicker/YPImagePicker.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -747,6 +714,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookLogin.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookShare.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gallery.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MarqueeLabel.framework",
@@ -758,9 +726,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stevia.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyCam.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Tabman.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YPImagePicker.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -803,29 +769,24 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2A5474FC1FB2222600FDFF69 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2A5475031FB2222600FDFF69 /* ShareViewController.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2A9AFA421F4F4DC600B86F49 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				2ADD59B91FABC1E0002FADB1 /* Group.swift in Sources */,
 				2A37A35C1F915E35009354ED /* VideoVC.swift in Sources */,
+				2A712D5C1FC488E700495637 /* Forwarder.swift in Sources */,
 				2AD3C8171F61B3CE00DD16D3 /* Extensions.swift in Sources */,
 				2AAE36151F5EF3C100FDEA96 /* NewAccountPWInputVC.swift in Sources */,
-				2AC581C21F71A3C8006312DE /* CameraVC.swift in Sources */,
+				2A712D5E1FC48BA800495637 /* ForwarderCell.swift in Sources */,
 				2A4C82DB1F8BDF1900916069 /* UserSettings.swift in Sources */,
+				2A6BDFEC1FBA1F9B00B0B6AD /* VideoPreviewVC.swift in Sources */,
 				2A06DC011F5DA6BA00824E62 /* EmailLoginVC.swift in Sources */,
 				2ABFF18B1F8D63B9008E4026 /* AddFriendCell.swift in Sources */,
 				2ACF566A1F7AA933007689D9 /* StartAMovementCell.swift in Sources */,
 				2A66C5521FACC75B00F4C512 /* SelectFriendsVC.swift in Sources */,
 				2A483A261FAA4A6C00C899A4 /* GroupsVC.swift in Sources */,
+				2A331EE31FDB019000C78BAA /* FiltersView.swift in Sources */,
 				2AD298D41F9E5D200048E29E /* UserAnnotationView.swift in Sources */,
 				2AAE36131F5EF38400FDEA96 /* ExistingAccountPWInputVC.swift in Sources */,
 				2ADD59B51FABBE20002FADB1 /* GroupCell.swift in Sources */,
@@ -833,16 +794,22 @@
 				2AE9BDED1F969945007CCF50 /* FriendCell.swift in Sources */,
 				2AE61F221FACF4DF00D0303B /* SettingsVC.swift in Sources */,
 				2A3221F71FB391E90023F68E /* CustomPushTransition.swift in Sources */,
+				2A6BDFEE1FBA259C00B0B6AD /* CaptionVC.swift in Sources */,
 				2AD3C8151F61ABC700DD16D3 /* ConnectOrSkipVC.swift in Sources */,
+				2A3A963B1FD5ACCA00BC1D19 /* ZoomTransitioningDelegate.swift in Sources */,
 				2A5475181FB36C1B00FDFF69 /* Identifiers.swift in Sources */,
 				2ADD59B71FABBEBE002FADB1 /* AvatarCell.swift in Sources */,
+				2A02B7B31FBDEAFE003B4366 /* FriendListVC.swift in Sources */,
+				2A331EDF1FDB014C00C78BAA /* FilterPreview.swift in Sources */,
 				2A3221FB1FB395B20023F68E /* CustomInteractor.swift in Sources */,
 				2AD298D21F9E4CB90048E29E /* UserAnnotation.swift in Sources */,
 				2ADD59AD1FAB82E7002FADB1 /* CreateGroupPageVC.swift in Sources */,
 				2AAE36191F6046C800FDEA96 /* AddFBFriendsVC.swift in Sources */,
 				2ABFF18D1F8E6FF6008E4026 /* SearchableUser.swift in Sources */,
+				2AE696D11FCCA1E9004CD493 /* EditProfileVC.swift in Sources */,
 				2ACF566E1F7AB9DE007689D9 /* NotificationsVC.swift in Sources */,
 				2A6121781F9287B000C430A3 /* Friend.swift in Sources */,
+				2A331EDD1FDB012F00C78BAA /* FilterCollectionViewCell.swift in Sources */,
 				2A2B4D3F1F86B13300D98F78 /* FirebaseController.swift in Sources */,
 				2AABB7011F7055EF00BF3432 /* InboxItem.swift in Sources */,
 				2A66C5561FACCEB400F4C512 /* SendPageVC.swift in Sources */,
@@ -851,8 +818,11 @@
 				2ACF56671F7AA2CB007689D9 /* ThumbnailCell.swift in Sources */,
 				2A3221F91FB392170023F68E /* CustomPopTransition.swift in Sources */,
 				2A5475161FB3684100FDFF69 /* LoginContainerVC.swift in Sources */,
+				2A57CEFE1FB51418006FCEE4 /* CustomNavigationController.swift in Sources */,
+				2A4044381FBF72AC00A5385D /* ForwardListVC.swift in Sources */,
 				2A849AFB1FA37EEF00861DE9 /* MediaViewVC.swift in Sources */,
 				2A4F577B1F76BD090043A231 /* CategoryRowCell.swift in Sources */,
+				2A331EE11FDB016700C78BAA /* FiltersVC.swift in Sources */,
 				2A37A35E1F915ECA009354ED /* PhotoVC.swift in Sources */,
 				2AABB6FA1F70536300BF3432 /* InboxCell.swift in Sources */,
 				2AD298D81F9E83C10048E29E /* CommentsVC.swift in Sources */,
@@ -876,8 +846,8 @@
 				2AC30EA61FA783DB005BF3AD /* CommentCell.swift in Sources */,
 				2AA77A981F85617F009C2625 /* UserController.swift in Sources */,
 				2A66C5541FACC77900F4C512 /* SelectGroupsVC.swift in Sources */,
+				2A331EDB1FDB010B00C78BAA /* Filter.swift in Sources */,
 				2AA77A9C1F8562CF009C2625 /* Validator.swift in Sources */,
-				2A37A3601F91632E009354ED /* SwiftyRecordButton.swift in Sources */,
 				2AB8F98E1FA0DCCC00958036 /* TabVC.swift in Sources */,
 				2ACD56211F9A567B0066431E /* Upload.swift in Sources */,
 				2A4C82DD1F8D190E00916069 /* Notifications.swift in Sources */,
@@ -895,23 +865,7 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		2A5475091FB2222600FDFF69 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2A5474FF1FB2222600FDFF69 /* TelepicShareExt */;
-			targetProxy = 2A5475081FB2222600FDFF69 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
-		2A5475041FB2222600FDFF69 /* MainInterface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2A5475051FB2222600FDFF69 /* Base */,
-			);
-			name = MainInterface.storyboard;
-			sourceTree = "<group>";
-		};
 		2A9AFA4D1F4F4DC600B86F49 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -931,46 +885,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		2A54750B1FB2222600FDFF69 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = TelepicShareExt/TelepicShareExt.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 88M8AT4J5D;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = TelepicShareExt/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.TelepicLLC.Telepic.TelepicShareExt;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		2A54750C1FB2222600FDFF69 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = TelepicShareExt/TelepicShareExt.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 88M8AT4J5D;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = TelepicShareExt/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.TelepicLLC.Telepic.TelepicShareExt;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		2A9AFA561F4F4DC600B86F49 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1080,7 +994,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 57F0175D7FE62023A86E28FC /* Pods-Telepic.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Telepic/Telepic.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1104,7 +1017,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 853CCFC10405AAC95016F671 /* Pods-Telepic.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Telepic/Telepic.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1127,15 +1039,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2A54750D1FB2222600FDFF69 /* Build configuration list for PBXNativeTarget "TelepicShareExt" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2A54750B1FB2222600FDFF69 /* Debug */,
-				2A54750C1FB2222600FDFF69 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		2A9AFA411F4F4DC600B86F49 /* Build configuration list for PBXProject "Telepic" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -17,8 +17,8 @@ target 'Telepic' do
   pod 'FacebookShare'
   pod 'NotificationBannerSwift'
   pod 'SVProgressHUD'
-  pod 'SwiftyCam'
   pod 'Kingfisher', '~> 4.0'
-  pod 'YPImagePicker', '~> 2.3'
   pod 'Tabman', '~> 1.0'
+  pod 'Gallery'
+  pod 'SteviaLayout'
 end

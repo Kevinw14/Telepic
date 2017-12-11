@@ -19,17 +19,33 @@ class ForwardsVC: TabChildVC {
     var forwards = [Upload]()
     var image: UIImage?
     
-    weak var mediaViewDelegate: MediaViewDelegate?
+    let zoomTransitioningDelegate = ZoomTransitioningDelegate()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        
         NotificationCenter.default.addObserver(self, selector: #selector(getForwards), name: Notifications.didForwardMedia, object: nil)
         
         self.collectionView.register(UINib(nibName: "ThumbnailCell", bundle: nil), forCellWithReuseIdentifier: "thumbnailCell")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.edgesForExtendedLayout = []
+        self.navigationController?.delegate = zoomTransitioningDelegate
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.navigationBar.backgroundColor = .white
         
         getForwards()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
+        self.hidesBottomBarWhenPushed = false
+        self.tabBarController?.tabBar.isHidden = false
     }
 
     // MARK: - Navigation
@@ -44,20 +60,23 @@ class ForwardsVC: TabChildVC {
 //    }
 
     @objc func getForwards() {
-        if let uid = Auth.auth().currentUser?.uid {
-            FirebaseController.shared.fetchUser(uid: uid, completion: { (userDict) in
-                self.user = userDict
-                
-                if let forwardsDict = userDict["forwards"] as? [String:[String:Any]] {
-                    var forwards = [Upload]()
-                    for (key, value) in forwardsDict {
-                        let forward = Upload(uid: key, dict: value)
-                        forwards.append(forward)
+        DispatchQueue.main.async {
+            
+            if let uid = Auth.auth().currentUser?.uid {
+                FirebaseController.shared.fetchUser(uid: uid, completion: { (userDict) in
+                    self.user = userDict
+                    
+                    if let forwardsDict = userDict["forwards"] as? [String:[String:Any]] {
+                        var forwards = [Upload]()
+                        for (key, value) in forwardsDict {
+                            let forward = Upload(uid: key, dict: value)
+                            forwards.append(forward)
+                        }
+                        self.forwards = forwards.sorted { $0.timestamp > $1.timestamp }
+                        self.collectionView.reloadData()
                     }
-                    self.forwards = forwards.sorted { $0.timestamp > $1.timestamp }
-                    self.collectionView.reloadData()
-                }
-            })
+                })
+            }
         }
     }
 }
@@ -78,7 +97,15 @@ extension ForwardsVC: UICollectionViewDataSource, UICollectionViewDelegate {
         let urlString = forward.type == "video" ?  forward.thumbnailURL : forward.downloadURL
         let url = URL(string: urlString)
         
-        cell.thumbnailImageView.kf.setImage(with: url)
+        cell.thumbnailImageView.kf.setImage(with: url, placeholder: nil, options: nil, progressBlock: nil) { (image, error, cacheType, imageURL) in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+            
+            if forward.type == "video" {
+                cell.playButton.isHidden = false
+            }
+        }
         
         return cell
     }
@@ -86,12 +113,14 @@ extension ForwardsVC: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) as? ThumbnailCell else { return }
         
-        if let image = cell.thumbnailImageView.image {
+        if let image = cell.thumbnailImageView {
+            FirebaseController.shared.photoToPresent = image
             FirebaseController.shared.fetchMediaItem(forItemID: forwards[indexPath.row].uid, completion: { (item) in
                 FirebaseController.shared.currentMediaItem = item
-                FirebaseController.shared.photoToPresent = cell.thumbnailImageView
+                
                 NotificationCenter.default.post(Notification(name: Notifications.didLoadMediaItem))
             })
+            self.presentMediaViewVC()
         }
     }
 }
@@ -116,5 +145,27 @@ extension ForwardsVC: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
+    }
+}
+
+extension ForwardsVC: PresentMediaDelegate {
+    @objc func presentMediaViewVC() {
+        guard let image = FirebaseController.shared.photoToPresent?.image else { return }
+        self.navigationController?.navigationBar.isHidden = true
+        let mediaViewVC = UIStoryboard(name: "MediaView", bundle: nil).instantiateViewController(withIdentifier: Identifiers.mediaViewVC) as! MediaViewVC
+        mediaViewVC.hidesBottomBarWhenPushed = true
+        self.hidesBottomBarWhenPushed = true
+        mediaViewVC.photo = image
+        self.navigationController?.pushViewController(mediaViewVC, animated: true)
+    }
+}
+
+extension ForwardsVC: ZoomingViewController {
+    func zoomingBackgroundView(for transition: ZoomTransitioningDelegate) -> UIView? {
+        return nil
+    }
+    
+    func zoomingImageView(for transition: ZoomTransitioningDelegate) -> UIImageView? {
+        return FirebaseController.shared.photoToPresent!
     }
 }

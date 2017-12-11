@@ -83,6 +83,9 @@
                                     <constraint firstAttribute="width" secondItem="Adq-Qv-X4p" secondAttribute="height" multiplier="244:17" id="kME-Xi-SjM"/>
                                 </constraints>
                                 <state key="normal" backgroundImage="hasAccount"/>
+                                <connections>
+                                    <action selector="continueWithEmailButtonTapped:" destination="Vol-uH-SrD" eventType="touchUpInside" id="5Sg-1Q-JjY"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -138,9 +141,6 @@
                                     <constraint firstAttribute="width" constant="40" id="nDj-Cv-LUR"/>
                                 </constraints>
                                 <state key="normal" image="backArrow"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="heroID" value="backArrow"/>
-                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="backButtonTapped:" destination="Kas-GD-E5E" eventType="touchUpInside" id="AF7-1l-F0B"/>
                                 </connections>
@@ -240,9 +240,6 @@
                             <constraint firstItem="cfD-Xm-a1Y" firstAttribute="top" secondItem="QEd-Xa-zKj" secondAttribute="bottom" constant="4" id="tJZ-PP-C5e"/>
                         </constraints>
                     </view>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
-                    </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="emailTextField" destination="cfD-Xm-a1Y" id="ahO-hk-Fpk"/>
                         <outlet property="messageLabel" destination="QEd-Xa-zKj" id="1B8-bu-Qjt"/>
@@ -684,6 +681,6 @@ user@email.com</string>
         <image name="nextButton" width="193" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="NQE-iA-RLW"/>
+        <segue reference="Kxx-a6-2Y3"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -22,7 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         SVProgressHUD.setBackgroundColor(UIColor.clear)
-        FirebaseApp.configure()
         
         UNUserNotificationCenter.current().delegate = self
         
@@ -30,8 +29,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: {_, _ in })
         application.registerForRemoteNotifications()
         
+        FirebaseApp.configure()
         let token = Messaging.messaging().fcmToken
         print("FCM token: \(token ?? "")")
+        
+        
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
         let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
@@ -39,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         if Auth.auth().currentUser != nil {
             // User is signed in.
-            self.window?.rootViewController = homeStoryboard.instantiateViewController(withIdentifier: "TabBarVC") as! TabBarVC
+            self.window?.rootViewController = homeStoryboard.instantiateViewController(withIdentifier: Identifiers.tabBarController)
         } else {
             // No user is signed in.
             window?.rootViewController = mainStoryboard.instantiateInitialViewController()
@@ -49,8 +51,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         return true
     }
     
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+    }
+    
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+        
         print("Firebase registration token: \(fcmToken)")
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
+        print(userInfo)
+        //FirebaseController.shared.updateBadgeCount()
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -69,7 +81,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        
+        application.applicationIconBadgeNumber = 0
+        FirebaseController.shared.resetBadgeCount()
         AppEventsLogger.activate(application)
     }
 

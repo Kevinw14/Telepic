@@ -20,21 +20,29 @@
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo1" translatesAutoresizingMaskIntoConstraints="NO" id="Grx-Gw-WRA">
                         <rect key="frame" x="0.0" y="0.0" width="138" height="115"/>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="string" keyPath="heroID" value="imageView"/>
-                        </userDefinedRuntimeAttributes>
                     </imageView>
+                    <button hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GGE-Uw-9ZV">
+                        <rect key="frame" x="57" y="45" width="25" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="25" id="aty-Uj-KSy"/>
+                            <constraint firstAttribute="height" constant="25" id="vc7-6L-sLT"/>
+                        </constraints>
+                        <state key="normal" image="playButton"/>
+                    </button>
                 </subviews>
             </view>
             <constraints>
                 <constraint firstItem="Grx-Gw-WRA" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Jqk-CI-WdK"/>
                 <constraint firstAttribute="bottom" secondItem="Grx-Gw-WRA" secondAttribute="bottom" id="VHD-5b-KkE"/>
+                <constraint firstItem="GGE-Uw-9ZV" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="g9b-YX-Psh"/>
                 <constraint firstAttribute="trailing" secondItem="Grx-Gw-WRA" secondAttribute="trailing" id="gFV-0l-KuY"/>
+                <constraint firstItem="GGE-Uw-9ZV" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="hnU-Q7-4Pk"/>
                 <constraint firstItem="Grx-Gw-WRA" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="kZG-VO-Gt4"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="138" height="115"/>
             <connections>
+                <outlet property="playButton" destination="GGE-Uw-9ZV" id="Q93-Kl-As7"/>
                 <outlet property="thumbnailImageView" destination="Grx-Gw-WRA" id="YdG-2o-u55"/>
             </connections>
             <point key="canvasLocation" x="78" y="86.5"/>
@@ -42,5 +50,6 @@
     </objects>
     <resources>
         <image name="photo1" width="375" height="366"/>
+        <image name="playButton" width="32" height="38"/>
     </resources>
 </document>

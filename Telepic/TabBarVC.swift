@@ -58,8 +58,8 @@ class TabBarVC: UIViewController, ControlTabBarDelegate {
         tabButtons[selectedIndex].isSelected = true
         tabButtonPressed(tabButtons[selectedIndex])
         
-        FirebaseController.shared.fetchNotifications()
-        FirebaseController.shared.fetchFriends()
+        //FirebaseController.shared.fetchNotifications()
+        //FirebaseController.shared.fetchFriends()
         
         animator.dismissCompletion = {
             FirebaseController.shared.photoToPresent?.isHidden = false

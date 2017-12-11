@@ -9,6 +9,7 @@
 import UIKit
 import Kingfisher
 import AVKit
+import FirebaseAuth
 
 class MediaViewVC: UIViewController {
 
@@ -22,14 +23,17 @@ class MediaViewVC: UIViewController {
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var usernameLabel: UILabel!
     
-    var mediaItem: MediaItem?
+    //var mediaItem: MediaItem?
     var photo: UIImage?
     var panGestureRecognizer = UIPanGestureRecognizer()
+    
+    let zoomTransitioningDelegate = ZoomTransitioningDelegate()
     
     var playerLayer: AVPlayerLayer?
     var player: AVPlayer?
     var playerIsPaused = false
     
+    @IBOutlet weak var numberOfCommentsLabel: UILabel!
     let activityIndicatorView: UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         aiv.translatesAutoresizingMaskIntoConstraints = false
@@ -52,8 +56,16 @@ class MediaViewVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        updateViews()
+        
+        self.edgesForExtendedLayout = []
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd(_:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+        
         topBarTopConstraint.constant = -120
         bottomBarBottomConstraint.constant = 80
+        
+        self.mediaImageView.contentMode = .scaleAspectFit
         
         playButton.isHidden = true
         
@@ -72,7 +84,28 @@ class MediaViewVC: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(photoTapped))
         self.view.addGestureRecognizer(tapGesture)
         
+        print("loaded")
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
+        self.navigationController?.navigationBar.isHidden = true
+        self.navigationItem.hidesBackButton = true
+        self.navigationController?.navigationBar.backgroundColor = .clear
+        self.navigationController?.delegate = zoomTransitioningDelegate
+        self.tabBarController?.tabBar.isHidden = true
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        player?.pause()
+        player = nil
+    }
+    
+    @objc func playerItemDidReachEnd(_ note: Notification) {
+        player?.actionAtItemEnd = .none
+        player?.seek(to: kCMTimeZero)
+        player?.play()
     }
     
     @objc func handlePlay() {
@@ -100,56 +133,76 @@ class MediaViewVC: UIViewController {
     @IBAction func creatorTapped(_ sender: Any) {
         guard let mediaItem = FirebaseController.shared.currentMediaItem else { return }
         let creatorID = mediaItem.creatorID
-        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController() as! ProfileVC
+        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: Identifiers.profileVC) as! ProfileVC
+        profileVC.isCurrentUser = false
+        profileVC.username = mediaItem.creatorUsername
+        profileVC.userID = creatorID
         DispatchQueue.main.async {
             FirebaseController.shared.fetchUser(uid: creatorID, completion: { (user) in
                 profileVC.user = user
-                profileVC.userID = creatorID
                 NotificationCenter.default.post(Notification(name: Notifications.didLoadUser))
             })
         }
-        
-        guard let tabBarVC = self.presentingViewController as? TabBarVC else { return }
-        guard let vc = tabBarVC.viewControllers[tabBarVC.selectedIndex] as? UINavigationController else { return }
-        dismiss(animated: false) {
-
-            vc.pushViewController(profileVC, animated: true)
-        }
-        
+        FirebaseController.shared.isZooming = false
+        self.tabBarController?.tabBar.isHidden = false
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.pushViewController(profileVC, animated: true)
+        FirebaseController.shared.isZooming = true
     }
     
     @IBAction func mapButtonTapped(_ sender: Any) {
         guard let mediaItem = FirebaseController.shared.currentMediaItem else { return }
-        let mapNavVC = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "MapNavVC") as! UINavigationController
-        let mapVC = mapNavVC.viewControllers.first as! MapVC
+        let mapVC = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: Identifiers.mapVC) as! MapVC
         mapVC.mediaItem = mediaItem
-        self.present(mapNavVC, animated: true, completion: nil)
+        self.navigationController?.pushViewController(mapVC, animated: true)
     }
     
     @IBAction func commentsButtonTapped(_ sender: Any) {
         guard let mediaItemID = FirebaseController.shared.currentMediaItem?.itemID else { return }
-        let commentsVC = UIStoryboard(name: "Comments", bundle: nil).instantiateInitialViewController() as! CommentsVC
+        let commentsVC = UIStoryboard(name: "Comments", bundle: nil).instantiateViewController(withIdentifier: Identifiers.commentsVC) as! CommentsVC
         commentsVC.mediaItemID = mediaItemID
-        commentsVC.isModal = true
-        self.present(commentsVC, animated: true, completion: nil)
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.pushViewController(commentsVC, animated: true)
     }
     
     @IBAction func forwardButtonTapped(_ sender: Any) {
         guard let mediaItem = FirebaseController.shared.currentMediaItem else { return }
         
         let sendVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: "SendVC") as! SendVC
-        let inboxItem = FirebaseController.shared.inboxItems.filter { $0.itemID == mediaItem.itemID }
         sendVC.isForwardingItem = true
-        sendVC.inboxItemBeingSent = inboxItem[0]
-        present(sendVC, animated: true, completion: nil)
+        sendVC.mediaItemBeingSent = mediaItem
+        self.navigationController?.pushViewController(sendVC, animated: true)
     }
     
     @IBAction func closeButtonTapped(_ sender: Any) {
         close()
     }
     
+    @IBAction func moreButtonTapped(_ sender: Any) {
+        guard let currentUID = Auth.auth().currentUser?.uid else { return }
+        guard let mediaItem = FirebaseController.shared.currentMediaItem else { return }
+        
+        let ac = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        if currentUID == mediaItem.creatorID {
+            ac.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (_) in
+                print("delete item")
+                FirebaseController.shared.removeMediaItem(withID: mediaItem.itemID)
+                NotificationCenter.default.post(Notification(name: Notifications.didUploadMedia))
+                self.navigationController?.popViewController(animated: true)
+            }))
+        }
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(ac, animated: true, completion: nil)
+    }
+    
     @objc func updateViews() {
         guard let mediaItem = FirebaseController.shared.currentMediaItem else { return }
+        
+        FirebaseController.shared.fetchComments(forMediaItemID: mediaItem.itemID, completion: { (comments) in
+            self.numberOfCommentsLabel.isHidden = false
+            self.numberOfCommentsLabel.text = "\(comments.count)"
+        })
+        
         self.usernameLabel.text = mediaItem.creatorUsername
         FirebaseController.shared.fetchAvatarImage(forUID: mediaItem.creatorID, completion: { (avatarURL) in
             self.avatarImageView.kf.setImage(with: URL(string: avatarURL))
@@ -200,14 +253,10 @@ class MediaViewVC: UIViewController {
     func close() {
         self.topBarTopConstraint.constant = -120
         self.bottomBarBottomConstraint.constant = 80
-        UIView.animate(withDuration: 0.3, animations: {
-            self.mediaImageView.alpha = 0
-            self.view.layoutIfNeeded()
-        }, completion: { (_) in
-            self.mediaImageView.isHidden = true
-            FirebaseController.shared.photoToPresent?.isHidden = true
-            self.dismiss(animated: true, completion: nil)
-        })
+        self.view.layoutIfNeeded()
+        self.tabBarController?.tabBar.isHidden = false
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.popViewController(animated: true)
     }
     
     @objc func photoTapped() {
@@ -215,11 +264,13 @@ class MediaViewVC: UIViewController {
             UIView.animate(withDuration: 0.3) {
                 self.topBar.alpha = 0
                 self.bottomBar.alpha = 0
+                self.numberOfCommentsLabel.alpha = 0
             }
         } else {
             UIView.animate(withDuration: 0.3, animations: {
                 self.topBar.alpha = 1
                 self.bottomBar.alpha = 1
+                self.numberOfCommentsLabel.alpha = 1
             })
         }
         
@@ -243,8 +294,8 @@ class MediaViewVC: UIViewController {
         
         topBarTopConstraint.constant = 0
         bottomBarBottomConstraint.constant = 0
-
-        UIView.animate(withDuration: 0.3) {
+        
+        UIView.animate(withDuration: 0.2) {
             self.view.layoutIfNeeded()
             self.modalPresentationCapturesStatusBarAppearance = true
             self.setNeedsStatusBarAppearanceUpdate()
@@ -267,6 +318,17 @@ class MediaViewVC: UIViewController {
 
 }
 
-protocol MediaViewDelegate: class {
-    func presentMediaView(withImage image: UIImage)
+extension MediaViewVC: ZoomingViewController {
+    func zoomingBackgroundView(for transition: ZoomTransitioningDelegate) -> UIView? {
+        return nil
+    }
+    
+    func zoomingImageView(for transition: ZoomTransitioningDelegate) -> UIImageView? {
+        return mediaImageView
+    }
 }
+
+//protocol MediaViewDelegate: class {
+//    func presentMediaView(withImage image: UIImage)
+//}
+

@@ -49,6 +49,10 @@ class NotificationCell: UITableViewCell {
             self.acceptButton.isHidden = false
             self.declineButton.isHidden = false
             self.photoImageView.alpha = 0
+        case .newInboxItem:
+            self.photoImageView.isHidden = true
+            self.acceptButton.isHidden = true
+            self.declineButton.isHidden = true
         default:
             self.acceptButton.isHidden = true
             self.declineButton.isHidden = true

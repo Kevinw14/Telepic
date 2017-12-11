@@ -11,14 +11,89 @@ import UIKit
 class ExploreVC: UIViewController {
 
     let categories = ["Most Forwarded", "Most Miles Traveled", "Start a Movement"]
-    var thumbnails = [InboxItem]()
+    // Media items that have the most forwards, sorted by total forwards, then by newest
+    var mostForwarded = [MediaItem]()
+    // Media items that have traveled the most miles, sorted by miles, then by newest
+    var mostMilesTraveled = [MediaItem]()
+    // Media Items that have 0 forwards, sorted by newest
+    var startAMovement = [MediaItem]()
+    
+    let zoomTransitioningDelegate = ZoomTransitioningDelegate()
+    
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(handleRefresh(_:)), for: UIControlEvents.valueChanged)
+        //refreshControl.tintColor = UIColor(hexString: "1BBB6A")
+         
+        
+        return refreshControl
+    }()
    
     @IBOutlet weak var tableView: UITableView!
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
 
         
+        self.tableView.addSubview(self.refreshControl)
+        fetchData()
+        
+        let btn = UIButton(type: .system)
+        btn.setImage(#imageLiteral(resourceName: "addFriend"), for: .normal)
+        //btn.sizeToFit()
+        btn.height(40)
+        btn.width(40)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -20)
+        btn.addTarget(self, action: #selector(addFriendTapped), for: .touchUpInside)
+        let barBtn = UIBarButtonItem(customView: btn)
+        
+        self.navigationItem.rightBarButtonItem = barBtn
+    }
+    
+    @objc func addFriendTapped() {
+        let addFriendVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "AddFriendVC") as! AddFriendVC
+        self.navigationController?.pushViewController(addFriendVC, animated: true)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.hidesBottomBarWhenPushed = false
+        self.tabBarController?.tabBar.isHidden = false
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.edgesForExtendedLayout = []
+        self.navigationController?.delegate = zoomTransitioningDelegate
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.navigationBar.backgroundColor = .white
+    }
+    
+    func fetchData() {
+        FirebaseController.shared.fetchMostForwarded { (mostForwarded) in
+            self.mostForwarded = mostForwarded
+            //self.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+            self.tableView.reloadData()
+        }
+        
+        FirebaseController.shared.fetchMostMilesTraveled { (mostMilesTraveled) in
+            self.mostMilesTraveled = mostMilesTraveled
+            //self.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+            self.tableView.reloadData()
+        }
+        
+        FirebaseController.shared.fetchNewItems { (startAMovement) in
+            self.startAMovement = startAMovement
+            //self.tableView.reloadSections(IndexSet(integer: 2), with: .automatic)
+            self.tableView.reloadData()
+        }
+    }
+    
+    @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
+        fetchData()
+        refreshControl.endRefreshing()
     }
 
     /*
@@ -67,18 +142,32 @@ extension ExploreVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 2 {
+        
+        switch indexPath.section {
+        case 0:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "categoryRow") as? CategoryRowCell else { return UITableViewCell() }
+            
+            cell.mediaItems = mostForwarded
+            cell.delegate = self
+
+            return cell
+        case 1:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "categoryRow") as? CategoryRowCell else { return UITableViewCell() }
+            
+            cell.mediaItems = mostMilesTraveled
+            cell.isLocalCategory = true
+            cell.delegate = self
+            
+            return cell
+        case 2:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "startAMovementCell") as? StartAMovementCell else { return UITableViewCell() }
             
-            //cell.thumbnails = thumbnails
-            
+            cell.mediaItems = startAMovement
+            cell.delegate = self
+
             return cell
-        } else {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "categoryRow") as? CategoryRowCell else { return UITableViewCell() }
-        
-            cell.thumbnails = thumbnails
-        
-            return cell
+        default:
+            return UITableViewCell()
         }
     }
     
@@ -93,4 +182,30 @@ extension ExploreVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 40.0
     }
+}
+
+extension ExploreVC: PresentMediaDelegate {
+    @objc func presentMediaViewVC() {
+        guard let image = FirebaseController.shared.photoToPresent?.image else { return }
+        self.navigationController?.navigationBar.isHidden = true
+        let mediaViewVC = UIStoryboard(name: "MediaView", bundle: nil).instantiateViewController(withIdentifier: Identifiers.mediaViewVC) as! MediaViewVC
+        mediaViewVC.hidesBottomBarWhenPushed = true
+        self.hidesBottomBarWhenPushed = true
+        mediaViewVC.photo = image
+        self.navigationController?.pushViewController(mediaViewVC, animated: true)
+    }
+}
+
+extension ExploreVC: ZoomingViewController {
+    func zoomingBackgroundView(for transition: ZoomTransitioningDelegate) -> UIView? {
+        return nil
+    }
+    
+    func zoomingImageView(for transition: ZoomTransitioningDelegate) -> UIImageView? {
+        return FirebaseController.shared.photoToPresent!
+    }
+}
+
+protocol PresentMediaDelegate: class {
+    func presentMediaViewVC()
 }

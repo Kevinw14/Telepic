@@ -30,7 +30,7 @@ class PhotoVC: UIViewController {
         
         
         // Temporary placement
-        FirebaseController.shared.fetchFriends()
+        //FirebaseController.shared.fetchFriends(uid)
         
         self.view.backgroundColor = UIColor.gray
         let backgroundImageView = UIImageView(frame: view.frame)
@@ -62,9 +62,9 @@ class PhotoVC: UIViewController {
         let data = UIImageJPEGRepresentation(backgroundImage, 0.8)!
         let sendVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: "SendVC") as! SendVC
         sendVC.data = data
-        sendVC.isHeroEnabled = true
-        sendVC.heroModalAnimationType = .slide(direction: .left)
-        self.hero_replaceViewController(with: sendVC)
+//        sendVC.isHeroEnabled = true
+//        sendVC.heroModalAnimationType = .slide(direction: .left)
+//        self.hero_replaceViewController(with: sendVC)
     }
 }
 

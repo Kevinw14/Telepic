@@ -23,6 +23,8 @@ class InboxCell: UITableViewCell {
     @IBOutlet weak var blurView: UIVisualEffectView!
     @IBOutlet weak var photoReceivedLabel: UIStackView!
     @IBOutlet weak var messageLabel: UILabel!
+    @IBOutlet weak var captionLabel: UILabel!
+    @IBOutlet weak var numberOfCommentsLabel: UILabel!
     
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var footerView: UIView!
@@ -57,7 +59,7 @@ class InboxCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(photoTapped))
         photoImageView.addGestureRecognizer(tapGesture)
         
@@ -65,10 +67,20 @@ class InboxCell: UITableViewCell {
         blurView.addGestureRecognizer(tapToViewGesture)
         
         NotificationCenter.default.addObserver(self, selector: #selector(didReachItemEnd), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(stopPlayer), name: Notifications.stopPlayer, object: nil)
     }
 
     func setUpCell() {
         guard let inboxItem = inboxItem else { return }
+        
+        DispatchQueue.main.async {
+            FirebaseController.shared.fetchMediaItem(forItemID: inboxItem.itemID) { (mediaItem) in
+                FirebaseController.shared.fetchComments(forMediaItemID: mediaItem.itemID, completion: { (comments) in
+                    self.numberOfCommentsLabel.isHidden = false
+                    self.numberOfCommentsLabel.text = "\(comments.count)"
+                })
+            }
+        }
         
         if inboxItem.type == "photo" {
             let photoURL = URL(string: inboxItem.downloadURL)
@@ -114,8 +126,14 @@ class InboxCell: UITableViewCell {
         senderLabel.text = inboxItem.senderUsername
         creatorLabel.text = inboxItem.creatorUsername
         
+        if let caption = inboxItem.caption {
+            captionLabel.text = caption
+        } else {
+            captionLabel.isHidden = true
+        }
+        
         senderAvatarImageView.layer.cornerRadius = senderAvatarImageView.frame.width / 2
-        daysRemainingLabel.text = "\(inboxItem.daysRemaining)d"
+        daysRemainingLabel.text = inboxItem.daysRemaining
         creatorAvatarImageView.layer.cornerRadius = creatorAvatarImageView.frame.width / 2
         
         // set up cell properly for inboxItem open state
@@ -123,7 +141,7 @@ class InboxCell: UITableViewCell {
             self.blurView.alpha = 0
             self.photoReceivedLabel.alpha = 0
             self.forwardButton.isHidden = false
-            self.daysRemainingLabel.isHidden = true
+            self.daysRemainingLabel.isHidden = false
         } else {
             self.blurView.alpha = 1
             self.photoReceivedLabel.alpha = 1
@@ -133,13 +151,13 @@ class InboxCell: UITableViewCell {
     }
     
     @IBAction func senderTapped(_ sender: Any) {
-        guard let senderID = inboxItem?.senderID else { return }
-        delegate?.segueToProfileVC(withUID: senderID)
+        guard let senderID = inboxItem?.senderID, let username = inboxItem?.senderUsername else { return }
+        delegate?.segueToProfileVC(withUID: senderID, username: username)
     }
     
     @IBAction func creatorTapped(_ sender: Any) {
-        guard let creatorID = inboxItem?.creatorID else { return }
-        delegate?.segueToProfileVC(withUID: creatorID)
+        guard let creatorID = inboxItem?.creatorID, let username = inboxItem?.creatorUsername else { return }
+        delegate?.segueToProfileVC(withUID: creatorID, username: username)
     }
     
     
@@ -155,7 +173,7 @@ class InboxCell: UITableViewCell {
     
     @IBAction func forwardButtonTapped(_ sender: Any) {
         guard let inboxItem = inboxItem else { return }
-        delegate?.forwardItem(inboxItem)
+        delegate?.forwardItem(inboxItem, cell: self)
     }
     
     @IBAction func fullscreenButtonTapped(_ sender: Any) {
@@ -188,6 +206,11 @@ class InboxCell: UITableViewCell {
         }
     }
     
+    @objc func stopPlayer() {
+        player?.pause()
+        player = nil
+    }
+    
     @objc func didReachItemEnd() {
         if self.player != nil {
             self.player!.seek(to: kCMTimeZero)
@@ -211,14 +234,14 @@ class InboxCell: UITableViewCell {
                 self.playerIsPaused = true
             }
         } else {
-            if let _ = self.photoImageView.image, let mediaItem = self.inboxItem {
-                DispatchQueue.main.async {
-                    FirebaseController.shared.fetchMediaItem(forItemID: mediaItem.itemID, completion: { (mediaItem) in
-                        FirebaseController.shared.photoToPresent = self.photoImageView
-                        FirebaseController.shared.currentMediaItem = mediaItem
-                        NotificationCenter.default.post(Notification(name: Notifications.didLoadMediaItem))
-                    })
-                }
+            if let _ = self.photoImageView.image, let item = self.inboxItem {
+                FirebaseController.shared.fetchMediaItem(forItemID: item.itemID, completion: { (mediaItem) in
+                    FirebaseController.shared.currentMediaItem = mediaItem
+                    
+                    NotificationCenter.default.post(Notification(name: Notifications.didLoadMediaItem))
+                })
+                FirebaseController.shared.photoToPresent = self.photoImageView
+                self.delegate?.presentMediaViewVC()
             }
         }
     }
@@ -240,11 +263,12 @@ class InboxCell: UITableViewCell {
             self.photoReceivedLabel.alpha = 0
             //self.photoReceivedLabel.isHidden = true
             self.forwardButton.isHidden = false
-            self.daysRemainingLabel.isHidden = true
+            //self.daysRemainingLabel.isHidden = true
         }
         
         // Record location and set inboxItem `opened` to true
-        delegate?.recordUserLocation(forItemID: inboxItem.itemID)
+        delegate?.recordUserLocation(item: inboxItem)
+
         
         // record the location the photo was viewed
         // add photo to array of viewed photos
@@ -255,11 +279,12 @@ class InboxCell: UITableViewCell {
 protocol InboxItemDelegate: class {
     func goFullscreen(_ imageView: UIImageView)
     func dismissFullscreen(_ sender: UITapGestureRecognizer)
-    func recordUserLocation(forItemID itemID: String)
-    func forwardItem(_ inboxItem: InboxItem)
+    func recordUserLocation(item: InboxItem)
+    func forwardItem(_ inboxItem: InboxItem, cell: UITableViewCell)
     func segueToMapVC(withItemID itemID: String)
-    func segueToProfileVC(withUID uid: String)
+    func segueToProfileVC(withUID uid: String, username: String)
     func segueToCommentsVC(withItemID itemID: String)
     func presentVideoFullScreen(controller: AVPlayerViewController)
+    func presentMediaViewVC()
 }
 

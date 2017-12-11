@@ -10,7 +10,6 @@ import UIKit
 import FacebookCore
 import FacebookLogin
 import FirebaseAuth
-import Hero
 
 class LoginVC: UIViewController {
     

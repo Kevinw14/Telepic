@@ -10,25 +10,32 @@ import UIKit
 
 class GroupDetailVC: UIViewController {
 
-    @IBOutlet weak var groupNameLabel: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
     
+    lazy var backBarButton: UIBarButtonItem = {
+        let btn = UIButton(type: .system)
+        btn.setImage(#imageLiteral(resourceName: "backArrowDark"), for: .normal)
+        btn.height(40)
+        btn.width(40)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 0, left: -20, bottom: 0, right: 0)
+        btn.addTarget(self, action: #selector(goBack), for: .touchUpInside)
+        return UIBarButtonItem(customView: btn)
+    }()
+    
+    var group: Group?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.navigationItem.title = group?.groupName
+        self.navigationItem.leftBarButtonItem = backBarButton
+        
         collectionView.dataSource = self
     }
     
-    @IBAction func backButtonTapped(_ sender: Any) {
-        
+    @objc func goBack() {
+        self.navigationController?.popViewController(animated: true)
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
 
     /*
     // MARK: - Navigation
@@ -48,7 +55,8 @@ extension GroupDetailVC: UICollectionViewDataSource, UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        guard let groupMembers = group?.members else { return 0 }
+        return groupMembers.count
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -57,6 +65,11 @@ extension GroupDetailVC: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "memberCell", for: indexPath) as? MemberCell else { return UICollectionViewCell() }
+        
+        if let groupMembers = group?.members {
+            cell.friend = groupMembers[indexPath.row]
+            cell.setUpViews()
+        }
         
         return cell
     }

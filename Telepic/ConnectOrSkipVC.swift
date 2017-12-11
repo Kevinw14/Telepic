@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Hero
 
 class ConnectOrSkipVC: UIViewController {
 
@@ -18,17 +17,17 @@ class ConnectOrSkipVC: UIViewController {
     
     @IBAction func backButtonTapped(_ sender: Any) {
         let createUsernameVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CreateUsernameVC") as! CreateUsernameVC
-        createUsernameVC.isHeroEnabled = true
-        createUsernameVC.heroModalAnimationType = .slide(direction: .right)
-        self.hero_replaceViewController(with: createUsernameVC)
+//        createUsernameVC.isHeroEnabled = true
+//        createUsernameVC.heroModalAnimationType = .slide(direction: .right)
+//        self.hero_replaceViewController(with: createUsernameVC)
     }
     
     @IBAction func connectButtonTapped(_ sender: Any) {
         let addFBFriendsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddFBFriendsVC")
-        addFBFriendsVC.isHeroEnabled = true
-        addFBFriendsVC.heroModalAnimationType = .slide(direction: .left)
-        
-        self.hero_replaceViewController(with: addFBFriendsVC)
+//        addFBFriendsVC.isHeroEnabled = true
+//        addFBFriendsVC.heroModalAnimationType = .slide(direction: .left)
+//        
+//        self.hero_replaceViewController(with: addFBFriendsVC)
     }
     
     @IBAction func skipButtonTapped(_ sender: Any) {

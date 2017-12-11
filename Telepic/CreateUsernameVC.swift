@@ -48,7 +48,7 @@ extension CreateUsernameVC: LoginChildDelegate {
                         self.usernameTextField.resignFirstResponder()
                         FirebaseController.shared.storeUsername(username, uid: uid)
                         SVProgressHUD.dismiss()
-                        let nextVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: Identifiers.tabBarVC)
+                        let nextVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: Identifiers.tabBarController)
                         completion(nextVC)
                     } else {
                         SVProgressHUD.dismiss()
@@ -76,7 +76,7 @@ extension CreateUsernameVC: LoginChildDelegate {
                                 } else {
                                     self.usernameTextField.resignFirstResponder()
                                     FirebaseController.shared.storeUsername(username, uid: uid)
-                                    let nextVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: Identifiers.tabBarVC)
+                                    let nextVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: Identifiers.tabBarController)
                                     completion(nextVC)
                                 }
                             })

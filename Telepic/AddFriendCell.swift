@@ -15,6 +15,7 @@ class AddFriendCell: UITableViewCell {
     @IBOutlet weak var sendRequestButton: UIButton!
     
     var uid: String!
+    weak var delegate: AddFriendDelegate?
         
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -24,8 +25,12 @@ class AddFriendCell: UITableViewCell {
     }
 
     @IBAction func sendRequestButtonTapped(_ sender: Any) {
-        FirebaseController.shared.sendFriendRequest(toUID: uid)
-        print("testing")
+
+        delegate?.sendRequest(uid: uid, cell: self)
     }
 
+}
+
+protocol AddFriendDelegate: class {
+    func sendRequest(uid: String, cell: UITableViewCell)
 }
