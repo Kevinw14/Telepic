@@ -187,7 +187,8 @@ class MediaViewVC: UIViewController {
             ac.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (_) in
                 print("delete item")
                 FirebaseController.shared.removeMediaItem(withID: mediaItem.itemID)
-                NotificationCenter.default.post(Notification(name: Notifications.didUploadMedia))
+//                NotificationCenter.default.post(Notification(name: Notifications.didUploadMedia))
+                self.navigationController?.navigationBar.isHidden = false
                 self.navigationController?.popViewController(animated: true)
             }))
         }

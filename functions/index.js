@@ -61,6 +61,12 @@ exports.sendFriendRequestNotification = functions.database.ref('/users/{userID}/
   })
 });
 
+exports.sendNewCommentNotification = functions.database.ref('/mediaItems/{itemID}/comments').onCreate(event => {
+                                                                                                      const itemID = event.params.itemID;
+                                                                                                      let creatorID = functions.database.DeltaSnapshot.child('/mediaItems/' + itemID + '/creatorID').val();
+                                                                                                                                                             console.log('creatorID:' + creatorID);
+                                                                                                          });
+
 exports.sendNewInboxItemNotification = functions.database.ref('/users/{userID}/inbox/{inboxItem}').onCreate(event => {
   //   /users/{userID}/inbox/{itemID}/senderID/{senderID}
   const userID = event.params.userID;

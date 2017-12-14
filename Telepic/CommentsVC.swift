@@ -112,7 +112,7 @@ class CommentsVC: UIViewController {
         
         self.navigationController?.navigationBar.titleTextAttributes = titleAttrs
         self.navigationItem.leftBarButtonItem = backBarButton
-        
+        self.navigationController?.navigationBar.isHidden = false
         
         self.navigationItem.title = "Comments"
         

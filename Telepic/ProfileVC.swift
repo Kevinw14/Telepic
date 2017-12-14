@@ -22,6 +22,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     @IBOutlet weak var coverView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var addBioButton: UIButton!
+    @IBOutlet weak var scrollView: UIScrollView!
     
     // Constants
     let itemsPerRow: CGFloat = 3
@@ -84,7 +85,8 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         super.viewDidLoad()
         
         self.collectionView.contentInsetAdjustmentBehavior = .never
-        
+        self.scrollView.contentInsetAdjustmentBehavior = .never
+
         self.addBioButton.isHidden = true
         
         // Notifications
@@ -273,18 +275,24 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
             
             FirebaseController.shared.fetchUser(uid: uid, completion: { (userDict) in
                 self.user = userDict
-                
+                var uploads = [Upload]()
                 if let uploadsDict = userDict["uploads"] as? [String:[String:Any]] {
-                    var uploads = [Upload]()
                     for (key, value) in uploadsDict {
                         let upload = Upload(uid: key, dict: value)
                         uploads.append(upload)
                     }
-                    self.uploads = uploads.sorted { $0.timestamp > $1.timestamp }
-                    self.uploadsLabel.text = "\(uploads.count)"
-                    self.forwardsLabel.text = "\(self.forwards)"
-                    self.collectionView.reloadData()
                 }
+                if uploads.isEmpty {
+                    self.uploads = uploads
+                } else {
+                    self.uploads = uploads.sorted { $0.timestamp > $1.timestamp }
+                }
+                
+                let forwardCount = userDict["forwardCount"] as? Int ?? 0
+                self.uploadsLabel.text = "\(uploads.count)"
+                self.forwardsLabel.text = "\(forwardCount)"
+                self.collectionView.reloadData()
+                
             })
         }
     }

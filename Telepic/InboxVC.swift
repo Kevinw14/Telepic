@@ -198,6 +198,7 @@ extension InboxVC: InboxItemDelegate {
         let sendVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: "SendVC") as! SendVC
         sendVC.inboxItemBeingSent = inboxItem
         sendVC.isForwardingItem = true
+        sendVC.isModal = true
         present(sendVC, animated: true, completion: nil)
     }
     

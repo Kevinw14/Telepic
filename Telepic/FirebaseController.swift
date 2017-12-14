@@ -8,12 +8,15 @@
 
 import UIKit
 import Firebase
-import NotificationBannerSwift
+//import NotificationBannerSwift
 import MapKit
+import SVProgressHUD
 
 class FirebaseController {
     
     static var shared = FirebaseController()
+    
+    static var remoteConfig = RemoteConfig.remoteConfig()
     
     private var ref = Database.database().reference()
     
@@ -28,6 +31,9 @@ class FirebaseController {
             NotificationCenter.default.post(name: Notifications.presentMedia, object: self)
         }
     }
+    
+    var startAMovement = true
+    var contest = false
     
     var currentMediaItem: MediaItem?
     
@@ -285,7 +291,13 @@ class FirebaseController {
         }
         self.ref.child("mediaItems").child(itemID).removeValue()
         
+        self.ref.child("contest").child(itemID).removeValue()
+        
+        self.ref.child("startAMovement").child(itemID).removeValue()
+        
         self.ref.child("users").child(currentUID).child("uploads").child(itemID).removeValue()
+        
+        NotificationCenter.default.post(Notification(name: Notifications.didUploadMedia))
     }
     
     func setItemOpened(inboxItem: InboxItem, latitude: Double, longitude: Double) {
@@ -367,7 +379,7 @@ class FirebaseController {
             // Increment forward count for sender
             // Check if the sender has already forwarded this item to someone, if so update forward count.
             if let existingUser = forwardList[inboxItem.senderID] {
-                let currentForwardCount = existingUser["forwardCount"] as! Int
+                let currentForwardCount = existingUser["count"] as! Int
                 let updatedUser: [String:Any] = [
                     "username": inboxItem.senderUsername,
                     "avatarURL": inboxItem.senderAvatarURL,
@@ -571,8 +583,8 @@ class FirebaseController {
                     print("User is the creator.")
                 } else {
                     validIDs.append(uid)
-                    if uid == targets.last { completion(validIDs) }
                 }
+                if uid == targets.last { completion(validIDs) }
             })
         }
     }
@@ -715,31 +727,45 @@ class FirebaseController {
         }
     }
     
-    func fetchMostMilesTraveled(completion: @escaping ([MediaItem]) -> Void) {
-        self.ref.child("mediaItems").queryOrdered(byChild: "milesTraveled").queryLimited(toLast: 50).queryStarting(atValue: 1).observeSingleEvent(of: .value) { (snapshot) in
-            if let mediaItemDict = snapshot.value as? [String:[String:Any]] {
+    func fetchContestOfTheWeek(completion: @escaping ([MediaItem]) -> Void) {
+        self.ref.child("contest").observeSingleEvent(of: .value) { (snapshot) in
+            if let mediaIDsDict = snapshot.value as? [String:Any] {
                 var mediaItems = [MediaItem]()
-                mediaItems = mediaItemDict.map { (key, value) in
-                    MediaItem(itemID: key, dict: value)
+                let mediaIDs = Array(mediaIDsDict.keys)
+                mediaIDs.forEach { (mediaID) in
+                    self.ref.child("mediaItems").child(mediaID).observeSingleEvent(of: .value, with: { (snapshot) in
+                        if let mediaItemDict = snapshot.value as? [String:Any] {
+                            mediaItems.append(MediaItem(itemID: mediaID, dict: mediaItemDict))
+                        }
+                        
+                        if mediaID == mediaIDs.last {
+                            completion(mediaItems.sorted { $0.forwards > $1.forwards})
+                        }
+                    })
                 }
-                completion(mediaItems.sorted { $0.milesTraveled > $1.milesTraveled })
             }
         }
     }
     
-    func fetchPopularNearby(completion: @escaping ([MediaItem]) -> Void) {
-        //self.ref.child("mediaItems").queryOrdered(byChild: "forwards")
-    }
-    
-//
-    func fetchNewItems(completion: @escaping ([MediaItem]) -> Void) {
-        self.ref.child("mediaItems").queryOrdered(byChild: "forwards").queryEqual(toValue: 0).observeSingleEvent(of: .value) { (snapshot) in
-            if let mediaItemDict = snapshot.value as? [String:[String:Any]] {
+    func fetchStartAMovement(completion: @escaping ([MediaItem]) -> Void) {
+        self.ref.child("startAMovement").observeSingleEvent(of: .value) { (snapshot) in
+            if let mediaIDsDict = snapshot.value as? [String:Any] {
                 var mediaItems = [MediaItem]()
-                mediaItems = mediaItemDict.map { (key, value) in
-                    MediaItem(itemID: key, dict: value)
+                let mediaIDs = Array(mediaIDsDict.keys)
+                mediaIDs.forEach { (mediaID) in
+                    self.ref.child("mediaItems").child(mediaID).observeSingleEvent(of: .value, with: { (snapshot) in
+                        if let mediaItemDict = snapshot.value as? [String:Any] {
+                            let forwards = mediaItemDict["forwards"] as? Int ?? 0
+                            if forwards == 0 {
+                                mediaItems.append(MediaItem(itemID: mediaID, dict: mediaItemDict))
+                            }
+                        }
+                        
+                        if mediaID == mediaIDs.last {
+                            completion(mediaItems.sorted { $0.timestamp > $1.timestamp})
+                        }
+                    })
                 }
-                completion(mediaItems.sorted { $0.timestamp > $1.timestamp })
             }
         }
     }
@@ -903,17 +929,27 @@ class FirebaseController {
                         "mapReference": [currentUID: ["latitude": adjustedLatitude, "longitude": adjustedLongitude, "avatarURL": currentUser.photoURL?.absoluteString ?? "n/a", "username": currentUser.displayName!, "timestamp": timestamp]]
                     ]
                     
+                    self.ref.child("mediaItems").child(childID).setValue(mediaItem)
+                    
                     if let caption = caption {
-                        mediaItem["caption"] = caption
+                        self.ref.child("mediaItems").child(childID).child("caption").setValue(caption)
                         
                         let comment = Comment(senderID: currentUID, username: creatorUsername, message: caption, timestamp: Date().timeIntervalSince1970, senderAvatarURL: creatorAvatarURL)
-                        
                         self.ref.child("mediaItems").child(childID).child("comments").childByAutoId().setValue(comment.dictionaryRepresentation())
                     }
                     
-                    self.ref.child("mediaItems").child(childID).setValue(mediaItem)
+                    if self.contest {
+                        self.ref.child("startAMovement").child(childID).setValue(true)
+                    }
                     
+                    if self.startAMovement {
+                        self.ref.child("contest").child(childID).setValue(true)
+                    }
                     
+                    SVProgressHUD.setDefaultMaskType(.black)
+                    SVProgressHUD.setBackgroundColor(.white)
+                    SVProgressHUD.showSuccess(withStatus: "Forwarded!")
+                    SVProgressHUD.dismiss(withDelay: 1.5)
                 }
             }
         }
@@ -932,6 +968,9 @@ class FirebaseController {
             // Upload reported progress
             let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount)
             print(percentComplete)
+            SVProgressHUD.setDefaultMaskType(.black)
+            SVProgressHUD.setBackgroundColor(.white)
+            SVProgressHUD.showProgress(Float(percentComplete))
         }
         
         uploadTask.observe(.failure) { (snapshot) in
@@ -956,6 +995,10 @@ class FirebaseController {
             //            }
             if let error = snapshot.error {
                 print(error.localizedDescription)
+                SVProgressHUD.setDefaultMaskType(.black)
+                SVProgressHUD.setBackgroundColor(.white)
+                SVProgressHUD.showError(withStatus: "Error Uploading Media")
+                SVProgressHUD.dismiss(withDelay: 1.5)
             }
         }
     }
@@ -1033,16 +1076,23 @@ class FirebaseController {
                     "mapReference": [currentUID: ["latitude": adjustedLatitude, "longitude": adjustedLongitude, "avatarURL": currentUser.photoURL?.absoluteString ?? "n/a", "username": currentUser.displayName!, "timestamp": timestamp]]
                 ]
                 
+                self.ref.child("mediaItems").child(childID).setValue(mediaItem)
+                
                 if let caption = caption {
-                    mediaItem["caption"] = caption
-                    
+                    self.ref.child("mediaItems").child(childID).child("caption").setValue(caption)
                     
                     let comment = Comment(senderID: currentUID, username: creatorUsername, message: caption, timestamp: Date().timeIntervalSince1970, senderAvatarURL: creatorAvatarURL)
                     self.ref.child("mediaItems").child(childID).child("comments").childByAutoId().setValue(comment.dictionaryRepresentation())
                 }
                 
-                self.ref.child("mediaItems").child(childID).setValue(mediaItem)
                 
+                if self.contest {
+                    self.ref.child("contest").child(childID).setValue(true)
+                }
+                
+                if self.startAMovement {
+                    self.ref.child("startAMovement").child(childID).setValue(true)
+                }
             }
         }
         
@@ -1059,14 +1109,19 @@ class FirebaseController {
             // Upload reported progress
             let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount)
             print(percentComplete)
+            SVProgressHUD.setDefaultMaskType(.black)
+            SVProgressHUD.setBackgroundColor(.white)
+            SVProgressHUD.showProgress(Float(percentComplete))
         }
         
         uploadTask.observe(.success) { (snapshot) in
             // Upload completed successfully
             // store downloadURL
             
-            
-            
+            SVProgressHUD.setDefaultMaskType(.black)
+            SVProgressHUD.setBackgroundColor(.white)
+            SVProgressHUD.showSuccess(withStatus: "Forwarded!")
+            SVProgressHUD.dismiss(withDelay: 1.5)
         }
         
         uploadTask.observe(.failure) { (snapshot) in

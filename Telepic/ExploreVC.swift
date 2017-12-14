@@ -10,11 +10,12 @@ import UIKit
 
 class ExploreVC: UIViewController {
 
-    let categories = ["Most Forwarded", "Most Miles Traveled", "Start a Movement"]
+    var categories = [String]()
     // Media items that have the most forwards, sorted by total forwards, then by newest
     var mostForwarded = [MediaItem]()
     // Media items that have traveled the most miles, sorted by miles, then by newest
-    var mostMilesTraveled = [MediaItem]()
+    //var mostMilesTraveled = [MediaItem]()
+    var contest = [MediaItem]()
     // Media Items that have 0 forwards, sorted by newest
     var startAMovement = [MediaItem]()
     
@@ -24,16 +25,19 @@ class ExploreVC: UIViewController {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(handleRefresh(_:)), for: UIControlEvents.valueChanged)
         //refreshControl.tintColor = UIColor(hexString: "1BBB6A")
-         
+        
         
         return refreshControl
     }()
    
     @IBOutlet weak var tableView: UITableView!
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let contestOfTheWeek = FirebaseController.remoteConfig["contestOfTheWeek"].stringValue ?? "Contest of the Week"
+        self.categories = ["Most Forwarded", contestOfTheWeek, "Start a Movement"]
+        
         
         self.tableView.addSubview(self.refreshControl)
         fetchData()
@@ -78,15 +82,13 @@ class ExploreVC: UIViewController {
             self.tableView.reloadData()
         }
         
-        FirebaseController.shared.fetchMostMilesTraveled { (mostMilesTraveled) in
-            self.mostMilesTraveled = mostMilesTraveled
-            //self.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+        FirebaseController.shared.fetchStartAMovement { (startAMovement) in
+            self.startAMovement = startAMovement
             self.tableView.reloadData()
         }
         
-        FirebaseController.shared.fetchNewItems { (startAMovement) in
-            self.startAMovement = startAMovement
-            //self.tableView.reloadSections(IndexSet(integer: 2), with: .automatic)
+        FirebaseController.shared.fetchContestOfTheWeek { (contestOfTheWeek) in
+            self.contest = contestOfTheWeek
             self.tableView.reloadData()
         }
     }
@@ -154,7 +156,7 @@ extension ExploreVC: UITableViewDelegate, UITableViewDataSource {
         case 1:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "categoryRow") as? CategoryRowCell else { return UITableViewCell() }
             
-            cell.mediaItems = mostMilesTraveled
+            cell.mediaItems = contest
             cell.isLocalCategory = true
             cell.delegate = self
             

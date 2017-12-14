@@ -82,7 +82,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="avatarImageView" destination="IGg-br-sIa" id="E9u-8O-qbw"/>
-                                            <outlet property="messageLabel" destination="jur-IT-5wA" id="Yn0-c7-bSX"/>
+                                            <outlet property="messageLabel" destination="jur-IT-5wA" id="3ub-ao-CI5"/>
                                             <outlet property="timestampLabel" destination="Uyw-7p-3ea" id="WwG-Sm-EvS"/>
                                             <outlet property="usernameLabel" destination="lUv-DQ-KXr" id="Co0-AO-cWM"/>
                                         </connections>

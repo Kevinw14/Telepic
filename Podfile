@@ -11,6 +11,7 @@ target 'Telepic' do
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'Firebase/Messaging'
+  pod 'Firebase/RemoteConfig'
   pod 'RSKImageCropper'
   pod 'FacebookCore'
   pod 'FacebookLogin'

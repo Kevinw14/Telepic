@@ -39,7 +39,8 @@ class LoginVC: UIViewController {
                     }
                     // user is signed in
                     UserController.shared.currentUser.usingFacebook = true
-                    
+                    let defaults = UserDefaults.standard
+                    defaults.set(Auth.auth().currentUser!.uid, forKey: "userID")
                     // if user has a username continue to inbox
                     if let user = user {
                         FirebaseController.shared.isUsernameStored(uid: user.uid, completion: { (result) in

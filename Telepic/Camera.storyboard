@@ -184,6 +184,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="backButton" destination="Y2p-Nl-9b6" id="wPx-Ka-iXc"/>
+                        <outlet property="closeButton" destination="shC-sb-hSy" id="uuM-PX-COX"/>
                         <outlet property="containerView" destination="dSi-Is-xCN" id="Rug-bY-Msb"/>
                         <outlet property="doneButton" destination="iLU-0Q-IxJ" id="8OY-fK-LqQ"/>
                         <outlet property="friendsButton" destination="hc6-Kj-gHT" id="OXH-QH-aaM"/>
@@ -257,6 +258,9 @@
                                             </label>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fBU-Hm-TQt">
                                                 <rect key="frame" x="286" y="2" width="51" height="31"/>
+                                                <connections>
+                                                    <action selector="contestSwitch:" destination="yo4-ar-5l2" eventType="valueChanged" id="gc0-dV-xsD"/>
+                                                </connections>
                                             </switch>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -324,6 +328,7 @@
                         <outlet property="captionTextView" destination="Blj-cj-pCb" id="bl4-st-EoD"/>
                         <outlet property="captionView" destination="DGZ-Jo-A8O" id="2Sf-bV-5fd"/>
                         <outlet property="captionViewTopConstraint" destination="Keo-hg-OmH" id="TZt-Yp-GL2"/>
+                        <outlet property="contestOfTheWeek" destination="X1F-0L-qAR" id="NNb-0d-wPx"/>
                         <outlet property="contestOfTheWeekSwitch" destination="fBU-Hm-TQt" id="NJk-GI-v8A"/>
                         <outlet property="previewImageTopConstraint" destination="teL-tA-TGU" id="ISb-N8-gpT"/>
                         <outlet property="previewImageView" destination="Xah-Wr-DrU" id="2fD-Du-v7L"/>

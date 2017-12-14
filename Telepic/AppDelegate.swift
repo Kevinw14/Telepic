@@ -33,8 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let token = Messaging.messaging().fcmToken
         print("FCM token: \(token ?? "")")
         
-        
-        
         self.window = UIWindow(frame: UIScreen.main.bounds)
         let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let homeStoryboard: UIStoryboard = UIStoryboard(name: "Home", bundle: nil)
@@ -84,6 +82,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         application.applicationIconBadgeNumber = 0
         FirebaseController.shared.resetBadgeCount()
         AppEventsLogger.activate(application)
+        
+        //FirebaseController.remoteConfig.configSettings = RemoteConfigSettings(developerModeEnabled: true)!
+        FirebaseController.remoteConfig.fetch { (status, error) in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+
+            FirebaseController.remoteConfig.activateFetched()
+
+            print(FirebaseController.remoteConfig["contestOfTheWeek"].stringValue)
+        }
+//        FirebaseController.remoteConfig.fetch(withExpirationDuration: 1) { (status, error) in
+//            if let error = error {
+//                print(error.localizedDescription)
+//                return
+//            }
+//
+//            FirebaseController.remoteConfig.activateFetched()
+//            print(FirebaseController.remoteConfig["contestOfTheWeek"].stringValue)
+//        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

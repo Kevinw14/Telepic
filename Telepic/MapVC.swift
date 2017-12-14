@@ -69,6 +69,13 @@ class MapVC: UIViewController {
         segueToProfileVC(uid: mediaItem.creatorID, username: mediaItem.creatorUsername)
     }
     
+    @IBAction func commentsTapped(_ sender: Any) {
+        guard let mediaItem = mediaItem else { return }
+        let commentsVC = UIStoryboard(name: "Comments", bundle: nil).instantiateViewController(withIdentifier: Identifiers.commentsVC) as! CommentsVC
+        commentsVC.mediaItemID = mediaItem.itemID
+        self.navigationController?.pushViewController(commentsVC, animated: true)
+    }
+    
     @IBAction func forwardsTapped(_ sender: Any) {
         let forwardListVC = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: Identifiers.forwardListVC) as! ForwardListVC
         guard let forwardList = mediaItem?.forwardList else { return }
@@ -164,12 +171,6 @@ class MapVC: UIViewController {
             guard let sendVC = segue.destination as? SendVC, let mediaItem = mediaItem else { return }
             sendVC.isForwardingItem = true
             sendVC.mediaItemBeingSent = mediaItem
-        }
-        
-        if segue.identifier == "toCommentsVC" {
-            guard let navVC = segue.destination as? CustomNavigationController else { return }
-            let commentsVC = navVC.childViewControllers[0] as! CommentsVC
-            commentsVC.mediaItemID = self.mediaItem?.itemID
         }
     }
 

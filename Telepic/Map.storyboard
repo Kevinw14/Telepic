@@ -92,7 +92,7 @@
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="11"/>
                                 <state key="normal" image="commentsWhite"/>
                                 <connections>
-                                    <segue destination="pI1-LF-I67" kind="show" identifier="toCommentsVC" id="f6d-xu-ccJ"/>
+                                    <action selector="commentsTapped:" destination="RW2-d4-pYu" eventType="touchUpInside" id="gTs-iB-Qmw"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b5b-Wv-5Ne">
@@ -259,14 +259,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yvc-4u-s5h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1363" y="130"/>
-        </scene>
-        <!--Comments-->
-        <scene sceneID="ly5-Yk-BzV">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Comments" id="pI1-LF-I67" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="MVA-ni-Y9f" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1387" y="277"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Cg8-mg-Qb0">

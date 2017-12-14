@@ -9,6 +9,7 @@
 import UIKit
 import CoreLocation
 import FirebaseAuth
+import SVProgressHUD
 
 class SendVC: UIViewController {
 
@@ -18,6 +19,7 @@ class SendVC: UIViewController {
     @IBOutlet weak var friendsButton: UIButton!
     @IBOutlet weak var groupsButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var closeButton: UIButton!
     
     let locationManager = CLLocationManager()
     
@@ -29,6 +31,7 @@ class SendVC: UIViewController {
     var isForwardingItem = false
     var isFromMapVC = false
     var currentType: String?
+    var isModal = false
     
     var isSelectingGroups = false {
         didSet {
@@ -56,6 +59,34 @@ class SendVC: UIViewController {
         if !isForwardingItem {
             FirebaseController.shared.fetchFriends(uid: Auth.auth().currentUser!.uid)
             NotificationCenter.default.addObserver(self, selector: #selector(notifySelectFriendsVC), name: Notifications.didLoadFriends, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(completeUpload), name: Notifications.didUploadMedia, object: nil)
+        }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(completeForward), name: Notifications.didForwardMedia, object: nil)
+        
+        if isModal {
+            self.backButton.isHidden = true
+        } else {
+            self.closeButton.isHidden = true
+        }
+    }
+    
+    @objc func completeUpload() {
+//        dismiss(animated: true, completion: nil)
+//        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func completeForward() {
+        SVProgressHUD.setDefaultMaskType(.black)
+        SVProgressHUD.setBackgroundColor(.white)
+        SVProgressHUD.showSuccess(withStatus: "Forwarded!")
+        SVProgressHUD.dismiss(withDelay: 1.5) {
+            if self.isModal {
+                self.dismiss(animated: true, completion: nil)
+            } else {
+                self.navigationController?.popViewController(animated: true)
+            }
         }
     }
     
@@ -79,18 +110,13 @@ class SendVC: UIViewController {
     }
     
     @IBAction func closeButtonTapped(_ sender: Any) {
-        if isFromMapVC {
-            performSegue(withIdentifier: "unwindToMapVCFromSendVC", sender: self)
-        } else {
-            dismiss(animated: true, completion: nil)
-        }
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func backButtonTapped(_ sender: UIButton) {
+        self.navigationController?.navigationBar.isHidden = false
         self.navigationController?.popViewController(animated: true)
-        //self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
-    
     
     @IBAction func doneButtonTapped(_ sender: Any) {
         
@@ -131,8 +157,8 @@ class SendVC: UIViewController {
                 }
             }
         }
-        
-        dismiss(animated: true, completion: nil)
+        //dismiss(animated: true, completion: nil)
+//        self.dismiss(animated: true, completion: nil)
     }
     
     func setUpButtons() {

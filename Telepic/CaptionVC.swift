@@ -18,6 +18,7 @@ class CaptionVC: UIViewController, UITextViewDelegate {
     @IBOutlet weak var previewImageTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var startAMovementSwitch: UISwitch!
     @IBOutlet weak var contestOfTheWeekSwitch: UISwitch!
+    @IBOutlet weak var contestOfTheWeek: UILabel!
     
     var image: UIImage?
     var videoURL: URL?
@@ -79,6 +80,8 @@ class CaptionVC: UIViewController, UITextViewDelegate {
         
         contestOfTheWeekSwitch.setOn(false, animated: false)
         
+        self.contestOfTheWeek.text = FirebaseController.remoteConfig["contestOfTheWeek"].stringValue
+        
         if let image = image {
             self.previewImageView.image = image
         } else if let videoURL = videoURL, let thumbnail = thumbnail {
@@ -105,7 +108,12 @@ class CaptionVC: UIViewController, UITextViewDelegate {
         }
     }
     
-    @IBAction func startAMovementSwitchValueChanged(_ sender: Any) {
+    @IBAction func startAMovementSwitchValueChanged(_ sender: UISwitch) {
+        //FirebaseController.shared.startAMovement = sender.isOn
+    }
+    
+    @IBAction func contestSwitch(_ sender: UISwitch) {
+        //FirebaseController.shared.contest = sender.isOn
     }
     
     func presentVideoFullScreen() {
@@ -139,6 +147,8 @@ class CaptionVC: UIViewController, UITextViewDelegate {
             }
         }
         if let videoURL = videoURL, let thumbnail = thumbnail { sendVC.videoURL = videoURL; sendVC.data = UIImageJPEGRepresentation(thumbnail, 1.0); sendVC.currentType = "video" }
+        FirebaseController.shared.contest = contestOfTheWeekSwitch.isOn
+        FirebaseController.shared.startAMovement = startAMovementSwitch.isOn
         self.navigationController?.pushViewController(sendVC, animated: true)
     }
     
