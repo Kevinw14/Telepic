@@ -84,6 +84,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         AppEventsLogger.activate(application)
         
         //FirebaseController.remoteConfig.configSettings = RemoteConfigSettings(developerModeEnabled: true)!
+        //        FirebaseController.remoteConfig.fetch(withExpirationDuration: 1) { (status, error) in
+        //            if let error = error {
+        //                print(error.localizedDescription)
+        //                return
+        //            }
+        //
+        //            FirebaseController.remoteConfig.activateFetched()
+        //            print(FirebaseController.remoteConfig["contestOfTheWeek"].stringValue)
+        //        }
         FirebaseController.remoteConfig.fetch { (status, error) in
             if let error = error {
                 print(error.localizedDescription)
@@ -94,15 +103,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
             print(FirebaseController.remoteConfig["contestOfTheWeek"].stringValue)
         }
-//        FirebaseController.remoteConfig.fetch(withExpirationDuration: 1) { (status, error) in
-//            if let error = error {
-//                print(error.localizedDescription)
-//                return
-//            }
-//
-//            FirebaseController.remoteConfig.activateFetched()
-//            print(FirebaseController.remoteConfig["contestOfTheWeek"].stringValue)
-//        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

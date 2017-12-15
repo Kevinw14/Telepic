@@ -112,6 +112,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
                 })
             }
         }
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
     override func viewDidAppear(_ animated: Bool) {

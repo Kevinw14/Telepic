@@ -206,6 +206,8 @@ class FirebaseController {
             guard let inboxItemDict = snapshot.value as? [String:Any] else { return }
             let inboxItem = InboxItem(itemID: snapshot.key, dict: inboxItemDict)
             
+            
+            
             let isUnique = !self.inboxItems.contains(where: { (item) -> Bool in
                 inboxItem.itemID == item.itemID
             })
@@ -244,6 +246,7 @@ class FirebaseController {
             var inboxItems = [InboxItem]()
             for (key, value) in inboxItemsDict {
                 var inboxItem = InboxItem(itemID: key, dict: value)
+                
                 let originalDate = Date(timeIntervalSinceReferenceDate: inboxItem.timestamp)
                 let threeDays = 259200.0
                 let deadline = Date(timeInterval: threeDays, since: originalDate)
@@ -282,22 +285,42 @@ class FirebaseController {
     
     func removeMediaItem(withID itemID: String) {
         guard let currentUID = Auth.auth().currentUser?.uid else { return }
-        self.ref.child("mediaItems").child(itemID).child("mapReference").observeSingleEvent(of: .value) { (snapshot) in
-            guard let mapReferenceDict = snapshot.value as? [String:Any] else { return }
+        self.ref.child("mediaItems").child(itemID).child("recipients").observeSingleEvent(of: .value) { (snapshot) in
+            guard let recipientsDict = snapshot.value as? [String:Any] else { return }
             
-            for userID in mapReferenceDict.keys {
-                self.ref.child("users").child(userID).child("inboxItems").child(itemID).removeValue()
+            for userID in recipientsDict.keys {
+                self.ref.child("users").child(userID).child("inbox").child(itemID).removeValue()
+            }
+            
+            self.ref.child("mediaItems").child(itemID).child("forwards").observeSingleEvent(of: .value, with: { (snapshot) in
+                guard let forwards = snapshot.value as? Int else { return }
+                
+                self.ref.child("users").child(currentUID).child("forwardCount").observeSingleEvent(of: .value, with: { (snapshot) in
+                    guard let forwardCount = snapshot.value as? Int else { return }
+                    
+                    let newCount = forwardCount - forwards
+                    
+                    self.ref.child("users").child(currentUID).child("forwardCount").setValue(newCount)
+                })
+            })
+            
+            self.ref.child("contest").child(itemID).removeValue()
+            
+            self.ref.child("startAMovement").child(itemID).removeValue()
+            
+            self.ref.child("users").child(currentUID).child("uploads").child(itemID).removeValue()
+            
+            self.ref.child("mediaItems").child(itemID).child("forwarders").observeSingleEvent(of: .value) { (snapshot) in
+                if let forwarders = snapshot.value as? [String:Any] {
+                    for userID in forwarders.keys {
+                        self.ref.child("users").child(userID).child("forwards").child(itemID).removeValue()
+                    }
+                }
+                
+                self.ref.child("mediaItems").child(itemID).removeValue()
+                NotificationCenter.default.post(Notification(name: Notifications.didUploadMedia))
             }
         }
-        self.ref.child("mediaItems").child(itemID).removeValue()
-        
-        self.ref.child("contest").child(itemID).removeValue()
-        
-        self.ref.child("startAMovement").child(itemID).removeValue()
-        
-        self.ref.child("users").child(currentUID).child("uploads").child(itemID).removeValue()
-        
-        NotificationCenter.default.post(Notification(name: Notifications.didUploadMedia))
     }
     
     func setItemOpened(inboxItem: InboxItem, latitude: Double, longitude: Double) {
@@ -603,6 +626,7 @@ class FirebaseController {
         if let currentUID = Auth.auth().currentUser?.uid {
             
             let dateSent = Date().timeIntervalSince1970
+            
             let inboxItem: [String:Any] = [
                 "type": item.type,
                 "caption": item.caption ?? nil,
@@ -624,7 +648,13 @@ class FirebaseController {
                 self.ref.child("users").child(uid).child("inbox").child(item.itemID).setValue(inboxItem)
             }
             
-            self.ref.child("users").child(currentUID).child("forwards").child(item.itemID).setValue(["downloadURL": item.downloadURL, "thumbnailURL": item.thumbnailURL, "timestamp": dateSent, "type": item.type])
+            self.ref.child("mediaItems").child(item.itemID).child("forwarders").child(currentUID).setValue(true)
+            
+            friendIDs.forEach { userID in
+                self.ref.child("mediaItems").child(item.itemID).child("recipients").child(userID).setValue(true)
+            }
+            
+            self.ref.child("users").child(currentUID).child("forwards").child(item.itemID).setValue(true)
             
             self.ref.child("users").child(currentUID).child("inbox").child(item.itemID).removeValue()
             self.loadInboxItems()
@@ -658,7 +688,13 @@ class FirebaseController {
                 self.ref.child("users").child(uid).child("inbox").child(item.itemID).setValue(inboxItem)
             }
             
-            self.ref.child("users").child(currentUID).child("forwards").child(item.itemID).setValue(["downloadURL": item.downloadURL, "thumbnailURL": item.thumbnailURL, "timestamp": dateSent, "type": item.type])
+            self.ref.child("mediaItems").child(item.itemID).child("forwarders").child(currentUID).setValue(true)
+            
+            self.ref.child("users").child(currentUID).child("forwards").child(item.itemID).setValue(true)
+            
+            friendIDs.forEach { userID in
+                self.ref.child("mediaItems").child(item.itemID).child("recipients").child(userID).setValue(true)
+            }
             
             self.ref.child("users").child(currentUID).child("inbox").child(item.itemID).removeValue()
             self.loadInboxItems()
@@ -938,6 +974,12 @@ class FirebaseController {
                         self.ref.child("mediaItems").child(childID).child("comments").childByAutoId().setValue(comment.dictionaryRepresentation())
                     }
                     
+                    self.ref.child("mediaItems").child(childID).child("forwarders").child(currentUID).setValue(true)
+                    
+                    toUserIDs.forEach { userID in
+                        self.ref.child("mediaItems").child(childID).child("recipients").child(userID).setValue(true)
+                    }
+                    
                     if self.contest {
                         self.ref.child("startAMovement").child(childID).setValue(true)
                     }
@@ -1085,6 +1127,11 @@ class FirebaseController {
                     self.ref.child("mediaItems").child(childID).child("comments").childByAutoId().setValue(comment.dictionaryRepresentation())
                 }
                 
+                self.ref.child("mediaItems").child(childID).child("forwarders").child(currentUID).setValue(true)
+                
+                toUserIDs.forEach { userID in
+                    self.ref.child("mediaItems").child(childID).child("recipients").child(userID).setValue(true)
+                }
                 
                 if self.contest {
                     self.ref.child("contest").child(childID).setValue(true)

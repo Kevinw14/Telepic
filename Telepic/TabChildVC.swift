@@ -11,6 +11,7 @@ import UIKit
 class TabChildVC: UIViewController {
 
     var pageTitle: String?
+    var delegate: PresentMediaDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()

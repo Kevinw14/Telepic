@@ -101,6 +101,9 @@ class FiltersVC: UIViewController {
         navigationItem.rightBarButtonItem = rightBarButtonItem
     }
     
+    @objc func handleTap() {
+        
+    }
     
     @objc func cancel() {
         self.navigationController?.dismiss(animated: true, completion: nil)

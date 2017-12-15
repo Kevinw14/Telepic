@@ -69,6 +69,8 @@ class SendVC: UIViewController {
         } else {
             self.closeButton.isHidden = true
         }
+        
+        
     }
     
     @objc func completeUpload() {

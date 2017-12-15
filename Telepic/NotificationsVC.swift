@@ -38,8 +38,8 @@ class NotificationsVC: TabChildVC {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
-        self.edgesForExtendedLayout = []
+//        self.navigationController?.navigationBar.isHidden = true
+//        self.edgesForExtendedLayout = []
     }
     
     @objc func updateData() {

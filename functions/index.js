@@ -61,11 +61,79 @@ exports.sendFriendRequestNotification = functions.database.ref('/users/{userID}/
   })
 });
 
-exports.sendNewCommentNotification = functions.database.ref('/mediaItems/{itemID}/comments').onCreate(event => {
-                                                                                                      const itemID = event.params.itemID;
-                                                                                                      let creatorID = functions.database.DeltaSnapshot.child('/mediaItems/' + itemID + '/creatorID').val();
-                                                                                                                                                             console.log('creatorID:' + creatorID);
-                                                                                                          });
+exports.sendNewCommentNotification = functions.database.ref('/mediaItems/{mediaID}/comments/{commentID}').onCreate(event => {
+  const mediaID = event.params.mediaID;
+  const commentID = event.params.commentID;
+
+  const getCreatorID = admin.database().ref('/mediaItems/' + mediaID + '/creatorID').once('value');
+  const getSenderID = admin.database().ref('/mediaItems/' + mediaID + '/comments/' + commentID + '/senderID').once('value');
+  const getMediaType = admin.database().ref('/mediaItems/' + mediaID + '/type').once('value');
+
+  console.log('CreatorID: ' + getCreatorID)
+  const getSenderUsername = admin.database().ref('/users/' + getSenderID + '/username').once('value');
+
+  const getDeviceTokensPromise = admin.database().ref('/users/' + getCreatorID + '/notificationToken').once('value');
+  const getBadgeCount = admin.database().ref('/users/' + getCreatorID + '/badgeCount').once('value');
+
+  return Promise.all([getDeviceTokensPromise, getBadgeCount]).then(results => {
+    const tokensSnapshot = results[0];
+    const badgeSnapshot = results[1];
+    //const senderSnapshot = results[1];
+    var count = badgeSnapshot.val() + 1;
+    console.log('COUNT', count);
+
+    admin.database().ref('/users/' + getCreatorID + '/badgeCount').set(count);
+    // Check if there are any device tokens.
+    if (!tokensSnapshot.hasChildren()) {
+      return console.log('There are no notification tokens to send to.');
+    }
+
+    console.log('There are', tokensSnapshot.numChildren(), 'tokens to send notifications to.');
+    //console.log('Fetched sender info', senderSnapshot);
+
+    // Notification details.
+    const payload = {
+      notification: {
+        title: '',
+        body: getSenderUsername + ' commented on your ' + getMediaType + ".",
+        //icon: senderSnapshot.photoURL,
+        click_action: 'mediaView',
+        badge: '' + count
+      },
+      data: {
+        mediaID: mediaID
+      }
+    };
+
+    // Listing all tokens.
+    const tokens = Object.keys(tokensSnapshot.val());
+
+    // Send notifications to all tokens.
+    return admin.messaging().sendToDevice(tokens, payload).then(response => {
+      // For each message, check if there was an error.
+      const tokensToRemove = [];
+      response.results.forEach((result, index) => {
+        const error = result.error;
+        if (error) {
+          console.error('Failure sending notifications to', tokens[index], error);
+          // Cleanup the tokens who are not registered anymore.
+          if (error.code === 'messaging/invalid-registration-token' ||
+              error.code === 'messaging/registration-token-not-registered') {
+                tokensToRemove.push(tokensSnapshot.ref.child(tokens[index]).remove());
+          }
+        }
+      });
+      return Promise.all(tokensToRemove);
+    });
+
+  })
+});
+
+// exports.sendNewForwardNotification = functions.database.ref('/mediaItems/{mediaID}/mapReference/{forwarder}').onWrite(event => {
+//   const userID = event.params.userID;
+//
+//   const userID = admin.database().ref('/mediaItems')
+// });
 
 exports.sendNewInboxItemNotification = functions.database.ref('/users/{userID}/inbox/{inboxItem}').onCreate(event => {
   //   /users/{userID}/inbox/{itemID}/senderID/{senderID}

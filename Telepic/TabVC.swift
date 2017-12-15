@@ -14,6 +14,8 @@ class TabVC: TabmanViewController {
 
     private(set) var viewControllers: [TabChildVC]!
     
+    let zoomTransitioningDelegate = ZoomTransitioningDelegate()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -41,12 +43,30 @@ class TabVC: TabmanViewController {
         })
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //self.edgesForExtendedLayout = []
+        self.navigationController?.delegate = zoomTransitioningDelegate
+        self.navigationController?.navigationBar.isHidden = true
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        self.navigationController?.navigationBar.backgroundColor = .white
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.hidesBottomBarWhenPushed = false
+        self.tabBarController?.tabBar.isHidden = false
+    }
+    
     private func childViewController(withTitle title: String) -> TabChildVC {
         let storyboard = UIStoryboard(name: "Notifications", bundle: nil)
         let identifier = title
         
         let viewController = storyboard.instantiateViewController(withIdentifier: identifier) as! TabChildVC
         viewController.pageTitle = title
+        viewController.delegate = self
         
         return viewController
     }
@@ -76,5 +96,28 @@ extension TabVC: PageboyViewControllerDataSource {
     
     func defaultPage(for pageboyViewController: PageboyViewController) -> PageboyViewController.Page? {
         return nil
+    }
+}
+
+extension TabVC: PresentMediaDelegate {
+    @objc func presentMediaViewVC() {
+        guard let image = FirebaseController.shared.photoToPresent?.image else { return }
+        self.navigationController?.navigationBar.isHidden = true
+        let mediaViewVC = UIStoryboard(name: "MediaView", bundle: nil).instantiateViewController(withIdentifier: Identifiers.mediaViewVC) as! MediaViewVC
+        mediaViewVC.hidesBottomBarWhenPushed = true
+        self.hidesBottomBarWhenPushed = true
+        mediaViewVC.photo = image
+        NotificationCenter.default.post(Notification(name: Notifications.didLoadMediaItem))
+        self.navigationController?.pushViewController(mediaViewVC, animated: true)
+    }
+}
+
+extension TabVC: ZoomingViewController {
+    func zoomingBackgroundView(for transition: ZoomTransitioningDelegate) -> UIView? {
+        return nil
+    }
+    
+    func zoomingImageView(for transition: ZoomTransitioningDelegate) -> UIImageView? {
+        return FirebaseController.shared.photoToPresent!
     }
 }

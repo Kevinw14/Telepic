@@ -56,6 +56,29 @@ class MediaViewVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if FirebaseController.shared.currentMediaItem?.type == "video" {
+            
+            if let videoURL = FirebaseController.shared.currentMediaItem?.downloadURL, let url = URL(string: videoURL) {
+                player = AVPlayer(url: url)
+                playerLayer = AVPlayerLayer(player: player)
+                playerLayer?.videoGravity = .resizeAspectFill
+                playerLayer?.backgroundColor = UIColor.clear.cgColor
+                playerLayer?.frame = mediaImageView.bounds
+                mediaImageView.layer.addSublayer(playerLayer!)
+                
+                mediaImageView.addSubview(playButton)
+                playButton.centerXAnchor.constraint(equalTo: mediaImageView.centerXAnchor).isActive = true
+                playButton.centerYAnchor.constraint(equalTo: mediaImageView.centerYAnchor).isActive = true
+                playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+                playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+                playButton.isHidden = false
+            }
+        } else {
+            if let photo = photo {
+                self.mediaImageView.image = photo
+            }
+        }
+        
         updateViews()
         
         self.edgesForExtendedLayout = []
@@ -74,9 +97,6 @@ class MediaViewVC: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateViews), name: Notifications.didLoadMediaItem, object: nil)
         
-        if let photo = photo {
-            self.mediaImageView.image = photo
-        }
         
         panGestureRecognizer.addTarget(self, action: #selector(pan(_:)))
         self.view.addGestureRecognizer(panGestureRecognizer)
@@ -89,6 +109,7 @@ class MediaViewVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        //self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.isHidden = true
         self.navigationItem.hidesBackButton = true
         self.navigationController?.navigationBar.backgroundColor = .clear
@@ -109,25 +130,11 @@ class MediaViewVC: UIViewController {
     }
     
     @objc func handlePlay() {
-        if let videoURL = FirebaseController.shared.currentMediaItem?.downloadURL, let url = URL(string: videoURL) {
-            player = AVPlayer(url: url)
-            playerLayer = AVPlayerLayer(player: player)
-            playerLayer?.videoGravity = .resizeAspectFill
-            playerLayer?.backgroundColor = UIColor.clear.cgColor
-            playerLayer?.frame = mediaImageView.bounds
-            mediaImageView.layer.addSublayer(playerLayer!)
-            
-            mediaImageView.addSubview(playButton)
-            playButton.centerXAnchor.constraint(equalTo: mediaImageView.centerXAnchor).isActive = true
-            playButton.centerYAnchor.constraint(equalTo: mediaImageView.centerYAnchor).isActive = true
-            playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-            
-            player?.play()
-            playButton.isHidden = true
-            activityIndicatorView.startAnimating()
-            print("Attempting to play video...")
-        }
+        
+        player?.play()
+        playButton.isHidden = true
+        activityIndicatorView.startAnimating()
+        print("Attempting to play video...")
     }
     
     @IBAction func creatorTapped(_ sender: Any) {
@@ -209,23 +216,23 @@ class MediaViewVC: UIViewController {
             self.avatarImageView.kf.setImage(with: URL(string: avatarURL))
         })
         
-        if mediaItem.type == "video" {
-            playButton.isHidden = false
-            
-            mediaImageView.addSubview(activityIndicatorView)
-            activityIndicatorView.centerXAnchor.constraint(equalTo: mediaImageView.centerXAnchor).isActive = true
-            activityIndicatorView.centerYAnchor.constraint(equalTo: mediaImageView.centerYAnchor).isActive = true
-            activityIndicatorView.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            activityIndicatorView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-            activityIndicatorView.stopAnimating()
-            
-            mediaImageView.addSubview(playButton)
-            playButton.isUserInteractionEnabled = false
-            playButton.centerXAnchor.constraint(equalTo: mediaImageView.centerXAnchor).isActive = true
-            playButton.centerYAnchor.constraint(equalTo: mediaImageView.centerYAnchor).isActive = true
-            playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        }
+//        if mediaItem.type == "video" {
+//            playButton.isHidden = false
+//
+//            mediaImageView.addSubview(activityIndicatorView)
+//            activityIndicatorView.centerXAnchor.constraint(equalTo: mediaImageView.centerXAnchor).isActive = true
+//            activityIndicatorView.centerYAnchor.constraint(equalTo: mediaImageView.centerYAnchor).isActive = true
+//            activityIndicatorView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+//            activityIndicatorView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+//            activityIndicatorView.stopAnimating()
+//
+//            mediaImageView.addSubview(playButton)
+//            playButton.isUserInteractionEnabled = false
+//            playButton.centerXAnchor.constraint(equalTo: mediaImageView.centerXAnchor).isActive = true
+//            playButton.centerYAnchor.constraint(equalTo: mediaImageView.centerYAnchor).isActive = true
+//            playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+//            playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+//        }
     }
     
     @objc func pan(_ sender: UIPanGestureRecognizer) {

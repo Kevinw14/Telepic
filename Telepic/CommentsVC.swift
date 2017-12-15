@@ -83,6 +83,9 @@ class CommentsVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
+        self.edgesForExtendedLayout = []
+
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 74
         
@@ -112,7 +115,9 @@ class CommentsVC: UIViewController {
         
         self.navigationController?.navigationBar.titleTextAttributes = titleAttrs
         self.navigationItem.leftBarButtonItem = backBarButton
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.navigationBar.backgroundColor = .white
         
         self.navigationItem.title = "Comments"
         
