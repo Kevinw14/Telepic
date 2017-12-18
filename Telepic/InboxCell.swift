@@ -37,6 +37,7 @@ class InboxCell: UITableViewCell {
     var playerLayer: AVPlayerLayer?
     var player: AVPlayer?
     var playerIsPaused = false
+    var gif: UIImage?
     
     let activityIndicatorView: UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
@@ -69,18 +70,16 @@ class InboxCell: UITableViewCell {
         NotificationCenter.default.addObserver(self, selector: #selector(didReachItemEnd), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(stopPlayer), name: Notifications.stopPlayer, object: nil)
     }
+    
+    
 
     func setUpCell() {
         guard let inboxItem = inboxItem else { return }
         
-        DispatchQueue.main.async {
-            FirebaseController.shared.fetchMediaItem(forItemID: inboxItem.itemID) { (mediaItem) in
-                FirebaseController.shared.fetchComments(forMediaItemID: mediaItem.itemID, completion: { (comments) in
-                    self.numberOfCommentsLabel.isHidden = false
-                    self.numberOfCommentsLabel.text = "\(comments.count)"
-                })
-            }
-        }
+        FirebaseController.shared.fetchComments(forMediaItemID: inboxItem.itemID, completion: { (comments) in
+            self.numberOfCommentsLabel.isHidden = false
+            self.numberOfCommentsLabel.text = "\(comments.count)"
+        })
         
         if inboxItem.type == "photo" {
             let photoURL = URL(string: inboxItem.downloadURL)
@@ -88,8 +87,8 @@ class InboxCell: UITableViewCell {
             playButton.isHidden = true
             fullscreenButton.isHidden = true
         } else if inboxItem.type == "gif" {
-            let gifImage = UIImage.gif(url: inboxItem.downloadURL)
-            photoImageView.image = gifImage
+            let url = URL(string: inboxItem.downloadURL)
+            self.photoImageView.kf.setImage(with: url)
             playButton.isHidden = true
             fullscreenButton.isHidden = true
         } else {
@@ -258,6 +257,9 @@ class InboxCell: UITableViewCell {
         player?.pause()
         player = nil
         activityIndicatorView.stopAnimating()
+        self.inboxItem = nil
+        self.numberOfCommentsLabel.text = ""
+        self.captionLabel.isHidden = false
     }
     
     @objc func viewPhoto() {

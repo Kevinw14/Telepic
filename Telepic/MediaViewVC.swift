@@ -10,6 +10,7 @@ import UIKit
 import Kingfisher
 import AVKit
 import FirebaseAuth
+import SVProgressHUD
 
 class MediaViewVC: UIViewController {
 
@@ -31,7 +32,7 @@ class MediaViewVC: UIViewController {
     
     var playerLayer: AVPlayerLayer?
     var player: AVPlayer?
-    var playerIsPaused = false
+    var playerIsPaused = true
     
     @IBOutlet weak var numberOfCommentsLabel: UILabel!
     let activityIndicatorView: UIActivityIndicatorView = {
@@ -49,33 +50,20 @@ class MediaViewVC: UIViewController {
         button.tintColor = .white
         button.setImage(image, for: .normal)
         
-        button.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
         return button
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if let photo = photo {
+            self.mediaImageView.image = photo
+        }
+        
         if FirebaseController.shared.currentMediaItem?.type == "video" {
-            
             if let videoURL = FirebaseController.shared.currentMediaItem?.downloadURL, let url = URL(string: videoURL) {
                 player = AVPlayer(url: url)
-                playerLayer = AVPlayerLayer(player: player)
-                playerLayer?.videoGravity = .resizeAspectFill
-                playerLayer?.backgroundColor = UIColor.clear.cgColor
-                playerLayer?.frame = mediaImageView.bounds
-                mediaImageView.layer.addSublayer(playerLayer!)
                 
-                mediaImageView.addSubview(playButton)
-                playButton.centerXAnchor.constraint(equalTo: mediaImageView.centerXAnchor).isActive = true
-                playButton.centerYAnchor.constraint(equalTo: mediaImageView.centerYAnchor).isActive = true
-                playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-                playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-                playButton.isHidden = false
-            }
-        } else {
-            if let photo = photo {
-                self.mediaImageView.image = photo
             }
         }
         
@@ -116,6 +104,7 @@ class MediaViewVC: UIViewController {
         self.navigationController?.delegate = zoomTransitioningDelegate
         self.tabBarController?.tabBar.isHidden = true
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -127,14 +116,6 @@ class MediaViewVC: UIViewController {
         player?.actionAtItemEnd = .none
         player?.seek(to: kCMTimeZero)
         player?.play()
-    }
-    
-    @objc func handlePlay() {
-        
-        player?.play()
-        playButton.isHidden = true
-        activityIndicatorView.startAnimating()
-        print("Attempting to play video...")
     }
     
     @IBAction func creatorTapped(_ sender: Any) {
@@ -215,24 +196,6 @@ class MediaViewVC: UIViewController {
         FirebaseController.shared.fetchAvatarImage(forUID: mediaItem.creatorID, completion: { (avatarURL) in
             self.avatarImageView.kf.setImage(with: URL(string: avatarURL))
         })
-        
-//        if mediaItem.type == "video" {
-//            playButton.isHidden = false
-//
-//            mediaImageView.addSubview(activityIndicatorView)
-//            activityIndicatorView.centerXAnchor.constraint(equalTo: mediaImageView.centerXAnchor).isActive = true
-//            activityIndicatorView.centerYAnchor.constraint(equalTo: mediaImageView.centerYAnchor).isActive = true
-//            activityIndicatorView.widthAnchor.constraint(equalToConstant: 50).isActive = true
-//            activityIndicatorView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-//            activityIndicatorView.stopAnimating()
-//
-//            mediaImageView.addSubview(playButton)
-//            playButton.isUserInteractionEnabled = false
-//            playButton.centerXAnchor.constraint(equalTo: mediaImageView.centerXAnchor).isActive = true
-//            playButton.centerYAnchor.constraint(equalTo: mediaImageView.centerYAnchor).isActive = true
-//            playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-//            playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-//        }
     }
     
     @objc func pan(_ sender: UIPanGestureRecognizer) {
@@ -283,12 +246,15 @@ class MediaViewVC: UIViewController {
         }
         
         if FirebaseController.shared.currentMediaItem?.type == "video" {
-            if player == nil {
-                handlePlay()
-            } else if self.playerIsPaused {
-                player?.play()
-                playButton.isHidden = true
-                self.playerIsPaused = false
+            if player != nil && self.playerIsPaused {
+                if player?.status.rawValue == 1 {
+                    SVProgressHUD.dismiss()
+                    player?.play()
+                    playButton.isHidden = true
+                    self.playerIsPaused = false
+                } else {
+                    SVProgressHUD.show()
+                }
             } else {
                 player?.pause()
                 playButton.isHidden = false
@@ -299,6 +265,24 @@ class MediaViewVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        if player != nil {
+            
+            
+            playerLayer = AVPlayerLayer(player: player)
+            playerLayer?.videoGravity = .resizeAspectFill
+            playerLayer?.backgroundColor = UIColor.clear.cgColor
+            playerLayer?.frame = mediaImageView.frame
+            mediaImageView.layer.addSublayer(playerLayer!)
+
+            mediaImageView.addSubview(playButton)
+            playButton.centerXAnchor.constraint(equalTo: mediaImageView.centerXAnchor).isActive = true
+            playButton.centerYAnchor.constraint(equalTo: mediaImageView.centerYAnchor).isActive = true
+            playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            
+            playButton.isHidden = false
+        }
         
         topBarTopConstraint.constant = 0
         bottomBarBottomConstraint.constant = 0

@@ -40,7 +40,7 @@ class ForwardListVC: UITableViewController {
             NSAttributedStringKey.foregroundColor: UIColor(hexString: "333333"),
             NSAttributedStringKey.font: UIFont(name: "AvenirNext-DemiBold", size: 18)
         ]
-        
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.isHidden = false
         self.navigationController?.navigationBar.titleTextAttributes = titleAttrs
         self.navigationItem.leftBarButtonItem = backBarButton

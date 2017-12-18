@@ -774,7 +774,7 @@ class FirebaseController {
                             mediaItems.append(MediaItem(itemID: mediaID, dict: mediaItemDict))
                         }
                         
-                        if mediaID == mediaIDs.last {
+                        if mediaIDs.count == mediaItems.count {
                             completion(mediaItems.sorted { $0.forwards > $1.forwards})
                         }
                     })
@@ -797,7 +797,7 @@ class FirebaseController {
                             }
                         }
                         
-                        if mediaID == mediaIDs.last {
+                        if mediaIDs.count == mediaItems.count {
                             completion(mediaItems.sorted { $0.timestamp > $1.timestamp})
                         }
                     })
@@ -885,6 +885,10 @@ class FirebaseController {
             print("Download successful")
             completion(file)
         }
+    }
+    
+    func startAMovementVideo(caption: String?, videoURL: URL, thumbnailData: Data, currentLocation: [String:Double]) {
+        
     }
     
     func sendVideo(caption: String?, videoURL: URL, thumbnailData: Data, toUserIDs: [String], currentLocation: [String:Double]) {
@@ -1044,6 +1048,69 @@ class FirebaseController {
             }
         }
     }
+    
+//    func startAMovementPhoto(caption: String?, data: Data, type: String, currentLocation: [String:Double]) {
+//        guard let currentUser = Auth.auth().currentUser else { return }
+//
+//        // File to upload
+//        let localData = data
+//
+//        let identifier = UUID().uuidString
+//        let fileRef = storageRef.child("images/\(identifier)")
+//
+//        // Upload file and metadata to the object
+//        let uploadTask = fileRef.putData(localData, metadata: nil) { (metadata, error) in
+//            guard let metadata = metadata else {
+//                // Uh-oh, an error occurred!
+//                return
+//            }
+//            // Metadata contains file metadata such as size, content-type, and download URL.
+//            guard let downloadURL = metadata.downloadURL()?.absoluteString else { print("No Download URL"); return }
+//
+//            // store downloadURL at database
+//            if let currentUID = Auth.auth().currentUser?.uid {
+//                let childID = UUID().uuidString
+//                let dateSent = Date().timeIntervalSince1970
+//                self.ref.child("users").child(currentUID).child("uploads").child(childID).setValue(["downloadURL": downloadURL,"thumbnailURL": "n/a", "timestamp": dateSent, "type": "photo"])
+//
+//                NotificationCenter.default.post(Notification(name: Notifications.didUploadMedia))
+//
+//                guard let creatorUsername = currentUser.displayName else { return }
+//                let creatorAvatarURL = currentUser.photoURL?.absoluteString ?? "n/a"
+//                let timestamp = Date().timeIntervalSince1970
+//                let range = -2...2
+//                let randomDistance = Int(arc4random_uniform(UInt32(1 + range.upperBound - range.lowerBound))) + range.lowerBound
+//                print(randomDistance)
+//                let adjustedLatitude = currentLocation["latitude"]! + (Double(randomDistance) * 0.01)
+//                let adjustedLongitude = currentLocation["longitude"]! + (Double(randomDistance) * 0.01)
+//
+//                var mediaItem: [String:Any] = [
+//                    "timestamp": dateSent,
+//                    "type": type,
+//                    "creatorAvatarURL": creatorAvatarURL,
+//                    "creatorUsername": creatorUsername,
+//                    "creatorID": currentUID,
+//                    "downloadURL": downloadURL,
+//                    "thumbnailURL": "n/a",
+//                    "forwards": 0, // toUserIDs.count
+//                    "milesTraveled": 0,
+//                    "mapReference": [currentUID: ["latitude": adjustedLatitude, "longitude": adjustedLongitude, "avatarURL": currentUser.photoURL?.absoluteString ?? "n/a", "username": currentUser.displayName!, "timestamp": timestamp]]
+//                ]
+//
+//                self.ref.child("mediaItems").child(childID).setValue(mediaItem)
+//
+//                if let caption = caption {
+//                    self.ref.child("mediaItems").child(childID).child("caption").setValue(caption)
+//                    
+//                    let comment = Comment(senderID: currentUID, username: creatorUsername, message: caption, timestamp: Date().timeIntervalSince1970, senderAvatarURL: creatorAvatarURL)
+//                    self.ref.child("mediaItems").child(childID).child("comments").childByAutoId().setValue(comment.dictionaryRepresentation())
+//                }
+//
+//                self.ref.child("startAMovement").child(childID).setValue(true)
+//            }
+//
+//
+//    }
     
     func sendPhoto(caption: String?, data: Data, type: String, toUserIDs: [String], currentLocation: [String:Double]) {
         

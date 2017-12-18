@@ -131,34 +131,50 @@ class SendVC: UIViewController {
             selectedFriendIDs = selectFriendsVC?.getSelectedFriendIDs()
         }
         
-        guard selectedFriendIDs != nil else { return }
-        
-        if isForwardingItem {
+        if selectedFriendIDs != nil {
             
-            if inboxItemBeingSent == nil {
-                if let item = mediaItemBeingSent {
-                    FirebaseController.shared.forwardMediaItem(item, toFriendIDs: selectedFriendIDs!)
-                }
-            } else {
-                FirebaseController.shared.forwardInboxItem(inboxItemBeingSent!, toFriendIDs: selectedFriendIDs!)
-            }
-            
-        } else {
-            getUserLocation()
-            
-            // Set the item in the current user's inbox to "opened"
-            if let location = locationManager.location {
-                let lat = location.coordinate.latitude
-                let long = location.coordinate.longitude
+            if isForwardingItem {
                 
-                if videoURL != nil, let data = data {
-                    FirebaseController.shared.sendVideo(caption: caption ?? nil, videoURL: videoURL!, thumbnailData: data, toUserIDs: selectedFriendIDs!, currentLocation: ["latitude": lat, "longitude": long])
-                } else if let data = data {
-                    guard let type = currentType else { return }
-                    FirebaseController.shared.sendPhoto(caption: caption ?? nil, data: data, type: type, toUserIDs: selectedFriendIDs!, currentLocation: ["latitude": lat, "longitude": long])
+                if inboxItemBeingSent == nil {
+                    if let item = mediaItemBeingSent {
+                        FirebaseController.shared.forwardMediaItem(item, toFriendIDs: selectedFriendIDs!)
+                    }
+                } else {
+                    FirebaseController.shared.forwardInboxItem(inboxItemBeingSent!, toFriendIDs: selectedFriendIDs!)
+                }
+                
+            } else {
+                getUserLocation()
+                
+                // Set the item in the current user's inbox to "opened"
+                if let location = locationManager.location {
+                    let lat = location.coordinate.latitude
+                    let long = location.coordinate.longitude
+                    
+                    if videoURL != nil, let data = data {
+                        FirebaseController.shared.sendVideo(caption: caption ?? nil, videoURL: videoURL!, thumbnailData: data, toUserIDs: selectedFriendIDs!, currentLocation: ["latitude": lat, "longitude": long])
+                    } else if let data = data {
+                        guard let type = currentType else { return }
+                        FirebaseController.shared.sendPhoto(caption: caption ?? nil, data: data, type: type, toUserIDs: selectedFriendIDs!, currentLocation: ["latitude": lat, "longitude": long])
+                    }
                 }
             }
+        } else if FirebaseController.shared.startAMovement {
+//            getUserLocation()
+//
+//            if let location = locationManager.location {
+//                let lat = location.coordinate.latitude
+//                let long = location.coordinate.longitude
+//
+//                if videoURL != nil, let data = data {
+//                    FirebaseController.shared.startAMovementVideo(caption: caption ?? nil, videoURL: videoURL!, thumbnailData: data, currentLocation: ["latitude": lat, "longitude": long])
+//                } else if let data = data {
+//                    guard let type = currentType else { return }
+//                    FirebaseController.shared.startAMovementPhoto(caption: caption ?? nil, data: data, type: type, currentLocation: ["latitude": lat, "longitude": long])
+//                }
+//            }
         }
+        
         //dismiss(animated: true, completion: nil)
 //        self.dismiss(animated: true, completion: nil)
     }

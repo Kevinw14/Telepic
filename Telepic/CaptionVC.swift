@@ -79,6 +79,7 @@ class CaptionVC: UIViewController, UITextViewDelegate {
         previewImageView.addGestureRecognizer(tapGesture)
         
         contestOfTheWeekSwitch.setOn(false, animated: false)
+        startAMovementSwitch.setOn(false, animated: false)
         
         self.contestOfTheWeek.text = FirebaseController.remoteConfig["contestOfTheWeek"].stringValue
         
