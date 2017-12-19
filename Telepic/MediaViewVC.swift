@@ -187,6 +187,9 @@ class MediaViewVC: UIViewController {
     @objc func updateViews() {
         guard let mediaItem = FirebaseController.shared.currentMediaItem else { return }
         
+        self.numberOfCommentsLabel.text = ""
+        self.avatarImageView.image = #imageLiteral(resourceName: "avatar-1")
+        
         FirebaseController.shared.fetchComments(forMediaItemID: mediaItem.itemID, completion: { (comments) in
             self.numberOfCommentsLabel.isHidden = false
             self.numberOfCommentsLabel.text = "\(comments.count)"

@@ -40,7 +40,7 @@ class LoginVC: UIViewController {
                     // user is signed in
                     UserController.shared.currentUser.usingFacebook = true
                     let defaults = UserDefaults.standard
-                    defaults.set(Auth.auth().currentUser!.uid, forKey: "userID")
+                    defaults.set(true, forKey: "isUsingFacebook")
                     // if user has a username continue to inbox
                     if let user = user {
                         FirebaseController.shared.isUsernameStored(uid: user.uid, completion: { (result) in
@@ -62,7 +62,8 @@ class LoginVC: UIViewController {
     
     @IBAction func continueWithEmailButtonTapped(_ sender: Any) {
         UserController.shared.currentUser.usingFacebook = false
-
+        let defaults = UserDefaults.standard
+        defaults.set(false, forKey: "isUsingFacebook")
         let nextVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: Identifiers.loginContainerVC) as! LoginContainerVC
         nextVC.isUsingEmail = true
         self.navigationController?.pushViewController(nextVC, animated: true)

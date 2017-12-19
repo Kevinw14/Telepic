@@ -131,12 +131,13 @@ class CaptionVC: UIViewController, UITextViewDelegate {
     
     @objc func goBack() {
         self.navigationController?.popViewController(animated: true)
-        self.navigationController?.dismiss(animated: true, completion: nil)
+//        self.navigationController?.dismiss(animated: true, completion: nil)
     }
     
     @objc func done() {
         let sendVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: Identifiers.sendVC) as! SendVC
         sendVC.caption = self.captionTextView.text == "Write a caption..." ? nil : self.captionTextView.text
+        sendVC.fromCaption = true
         if let thumbnail = thumbnail { sendVC.data = UIImageJPEGRepresentation(thumbnail, 1.0)}
         if let image = image {
             if let data = data {

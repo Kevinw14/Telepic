@@ -71,7 +71,7 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         let foregroundImageView = possibleForegroundImageView!
         
         let imageViewSnapshot = UIImageView(image: backgroundImageView.image)
-        imageViewSnapshot.contentMode = backgroundImageView.contentMode  //.scaleAspectFill
+        imageViewSnapshot.contentMode = backgroundImageView.contentMode
         imageViewSnapshot.layer.masksToBounds = true
         
         backgroundImageView.isHidden = true

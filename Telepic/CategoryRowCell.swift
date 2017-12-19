@@ -46,6 +46,12 @@ class CategoryRowCell: UITableViewCell {
                 
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.playButton.isHidden = true
+    }
+    
     func updateMediaItems() {
         var updated = [MediaItem]()
         for mediaItem in mediaItems {

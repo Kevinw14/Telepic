@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-//import NotificationBannerSwift
+import NotificationBannerSwift
 import MapKit
 import SVProgressHUD
 
@@ -206,34 +206,41 @@ class FirebaseController {
             guard let inboxItemDict = snapshot.value as? [String:Any] else { return }
             let inboxItem = InboxItem(itemID: snapshot.key, dict: inboxItemDict)
             
-            
-            
             let isUnique = !self.inboxItems.contains(where: { (item) -> Bool in
                 inboxItem.itemID == item.itemID
             })
             
             if isUnique {
-                self.inboxItems.append(inboxItem)
-                self.inboxItems = self.inboxItems.sorted { $0.timestamp > $1.timestamp }
-                
-                if inboxItem.opened == false {
-                    let notification = EventNotification(username: inboxItem.senderUsername,
-                                                     avatarURL: inboxItem.senderAvatarURL,
-                                                     userID: inboxItem.senderID,
-                                                     message: "\(inboxItem.senderUsername) sent you a \(inboxItem.type)!",
-                                                     mediaURL: inboxItem.downloadURL,
-                                                     mediaID: inboxItem.itemID,
-                                                     type: NotificationType.newInboxItem,
-                                                     timestamp: inboxItem.timestamp)
-                    self.eventNotifications.append(notification)
-                    self.ref.child("users").child(currentUser.uid).child("notifications").childByAutoId().setValue(notification.dictionaryRepresentation())
-                
-//                    let banner = StatusBarNotificationBanner(title: notification.message, style: .success)
-//                    banner.show()
+                self.ref.child("mediaItems").child(inboxItem.itemID).child("recipients").observeSingleEvent(of: .value, with: { (snapshot) in
+                    guard let recipients = snapshot.value as? [String:Bool] else { return }
                     
-                    self.eventNotifications = self.eventNotifications.sorted { $0.timestamp > $1.timestamp }
-                }
-                NotificationCenter.default.post(name: Notifications.newInboxItem, object: self)
+                    let recipientIDs = Array(recipients.keys)
+                    
+                    if !recipientIDs.contains(currentUser.uid) {
+                        self.inboxItems.append(inboxItem)
+                        
+                        self.inboxItems = self.inboxItems.sorted { $0.timestamp > $1.timestamp }
+                        
+                        if inboxItem.opened == false {
+                            let notification = EventNotification(username: inboxItem.senderUsername,
+                                                                 avatarURL: inboxItem.senderAvatarURL,
+                                                                 userID: inboxItem.senderID,
+                                                                 message: "\(inboxItem.senderUsername) sent you a \(inboxItem.type)!",
+                                mediaURL: inboxItem.downloadURL,
+                                mediaID: inboxItem.itemID,
+                                type: NotificationType.newInboxItem,
+                                timestamp: inboxItem.timestamp)
+                            self.eventNotifications.append(notification)
+                            self.ref.child("users").child(currentUser.uid).child("notifications").childByAutoId().setValue(notification.dictionaryRepresentation())
+                            
+                            //                    let banner = StatusBarNotificationBanner(title: notification.message, style: .success)
+                            //                    banner.show()
+                            
+                            self.eventNotifications = self.eventNotifications.sorted { $0.timestamp > $1.timestamp }
+                        }
+                        NotificationCenter.default.post(name: Notifications.newInboxItem, object: self)
+                    }
+                })
             }
         }
     }
@@ -285,6 +292,13 @@ class FirebaseController {
     
     func removeMediaItem(withID itemID: String) {
         guard let currentUID = Auth.auth().currentUser?.uid else { return }
+        
+        self.ref.child("contest").child(itemID).removeValue()
+        
+        self.ref.child("startAMovement").child(itemID).removeValue()
+        
+        self.ref.child("users").child(currentUID).child("uploads").child(itemID).removeValue()
+        
         self.ref.child("mediaItems").child(itemID).child("recipients").observeSingleEvent(of: .value) { (snapshot) in
             guard let recipientsDict = snapshot.value as? [String:Any] else { return }
             
@@ -304,12 +318,6 @@ class FirebaseController {
                 })
             })
             
-            self.ref.child("contest").child(itemID).removeValue()
-            
-            self.ref.child("startAMovement").child(itemID).removeValue()
-            
-            self.ref.child("users").child(currentUID).child("uploads").child(itemID).removeValue()
-            
             self.ref.child("mediaItems").child(itemID).child("forwarders").observeSingleEvent(of: .value) { (snapshot) in
                 if let forwarders = snapshot.value as? [String:Any] {
                     for userID in forwarders.keys {
@@ -321,10 +329,14 @@ class FirebaseController {
                 NotificationCenter.default.post(Notification(name: Notifications.didUploadMedia))
             }
         }
+        
+        NotificationCenter.default.post(Notification(name: Notifications.didUploadMedia))
     }
     
     func setItemOpened(inboxItem: InboxItem, latitude: Double, longitude: Double) {
         guard let currentUser = Auth.auth().currentUser else { return }
+        
+        self.ref.child("startAMovement").child(inboxItem.itemID).removeValue()
         ref.child("users").child(currentUser.uid).child("inbox").child(inboxItem.itemID).updateChildValues(["opened": true])
 
         let timestamp = Date().timeIntervalSince1970
@@ -443,6 +455,9 @@ class FirebaseController {
         
         ref.child("users").child(toUID).child("requests").child("received").child(currentUser.uid).setValue(["username": displayName, "avatarURL": avatarURL])
         ref.child("users").child(currentUser.uid).child("requests").child("sent").child(toUID).setValue(true)
+        
+        let banner = StatusBarNotificationBanner(title: "Friend request sent!", style: .success)
+        banner.show()
     }
     
     func fetchFriendRequests() {
@@ -598,18 +613,27 @@ class FirebaseController {
     func getValidForwardTargets(itemID: String, creatorID: String, targets: [String], completion: @escaping ([String]) -> Void) {
         var validIDs = [String]()
         
-        for uid in targets {
-            self.ref.child("users").child(uid).child("inbox").observeSingleEvent(of: .value, with: { (snapshot) in
-                if snapshot.hasChild(itemID) {
-                    print("User already has inbox item.")
-                } else if uid == creatorID {
-                    print("User is the creator.")
-                } else {
-                    validIDs.append(uid)
-                }
-                if uid == targets.last { completion(validIDs) }
-            })
-        }
+        self.ref.child("mediaItems").child(itemID).child("recipients").observeSingleEvent(of: .value, with: { (snapshot) in
+            if !snapshot.exists() { print("no recipients")}
+            guard let recipients = snapshot.value as? [String:Bool] else { return }
+            
+            let recipientIDs = Array(recipients.keys)
+            validIDs = targets.filter { targetID in
+                return !recipientIDs.contains(targetID) && targetID != creatorID
+            }
+            
+            completion(validIDs)
+        })
+//            self.ref.child("users").child(uid).child("inbox").observeSingleEvent(of: .value, with: { (snapshot) in
+//                if snapshot.hasChild(itemID) {
+//                    print("User already has inbox item.")
+//                } else if uid == creatorID {
+//                    print("User is the creator.")
+//                } else {
+//                    validIDs.append(uid)
+//                }
+//                if uid == targets.last { completion(validIDs) }
+//            })
     }
     
 //    func fetchForwardList(forMediaItemID mediaItemID: String, completion: @escaping ([String:[String:Any]]) -> Void) {
@@ -655,9 +679,12 @@ class FirebaseController {
             }
             
             self.ref.child("users").child(currentUID).child("forwards").child(item.itemID).setValue(true)
-            
+
             self.ref.child("users").child(currentUID).child("inbox").child(item.itemID).removeValue()
             self.loadInboxItems()
+            
+            let banner = StatusBarNotificationBanner(title: "Your \(item.type) was delivered successfully!", style: .success)
+            banner.show()
             
             NotificationCenter.default.post(Notification(name: Notifications.didForwardMedia))
         }
@@ -698,6 +725,9 @@ class FirebaseController {
             
             self.ref.child("users").child(currentUID).child("inbox").child(item.itemID).removeValue()
             self.loadInboxItems()
+            
+            let banner = StatusBarNotificationBanner(title: "Your \(item.type) was delivered successfully!", style: .success)
+            banner.show()
             
             NotificationCenter.default.post(Notification(name: Notifications.didForwardMedia))
         }
@@ -795,11 +825,11 @@ class FirebaseController {
                             if forwards == 0 {
                                 mediaItems.append(MediaItem(itemID: mediaID, dict: mediaItemDict))
                             }
+                            if mediaIDs.last == mediaID {
+                                completion(mediaItems.sorted { $0.timestamp > $1.timestamp})
+                            }
                         }
                         
-                        if mediaIDs.count == mediaItems.count {
-                            completion(mediaItems.sorted { $0.timestamp > $1.timestamp})
-                        }
                     })
                 }
             }
@@ -887,8 +917,80 @@ class FirebaseController {
         }
     }
     
-    func startAMovementVideo(caption: String?, videoURL: URL, thumbnailData: Data, currentLocation: [String:Double]) {
+    func postVideo(caption: String?, videoURL: URL, thumbnailData: Data, currentLocation: [String:Double]) {
+        guard let currentUser = Auth.auth().currentUser else { return }
         
+        let localFile = videoURL
+        let identifier = UUID().uuidString
+        let fileRef = storageRef.child("videos/\(identifier)")
+        
+        let uploadTask = fileRef.putFile(from: localFile)
+        
+        uploadTask.observe(.success) { (snapshot) in
+            guard let downloadURL = snapshot.metadata?.downloadURL()?.absoluteString else { return }
+            
+            let data = thumbnailData
+            let thumbnailRef = self.storageRef.child("thumbnails/\(identifier)")
+            let _ = thumbnailRef.putData(data, metadata: nil) { thumbnailMetadata, thumbnailError in
+                guard let thumbnailMetadata = thumbnailMetadata else {
+                    return
+                }
+                
+                guard let thumbnailURL = thumbnailMetadata.downloadURL()?.absoluteString else { print("Missing thumbnail"); return }
+                
+                // store downloadURL at database
+                if let currentUID = Auth.auth().currentUser?.uid {
+                    let childID = UUID().uuidString
+                    let dateSent = Date().timeIntervalSince1970
+                    self.ref.child("users").child(currentUID).child("uploads").child(childID).setValue(["downloadURL": identifier, "thumbnailURL": thumbnailURL, "timestamp": dateSent, "type": "video"])
+                    
+                    NotificationCenter.default.post(Notification(name: Notifications.didUploadMedia))
+                    
+                    guard let creatorUsername = currentUser.displayName  else { return }
+                    
+                    let creatorAvatarURL = currentUser.photoURL?.absoluteString ?? "n/a"
+                    let timestamp = Date().timeIntervalSince1970
+                    let range = -2...2
+                    let randomDistance = Int(arc4random_uniform(UInt32(1 + range.upperBound - range.lowerBound))) + range.lowerBound
+                    print(randomDistance)
+                    let adjustedLatitude = currentLocation["latitude"]! + (Double(randomDistance) * 0.01)
+                    let adjustedLongitude = currentLocation["longitude"]! + (Double(randomDistance) * 0.01)
+                    
+                    var mediaItem: [String:Any] = [
+                        "timestamp": dateSent,
+                        "type": "video",
+                        "creatorUsername": creatorUsername,
+                        "creatorAvatarURL": creatorAvatarURL,
+                        "creatorID": currentUID,
+                        "downloadURL": downloadURL,
+                        "thumbnailURL": thumbnailURL,
+                        "forwards": 0,
+                        "milesTraveled": 0,
+                        "mapReference": [currentUID: ["latitude": adjustedLatitude, "longitude": adjustedLongitude, "avatarURL": currentUser.photoURL?.absoluteString ?? "n/a", "username": currentUser.displayName!, "timestamp": timestamp]]
+                    ]
+                    
+                    self.ref.child("mediaItems").child(childID).setValue(mediaItem)
+                    
+                    if let caption = caption {
+                        self.ref.child("mediaItems").child(childID).child("caption").setValue(caption)
+                        
+                        let comment = Comment(senderID: currentUID, username: creatorUsername, message: caption, timestamp: Date().timeIntervalSince1970, senderAvatarURL: creatorAvatarURL)
+                        self.ref.child("mediaItems").child(childID).child("comments").childByAutoId().setValue(comment.dictionaryRepresentation())
+                    }
+                    
+                    if self.contest {
+                        self.ref.child("startAMovement").child(childID).setValue(true)
+                    }
+                    
+                    if self.startAMovement {
+                        self.ref.child("contest").child(childID).setValue(true)
+                    }
+                    
+                    let banner = StatusBarNotificationBanner(title: "Your video was posted successfully!", style: .success)
+                    banner.show()
+                }
+            }
+        }
     }
     
     func sendVideo(caption: String?, videoURL: URL, thumbnailData: Data, toUserIDs: [String], currentLocation: [String:Double]) {
@@ -992,10 +1094,13 @@ class FirebaseController {
                         self.ref.child("contest").child(childID).setValue(true)
                     }
                     
-                    SVProgressHUD.setDefaultMaskType(.black)
-                    SVProgressHUD.setBackgroundColor(.white)
-                    SVProgressHUD.showSuccess(withStatus: "Forwarded!")
-                    SVProgressHUD.dismiss(withDelay: 1.5)
+//                    SVProgressHUD.setDefaultMaskType(.black)
+//                    SVProgressHUD.setBackgroundColor(.white)
+//                    SVProgressHUD.showSuccess(withStatus: "Forwarded!")
+//                    SVProgressHUD.dismiss(withDelay: 1.5)
+                    
+                    let banner = StatusBarNotificationBanner(title: "Your video was delivered successfully!", style: .success)
+                    banner.show()
                 }
             }
         }
@@ -1012,11 +1117,11 @@ class FirebaseController {
         
         uploadTask.observe(.progress) { (snapshot) in
             // Upload reported progress
-            let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount)
-            print(percentComplete)
-            SVProgressHUD.setDefaultMaskType(.black)
-            SVProgressHUD.setBackgroundColor(.white)
-            SVProgressHUD.showProgress(Float(percentComplete))
+//            let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount)
+//            print(percentComplete)
+//            SVProgressHUD.setDefaultMaskType(.black)
+//            SVProgressHUD.setBackgroundColor(.white)
+//            SVProgressHUD.showProgress(Float(percentComplete))
         }
         
         uploadTask.observe(.failure) { (snapshot) in
@@ -1039,78 +1144,86 @@ class FirebaseController {
             //                    break
             //                }
             //            }
-            if let error = snapshot.error {
-                print(error.localizedDescription)
-                SVProgressHUD.setDefaultMaskType(.black)
-                SVProgressHUD.setBackgroundColor(.white)
-                SVProgressHUD.showError(withStatus: "Error Uploading Media")
-                SVProgressHUD.dismiss(withDelay: 1.5)
-            }
+//            if let error = snapshot.error {
+//                print(error.localizedDescription)
+//                SVProgressHUD.setDefaultMaskType(.black)
+//                SVProgressHUD.setBackgroundColor(.white)
+//                SVProgressHUD.showError(withStatus: "Error Uploading Media")
+//                SVProgressHUD.dismiss(withDelay: 1.5)
+//            }
         }
     }
     
-//    func startAMovementPhoto(caption: String?, data: Data, type: String, currentLocation: [String:Double]) {
-//        guard let currentUser = Auth.auth().currentUser else { return }
-//
-//        // File to upload
-//        let localData = data
-//
-//        let identifier = UUID().uuidString
-//        let fileRef = storageRef.child("images/\(identifier)")
-//
-//        // Upload file and metadata to the object
-//        let uploadTask = fileRef.putData(localData, metadata: nil) { (metadata, error) in
-//            guard let metadata = metadata else {
-//                // Uh-oh, an error occurred!
-//                return
-//            }
-//            // Metadata contains file metadata such as size, content-type, and download URL.
-//            guard let downloadURL = metadata.downloadURL()?.absoluteString else { print("No Download URL"); return }
-//
-//            // store downloadURL at database
-//            if let currentUID = Auth.auth().currentUser?.uid {
-//                let childID = UUID().uuidString
-//                let dateSent = Date().timeIntervalSince1970
-//                self.ref.child("users").child(currentUID).child("uploads").child(childID).setValue(["downloadURL": downloadURL,"thumbnailURL": "n/a", "timestamp": dateSent, "type": "photo"])
-//
-//                NotificationCenter.default.post(Notification(name: Notifications.didUploadMedia))
-//
-//                guard let creatorUsername = currentUser.displayName else { return }
-//                let creatorAvatarURL = currentUser.photoURL?.absoluteString ?? "n/a"
-//                let timestamp = Date().timeIntervalSince1970
-//                let range = -2...2
-//                let randomDistance = Int(arc4random_uniform(UInt32(1 + range.upperBound - range.lowerBound))) + range.lowerBound
-//                print(randomDistance)
-//                let adjustedLatitude = currentLocation["latitude"]! + (Double(randomDistance) * 0.01)
-//                let adjustedLongitude = currentLocation["longitude"]! + (Double(randomDistance) * 0.01)
-//
-//                var mediaItem: [String:Any] = [
-//                    "timestamp": dateSent,
-//                    "type": type,
-//                    "creatorAvatarURL": creatorAvatarURL,
-//                    "creatorUsername": creatorUsername,
-//                    "creatorID": currentUID,
-//                    "downloadURL": downloadURL,
-//                    "thumbnailURL": "n/a",
-//                    "forwards": 0, // toUserIDs.count
-//                    "milesTraveled": 0,
-//                    "mapReference": [currentUID: ["latitude": adjustedLatitude, "longitude": adjustedLongitude, "avatarURL": currentUser.photoURL?.absoluteString ?? "n/a", "username": currentUser.displayName!, "timestamp": timestamp]]
-//                ]
-//
-//                self.ref.child("mediaItems").child(childID).setValue(mediaItem)
-//
-//                if let caption = caption {
-//                    self.ref.child("mediaItems").child(childID).child("caption").setValue(caption)
-//                    
-//                    let comment = Comment(senderID: currentUID, username: creatorUsername, message: caption, timestamp: Date().timeIntervalSince1970, senderAvatarURL: creatorAvatarURL)
-//                    self.ref.child("mediaItems").child(childID).child("comments").childByAutoId().setValue(comment.dictionaryRepresentation())
-//                }
-//
-//                self.ref.child("startAMovement").child(childID).setValue(true)
-//            }
-//
-//
-//    }
+    func postPhoto(caption: String?, data: Data, type: String, currentLocation: [String:Double]) {
+        guard let currentUser = Auth.auth().currentUser else { return }
+        
+        // File to upload
+        let localData = data
+        
+        let identifier = UUID().uuidString
+        let fileRef = storageRef.child("images/\(identifier)")
+        
+        // Upload file and metadata to the object
+        let uploadTask = fileRef.putData(localData, metadata: nil) { (metadata, error) in
+            guard let metadata = metadata else {
+                // Uh-oh, an error occurred!
+                return
+            }
+            // Metadata contains file metadata such as size, content-type, and download URL.
+            guard let downloadURL = metadata.downloadURL()?.absoluteString else { print("No Download URL"); return }
+            
+            // store downloadURL at database
+            if let currentUID = Auth.auth().currentUser?.uid {
+                let childID = UUID().uuidString
+                let dateSent = Date().timeIntervalSince1970
+                self.ref.child("users").child(currentUID).child("uploads").child(childID).setValue(["downloadURL": downloadURL,"thumbnailURL": "n/a", "timestamp": dateSent, "type": "photo"])
+                
+                NotificationCenter.default.post(Notification(name: Notifications.didUploadMedia))
+                
+                guard let creatorUsername = currentUser.displayName else { return }
+                let creatorAvatarURL = currentUser.photoURL?.absoluteString ?? "n/a"
+                let timestamp = Date().timeIntervalSince1970
+                let range = -2...2
+                let randomDistance = Int(arc4random_uniform(UInt32(1 + range.upperBound - range.lowerBound))) + range.lowerBound
+                print(randomDistance)
+                let adjustedLatitude = currentLocation["latitude"]! + (Double(randomDistance) * 0.01)
+                let adjustedLongitude = currentLocation["longitude"]! + (Double(randomDistance) * 0.01)
+                
+                var mediaItem: [String:Any] = [
+                    "timestamp": dateSent,
+                    "type": type,
+                    "creatorAvatarURL": creatorAvatarURL,
+                    "creatorUsername": creatorUsername,
+                    "creatorID": currentUID,
+                    "downloadURL": downloadURL,
+                    "thumbnailURL": "n/a",
+                    "forwards": 0,
+                    "milesTraveled": 0,
+                    "mapReference": [currentUID: ["latitude": adjustedLatitude, "longitude": adjustedLongitude, "avatarURL": currentUser.photoURL?.absoluteString ?? "n/a", "username": currentUser.displayName!, "timestamp": timestamp]]
+                ]
+                
+                self.ref.child("mediaItems").child(childID).setValue(mediaItem)
+                
+                if let caption = caption {
+                    self.ref.child("mediaItems").child(childID).child("caption").setValue(caption)
+                    
+                    let comment = Comment(senderID: currentUID, username: creatorUsername, message: caption, timestamp: Date().timeIntervalSince1970, senderAvatarURL: creatorAvatarURL)
+                    self.ref.child("mediaItems").child(childID).child("comments").childByAutoId().setValue(comment.dictionaryRepresentation())
+                }
+                
+                if self.contest {
+                    self.ref.child("contest").child(childID).setValue(true)
+                }
+                
+                if self.startAMovement {
+                    self.ref.child("startAMovement").child(childID).setValue(true)
+                }
+                
+                let banner = StatusBarNotificationBanner(title: "Your photo was posted successfully!", style: .success)
+                banner.show()
+            }
+        }
+    }
     
     func sendPhoto(caption: String?, data: Data, type: String, toUserIDs: [String], currentLocation: [String:Double]) {
         
@@ -1207,6 +1320,9 @@ class FirebaseController {
                 if self.startAMovement {
                     self.ref.child("startAMovement").child(childID).setValue(true)
                 }
+                
+                let banner = StatusBarNotificationBanner(title: "Your photo was delivered successfully!", style: .success)
+                banner.show()
             }
         }
         
@@ -1221,21 +1337,21 @@ class FirebaseController {
         
         uploadTask.observe(.progress) { (snapshot) in
             // Upload reported progress
-            let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount)
-            print(percentComplete)
-            SVProgressHUD.setDefaultMaskType(.black)
-            SVProgressHUD.setBackgroundColor(.white)
-            SVProgressHUD.showProgress(Float(percentComplete))
+//            let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount)
+//            print(percentComplete)
+//            SVProgressHUD.setDefaultMaskType(.black)
+//            SVProgressHUD.setBackgroundColor(.white)
+//            SVProgressHUD.showProgress(Float(percentComplete))
         }
         
         uploadTask.observe(.success) { (snapshot) in
             // Upload completed successfully
             // store downloadURL
             
-            SVProgressHUD.setDefaultMaskType(.black)
-            SVProgressHUD.setBackgroundColor(.white)
-            SVProgressHUD.showSuccess(withStatus: "Forwarded!")
-            SVProgressHUD.dismiss(withDelay: 1.5)
+//            SVProgressHUD.setDefaultMaskType(.black)
+//            SVProgressHUD.setBackgroundColor(.white)
+//            SVProgressHUD.showSuccess(withStatus: "Forwarded!")
+//            SVProgressHUD.dismiss(withDelay: 1.5)
         }
         
         uploadTask.observe(.failure) { (snapshot) in

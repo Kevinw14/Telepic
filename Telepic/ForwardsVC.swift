@@ -73,7 +73,7 @@ class ForwardsVC: TabChildVC {
                         for mediaID in mediaIDs {
                             FirebaseController.shared.fetchMediaItem(forItemID: mediaID, completion: { (mediaItem) in
                                 forwards.append(mediaItem)
-                                if mediaID == mediaIDs.last {
+                                if mediaIDs.count == forwards.count {
                                     self.forwards = forwards
                                     self.collectionView.reloadData()
                                 }

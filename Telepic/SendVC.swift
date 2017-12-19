@@ -32,6 +32,7 @@ class SendVC: UIViewController {
     var isFromMapVC = false
     var currentType: String?
     var isModal = false
+    var fromCaption = false
     
     var isSelectingGroups = false {
         didSet {
@@ -47,7 +48,7 @@ class SendVC: UIViewController {
         super.viewDidLoad()
         
         self.navigationController?.navigationBar.isHidden = true
-        doneButton.setTitle("Forward", for: .normal)
+        doneButton.setTitle("Done", for: .normal)
         
         if let item = inboxItemBeingSent {
             FirebaseController.shared.fetchValidForwardTargets(itemID: item.itemID, creatorID: item.creatorID)
@@ -59,36 +60,12 @@ class SendVC: UIViewController {
         if !isForwardingItem {
             FirebaseController.shared.fetchFriends(uid: Auth.auth().currentUser!.uid)
             NotificationCenter.default.addObserver(self, selector: #selector(notifySelectFriendsVC), name: Notifications.didLoadFriends, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(completeUpload), name: Notifications.didUploadMedia, object: nil)
         }
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(completeForward), name: Notifications.didForwardMedia, object: nil)
         
         if isModal {
             self.backButton.isHidden = true
         } else {
             self.closeButton.isHidden = true
-        }
-        
-        
-    }
-    
-    @objc func completeUpload() {
-//        dismiss(animated: true, completion: nil)
-//        self.navigationController?.popViewController(animated: true)
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    @objc func completeForward() {
-        SVProgressHUD.setDefaultMaskType(.black)
-        SVProgressHUD.setBackgroundColor(.white)
-        SVProgressHUD.showSuccess(withStatus: "Forwarded!")
-        SVProgressHUD.dismiss(withDelay: 1.5) {
-            if self.isModal {
-                self.dismiss(animated: true, completion: nil)
-            } else {
-                self.navigationController?.popViewController(animated: true)
-            }
         }
     }
     
@@ -159,24 +136,28 @@ class SendVC: UIViewController {
                     }
                 }
             }
-        } else if FirebaseController.shared.startAMovement {
-//            getUserLocation()
-//
-//            if let location = locationManager.location {
-//                let lat = location.coordinate.latitude
-//                let long = location.coordinate.longitude
-//
-//                if videoURL != nil, let data = data {
-//                    FirebaseController.shared.startAMovementVideo(caption: caption ?? nil, videoURL: videoURL!, thumbnailData: data, currentLocation: ["latitude": lat, "longitude": long])
-//                } else if let data = data {
-//                    guard let type = currentType else { return }
-//                    FirebaseController.shared.startAMovementPhoto(caption: caption ?? nil, data: data, type: type, currentLocation: ["latitude": lat, "longitude": long])
-//                }
-//            }
+        } else {
+            getUserLocation()
+            
+            // Set the item in the current user's inbox to "opened"
+            if let location = locationManager.location {
+                let lat = location.coordinate.latitude
+                let long = location.coordinate.longitude
+                if videoURL != nil, let data = data {
+                    FirebaseController.shared.postVideo(caption: caption ?? nil, videoURL: videoURL!, thumbnailData: data, currentLocation: ["latitude": lat, "longitude": long])
+                } else if let data = data {
+                    guard let type = currentType else { return }
+                    FirebaseController.shared.postPhoto(caption: caption ?? nil, data: data, type: type, currentLocation: ["latitude": lat, "longitude": long])
+                }
+            }
+        }
+
+        if isModal || fromCaption {
+            dismiss(animated: true, completion: nil)
+        } else {
+            self.navigationController?.popViewController(animated: true)
         }
         
-        //dismiss(animated: true, completion: nil)
-//        self.dismiss(animated: true, completion: nil)
     }
     
     func setUpButtons() {

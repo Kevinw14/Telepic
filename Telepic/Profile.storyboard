@@ -731,8 +731,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="342" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="App Setting #1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pYt-rO-lvW">
-                                                    <rect key="frame" x="20" y="11.5" width="113" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Invite Friends" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pYt-rO-lvW">
+                                                    <rect key="frame" x="20" y="11.5" width="102" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -743,6 +743,9 @@
                                                 <constraint firstItem="pYt-rO-lvW" firstAttribute="leading" secondItem="qGS-Bk-Qdl" secondAttribute="leading" constant="20" id="oNi-5z-BCC"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="sgx-P2-dr7" kind="show" id="fMj-H6-dC5"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="9cs-X4-APT">
                                         <rect key="frame" x="0.0" y="276" width="375" height="44"/>
@@ -751,8 +754,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="App Setting #2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M0V-07-aFn">
-                                                    <rect key="frame" x="20" y="12" width="115" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Push Notifications" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M0V-07-aFn">
+                                                    <rect key="frame" x="20" y="12" width="139" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -783,13 +786,13 @@
                                                         <constraint firstAttribute="height" constant="1" id="xaj-rP-raa"/>
                                                     </constraints>
                                                 </view>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="App Setting #3" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UvL-1F-2zL">
-                                                    <rect key="frame" x="20" y="12" width="116" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Private Profile" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UvL-1F-2zL">
+                                                    <rect key="frame" x="20" y="12" width="106" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H1a-06-K49">
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="H1a-06-K49">
                                                     <rect key="frame" x="306" y="7" width="51" height="31"/>
                                                 </switch>
                                             </subviews>
@@ -1026,6 +1029,34 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3XC-KZ-z2r" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="957.60000000000002" y="1461.7691154422789"/>
+        </scene>
+        <!--Invite FriendsVC-->
+        <scene sceneID="N4e-WX-iw1">
+            <objects>
+                <viewController id="sgx-P2-dr7" customClass="InviteFriendsVC" customModule="Telepic" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="dW4-FM-pMN">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="602"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ubq-3X-nU4">
+                                <rect key="frame" x="141.5" y="286" width="92" height="30"/>
+                                <state key="normal" title="Invite Friends"/>
+                                <connections>
+                                    <action selector="fbInviteButtonTapped:" destination="sgx-P2-dr7" eventType="touchUpInside" id="rFr-rI-9Cc"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="ubq-3X-nU4" firstAttribute="centerY" secondItem="dW4-FM-pMN" secondAttribute="centerY" id="3tS-8S-H4g"/>
+                            <constraint firstItem="ubq-3X-nU4" firstAttribute="centerX" secondItem="dW4-FM-pMN" secondAttribute="centerX" id="Y9D-Ev-mo6"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="cHt-dz-GjI"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ToZ-Ll-Kpi" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="958" y="2179"/>
         </scene>
         <!--Settings ContainerVC-->
         <scene sceneID="RMu-ZL-rXs">

@@ -143,9 +143,17 @@ class MapVC: UIViewController {
                         return
                 }
                 
+                var forwards = 0
+                if let forwardList = self.mediaItem?.forwardList {
+                    if let userForwards = forwardList[userID] {
+                        if let count = userForwards["count"] as? Int {
+                            forwards = count
+                        }
+                    }
+                }
                 let avatarURL = user["avatarURL"] as? String ?? "n/a"
                 let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-                let userAnnotation = UserAnnotation(title: username, userID: userID, avatarURL: avatarURL, coordinate: coordinate, forwards: 0, timestamp: timestamp)
+                let userAnnotation = UserAnnotation(title: username, userID: userID, avatarURL: avatarURL, coordinate: coordinate, forwards: forwards, timestamp: timestamp)
                 
                 if userID == self.mediaItem?.creatorID { userAnnotation.isCreator = true }
                 self.annotations.append(userAnnotation)
