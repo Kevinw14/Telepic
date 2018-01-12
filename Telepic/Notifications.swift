@@ -30,4 +30,5 @@ struct Notifications {
     static let reloadNotifications = Notification.Name("ReloadNotifications")
     static let stopPlayer = Notification.Name("StopPlayer")
     static let emptyComments = Notification.Name("EmptyComments")
+    static let updateBadge = Notification.Name("UpdateBadge")
 }

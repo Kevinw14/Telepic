@@ -22,4 +22,7 @@ target 'Telepic' do
   pod 'Tabman', '~> 1.0'
   pod 'Gallery'
   pod 'SteviaLayout'
+  pod 'CropViewController'
+  pod 'Viewer'
+  pod 'Lightbox'
 end

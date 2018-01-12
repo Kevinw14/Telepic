@@ -37,9 +37,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let homeStoryboard: UIStoryboard = UIStoryboard(name: "Home", bundle: nil)
         
+//        do {
+//            try Auth.auth().signOut()
+//        } catch let signOutError as NSError {
+//            print ("Error signing out: %@", signOutError)
+//        }
+        
         if Auth.auth().currentUser != nil {
             // User is signed in.
             self.window?.rootViewController = homeStoryboard.instantiateViewController(withIdentifier: Identifiers.tabBarController)
+
         } else {
             // No user is signed in.
             window?.rootViewController = mainStoryboard.instantiateInitialViewController()
@@ -61,6 +68,61 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
         print(userInfo)
         //FirebaseController.shared.updateBadgeCount()
+        
+        if application.applicationState == .inactive {
+            
+            guard Auth.auth().currentUser != nil else { return }
+            
+            if let aps = userInfo["aps"] as? [String:Any] {
+                if let category = aps["category"] as? String {
+                    switch category {
+                    case "notifications":
+                        let rootVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: Identifiers.tabBarController) as! TabBarController
+                        rootVC.selectedIndex = 3
+                        self.window?.rootViewController = rootVC
+                        self.window?.makeKeyAndVisible()
+                    case "comments":
+                        if let mediaID = userInfo["mediaID"] as? String {
+                            print(mediaID)
+                            SVProgressHUD.show()
+                            FirebaseController.shared.fetchMediaItem(forItemID: mediaID, completion: { (item) in
+                                FirebaseController.shared.currentMediaItem = item
+                                
+                                let imageView = UIImageView()
+                                imageView.kf.setImage(with: URL(string: item.downloadURL)!, placeholder: nil, options: nil, progressBlock: nil, completionHandler: { (image, error, cacheType, url) in
+                                    let rootVC = self.window?.rootViewController as! TabBarController
+                                    
+                                    let mediaViewVC = UIStoryboard(name: "MediaView", bundle: nil).instantiateViewController(withIdentifier: Identifiers.mediaViewVC) as! MediaViewVC
+                                    mediaViewVC.hidesBottomBarWhenPushed = true
+                                    mediaViewVC.photo = image
+                                    mediaViewVC.isFromNotification = true
+                                    let navController = UINavigationController(rootViewController: mediaViewVC)
+                                    //                                rootVC.navigationController?.pushViewController(navController, animated: true)
+                                    rootVC.present(navController, animated: true, completion: {
+                                        let commentsVC = UIStoryboard(name: "Comments", bundle: nil).instantiateViewController(withIdentifier: Identifiers.commentsVC) as! CommentsVC
+                                        commentsVC.mediaItemID = mediaID
+                                        navController.navigationBar.isHidden = false
+                                        navController.pushViewController(commentsVC, animated: true)
+                                        SVProgressHUD.dismiss()
+                                    })
+                                })
+                                NotificationCenter.default.post(Notification(name: Notifications.didLoadMediaItem))
+                            })
+                        }
+                    case "mediaView":
+                        print(category)
+                        if let mediaID = userInfo["mediaID"] as? String {
+                            print(mediaID)
+                            
+                        }
+                    default:
+                        print(category)
+                    }
+                }
+            }
+        } else if application.applicationState == .active {
+            FirebaseController.shared.fetchNotifications()
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

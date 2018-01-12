@@ -75,15 +75,10 @@ class LoginContainerVC: UIViewController {
             self.rootNavVC.visibleViewController?.view.endEditing(true)
             self.rootNavVC.popViewController(animated: true)
         }
+
     }
     
     @IBAction func nextButtonTapped(_ sender: UIButton) {
-        //containerView.addSubview(activityIndicatorView)
-//        activityIndicatorView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
-//        activityIndicatorView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-//        activityIndicatorView.widthAnchor.constraint(equalToConstant: 50).isActive = true
-//        activityIndicatorView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-//        activityIndicatorView.startAnimating()
         
         loginChildDelegate?.getNextVC(completion: { (nextVC) in
             
@@ -97,18 +92,7 @@ class LoginContainerVC: UIViewController {
                 //self.activityIndicatorView.stopAnimating()
             }
         })
-        
     }
-    
-//    @objc func keyboardWillShow(notification: NSNotification) {
-//        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-//            let keyboardHeight = keyboardSize.height
-//            if Constant.keyboardHeight == 0.0 {
-//                Constant.keyboardHeight = keyboardHeight + 8
-//            }
-//            bottomConstraint.constant = Constant.keyboardHeight
-//        }
-//    }
     
     @objc func keyboardShow() {
         view.addGestureRecognizer(tapGestureRecognizer)

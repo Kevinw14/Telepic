@@ -12,12 +12,15 @@ import SVProgressHUD
 import FirebaseAuth
 import Gallery
 import MobileCoreServices
+import FBSDKShareKit
+import FBSDKCoreKit
 
-class TabBarController: UITabBarController {
+class TabBarController: UITabBarController, FBSDKAppInviteDialogDelegate {
 
     let zoomTransitioningDelegate = ZoomTransitioningDelegate()
     var gallery: GalleryController!
     let editor: VideoEditing = VideoEditor()
+    var inviteFriendsAlert = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +36,27 @@ class TabBarController: UITabBarController {
         // Notifications
         //NotificationCenter.default.addObserver(self, selector: #selector(presentMediaViewVC), name: Notifications.presentMedia, object: nil)
         
+        FirebaseController.shared.fetchNotifications()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateBadge), name: Notifications.updateBadge, object: nil)
+    }
+    
+    @objc func updateBadge() {
+        if FirebaseController.shared.tabBadge > 0 {
+            tabBar.items?[3].badgeValue = "\(FirebaseController.shared.tabBadge)"
+        } else {
+            tabBar.items?[3].badgeValue = nil
+        }
+    }
+    
+    func appInviteDialog(_ appInviteDialog: FBSDKAppInviteDialog!, didCompleteWithResults results: [AnyHashable : Any]!) {
+        print(results)
+        SVProgressHUD.showSuccess(withStatus: "Invites sent!")
+        SVProgressHUD.dismiss(withDelay: 0.4)
+    }
+    
+    func appInviteDialog(_ appInviteDialog: FBSDKAppInviteDialog!, didFailWithError error: Error!) {
+        print("Did fail with error")
     }
     /*
     // MARK: - Navigation
@@ -44,6 +68,33 @@ class TabBarController: UITabBarController {
     }
     */
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if self.inviteFriendsAlert {
+            self.inviteFriendsAlert = false
+            let ac = UIAlertController(title: "Invite Friends", message: "Send an app invite to your friends on Facebook.", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (_) in
+                
+                let inviteDialog = FBSDKAppInviteDialog()
+                
+                if inviteDialog.canShow() {
+                    let appLinkURL = URL(string: "https://itunes.apple.com/app/id1279816444")
+                    let previewImageURL = URL(string: "")
+                    
+                    let inviteContent = FBSDKAppInviteContent()
+                    inviteContent.appLinkURL = appLinkURL
+                    inviteContent.appInvitePreviewImageURL = previewImageURL
+                    
+                    inviteDialog.content = inviteContent
+                    inviteDialog.delegate = self
+                    inviteDialog.show()
+                }
+            }))
+            ac.addAction(UIAlertAction(title: "Skip", style: .cancel, handler: nil))
+            present(ac, animated: true, completion: nil)
+        }
+    }
 }
 
 extension TabBarController: UITabBarControllerDelegate {
@@ -57,7 +108,7 @@ extension TabBarController: UITabBarControllerDelegate {
             Gallery.Config.VideoEditor.maximumDuration = 30
             Gallery.Config.VideoEditor.savesEditedVideoToLibrary = false
             Gallery.Config.Camera.recordLocation = false
-            Gallery.Config.VideoEditor.quality = AVAssetExportPresetHighestQuality
+            Gallery.Config.VideoEditor.quality = AVAssetExportPresetMediumQuality
             present(gallery, animated: true, completion: nil)
             
             return false

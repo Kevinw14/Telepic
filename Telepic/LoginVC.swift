@@ -22,6 +22,7 @@ class LoginVC: UIViewController {
     
     @IBAction func facebookButtonTapped(_ sender: Any) {
         let loginManager = LoginManager()
+        loginManager.loginBehavior = .web
         loginManager.logIn([.publicProfile, .userFriends], viewController: self) { (loginResult) in
             switch loginResult {
             case .failed(let error):
@@ -45,7 +46,9 @@ class LoginVC: UIViewController {
                     if let user = user {
                         FirebaseController.shared.isUsernameStored(uid: user.uid, completion: { (result) in
                             if result {
-                                self.performSegue(withIdentifier: "existingFBUserInbox", sender: nil)
+                                let tabBarController = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: Identifiers.tabBarController)
+                                self.present(tabBarController, animated: true, completion: nil)
+                                
                             } else {
                                 let nextVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: Identifiers.loginContainerVC) as! LoginContainerVC
                                 nextVC.isUsingEmail = false

@@ -130,8 +130,11 @@ class CaptionVC: UIViewController, UITextViewDelegate {
     }
     
     @objc func goBack() {
-        self.navigationController?.popViewController(animated: true)
-//        self.navigationController?.dismiss(animated: true, completion: nil)
+        if videoURL == nil {
+            self.navigationController?.popViewController(animated: true)
+        } else {
+            self.navigationController?.dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc func done() {

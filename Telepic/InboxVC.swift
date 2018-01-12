@@ -12,6 +12,7 @@ import AVKit
 import SVProgressHUD
 import FirebaseAuth
 import Stevia
+import Kingfisher
 
 class InboxVC: UIViewController {
 
@@ -36,21 +37,20 @@ class InboxVC: UIViewController {
         
         let isRegisteredForRemoteNotifications = UIApplication.shared.isRegisteredForRemoteNotifications
         if isRegisteredForRemoteNotifications { FirebaseController.shared.saveToken() }
-                
+        
         SVProgressHUD.show()
+        tableView.estimatedRowHeight = 400
+        tableView.rowHeight = UITableViewAutomaticDimension
         
         tableView.isHidden = true
         emptyInboxLabel.isHidden = true
         emptyInboxImageView.isHidden = true
         exploreButton.isHidden = true
-//        tableView.estimatedRowHeight = 509
-//        tableView.rowHeight = UITableViewAutomaticDimension
+
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateInbox), name: Notifications.newInboxItem, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: Notifications.didLoadInbox, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(showEmptyInboxView), name: Notifications.inboxIsEmpty, object: nil)
 
-        FirebaseController.shared.loadInboxItems()
         FirebaseController.shared.fetchInboxItems()
         
         requestAuthorization()
@@ -66,11 +66,13 @@ class InboxVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        FirebaseController.shared.loadInboxItems()
         FirebaseController.shared.isInboxEmpty()
         self.inboxItems = FirebaseController.shared.inboxItems
-        tableView.estimatedRowHeight = 530
-        tableView.rowHeight = UITableViewAutomaticDimension
+        
+        if self.inboxItems.isEmpty {
+            self.tableView.isHidden = true
+            showEmptyInboxView()
+        }
         
         tableView.reloadData()
         
@@ -85,17 +87,6 @@ class InboxVC: UIViewController {
         self.navigationController?.delegate = zoomTransitioningDelegate
         self.navigationController?.navigationBar.isHidden = false
         self.navigationController?.navigationBar.backgroundColor = .white
-        
-//        let btn = UIButton(type: .system)
-//        btn.setImage(#imageLiteral(resourceName: "addFriend"), for: .normal)
-//        //btn.sizeToFit()
-//        btn.height(40)
-//        btn.width(40)
-//        btn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -20)
-//        btn.addTarget(self, action: #selector(addFriendVCSegue), for: .touchUpInside)
-//        let barBtn = UIBarButtonItem(customView: btn)
-//
-//        self.navigationItem.rightBarButtonItem = barBtn
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -108,12 +99,6 @@ class InboxVC: UIViewController {
         self.tabBarController?.selectedIndex = 1
     }
     
-    
-    @objc func addFriendVCSegue() {
-        let addFriendVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: Identifiers.addFriendVC)
-        self.navigationController?.pushViewController(addFriendVC, animated: true)
-    }
-    
     @objc func updateInbox() {
         self.tableView.isHidden = false
         emptyInboxLabel.isHidden = true
@@ -122,18 +107,7 @@ class InboxVC: UIViewController {
         
         SVProgressHUD.dismiss()
         inboxItems = FirebaseController.shared.inboxItems
-        //self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
         self.tableView.reloadData()
-    }
-    
-    @objc func reloadData() {
-        inboxItems = FirebaseController.shared.inboxItems
-        if self.inboxItems.isEmpty { self.showEmptyInboxView(); self.tableView.isHidden = true }
-        if !inboxItems.isEmpty {
-            self.tableView.isHidden = false
-            self.tableView.reloadData()
-        }
-        SVProgressHUD.dismiss()
     }
     
     @objc func showEmptyInboxView() {
@@ -142,13 +116,6 @@ class InboxVC: UIViewController {
         emptyInboxImageView.isHidden = false
         exploreButton.isHidden = false
     }
-    
-    
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//    }
 }
 
 extension InboxVC: UITableViewDelegate, UITableViewDataSource {
@@ -159,13 +126,73 @@ extension InboxVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "inboxCell") as? InboxCell else { return UITableViewCell() }
         
-        cell.inboxItem = inboxItems[indexPath.row]
-        
+        let inboxItem = inboxItems[indexPath.row]
+        cell.inboxItem = inboxItem
+
         cell.setUpCell()
+        cell.photoImageView.kf.indicatorType = .activity
         
         cell.delegate = self
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        (cell as! InboxCell).photoImageView.kf.cancelDownloadTask()
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let cell = cell as? InboxCell else { return }
+        guard let inboxItem = cell.inboxItem else { return }
+        
+        if inboxItem.caption == nil || inboxItem.caption == "" {
+            cell.captionLabel.isHidden = true
+        }
+        
+        if inboxItem.type == "photo" {
+            let photoURL = URL(string: inboxItem.downloadURL)
+            cell.photoImageView.kf.setImage(with: photoURL,
+                                            placeholder: nil,
+                                            options: [.transition(ImageTransition.fade(1))],
+                                            progressBlock: nil,
+                                            completionHandler: { (image, error, cacheType, imageURL) in
+                                                print("\(indexPath.row + 1): Finished")
+            })
+            cell.playButton.isHidden = true
+        } else if inboxItem.type == "gif" {
+            let url = URL(string: inboxItem.downloadURL)
+            cell.photoImageView.kf.setImage(with: url)
+            cell.playButton.isHidden = true
+        } else {
+            let thumbnailURL = URL(string: inboxItem.thumbnailURL)
+            cell.photoImageView.kf.setImage(with: thumbnailURL)
+            cell.messageLabel.text = "Video Received!"
+            cell.playButton.isHidden = false
+//            cell.photoImageView.addSubview(activityIndicatorView)
+//
+//            activityIndicatorView.centerXAnchor.constraint(equalTo: photoImageView.centerXAnchor).isActive = true
+//            activityIndicatorView.centerYAnchor.constraint(equalTo: photoImageView.centerYAnchor).isActive = true
+//            activityIndicatorView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+//            activityIndicatorView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+//            activityIndicatorView.stopAnimating()
+            
+            cell.photoImageView.addSubview(cell.playButton)
+            cell.playButton.isUserInteractionEnabled = false
+            cell.playButton.centerXAnchor.constraint(equalTo: cell.photoImageView.centerXAnchor).isActive = true
+            cell.playButton.centerYAnchor.constraint(equalTo: cell.photoImageView.centerYAnchor).isActive = true
+            cell.playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            cell.playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        }
+    }
+}
+
+extension InboxVC: UITableViewDataSourcePrefetching {
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        let indexes = indexPaths.flatMap { $0.row }
+        
+        let urls = indexes.map { URL(string: self.inboxItems[$0].downloadURL)! }
+        
+        ImagePrefetcher(urls: urls).start()
     }
 }
 
@@ -194,7 +221,6 @@ extension InboxVC: InboxItemDelegate {
     
     func forwardItem(_ inboxItem: InboxItem, cell: UITableViewCell) {
         let index = tableView.indexPath(for: cell)?.row
-        FirebaseController.shared.inboxItems.remove(at: index!)
         let sendVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: "SendVC") as! SendVC
         sendVC.inboxItemBeingSent = inboxItem
         sendVC.isForwardingItem = true
@@ -202,7 +228,7 @@ extension InboxVC: InboxItemDelegate {
         present(sendVC, animated: true, completion: nil)
     }
     
-    func recordUserLocation(item: InboxItem) {
+    func recordUserLocation(cell: UITableViewCell, item: InboxItem) {
         getUserLocation()
         
         // Add location to Array of coordinates for itemID in global mediaItems
@@ -212,6 +238,10 @@ extension InboxVC: InboxItemDelegate {
             let lat = location.coordinate.latitude
             let long = location.coordinate.longitude
             FirebaseController.shared.setItemOpened(inboxItem: item, latitude: lat, longitude: long)
+            let index = tableView.indexPath(for: cell)?.row
+            
+            FirebaseController.shared.inboxItems[index!].opened = true
+            tableView.reloadData()
         }
         
     }
@@ -267,6 +297,9 @@ extension InboxVC: CLLocationManagerDelegate {
             
             // We only want to request a one-time delivery of the user's location
             locationManager.requestLocation()
+        } else {
+            requestAuthorization()
+            getUserLocation()
         }
     }
     
@@ -322,7 +355,7 @@ extension InboxVC: ZoomingViewController {
     }
     
     func zoomingImageView(for transition: ZoomTransitioningDelegate) -> UIImageView? {
-        return FirebaseController.shared.photoToPresent!
+        return FirebaseController.shared.photoToPresent ?? nil
     }
 }
 

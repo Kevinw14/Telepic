@@ -37,7 +37,7 @@ extension CreateUsernameVC: LoginChildDelegate {
             
             UserController.shared.currentUser.username = username
             
-            if UserController.shared.currentUser.usingFacebook {
+             if UserController.shared.currentUser.usingFacebook {
                 
                 // store username on firebase
                 guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -48,7 +48,8 @@ extension CreateUsernameVC: LoginChildDelegate {
                         self.usernameTextField.resignFirstResponder()
                         FirebaseController.shared.storeUsername(username, uid: uid)
                         SVProgressHUD.dismiss()
-                        let nextVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: Identifiers.tabBarController)
+                        let nextVC = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: Identifiers.tabBarController) as! TabBarController
+                        nextVC.inviteFriendsAlert = true
                         completion(nextVC)
                     } else {
                         SVProgressHUD.dismiss()

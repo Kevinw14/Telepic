@@ -25,7 +25,6 @@ class NotificationsVC: TabChildVC {
         
         // Fetch data from Firebase
         FirebaseController.shared.fetchFriendRequests()
-        //FirebaseController.shared.fetchNotifications()
         
         if let uid = Auth.auth().currentUser?.uid { FirebaseController.shared.fetchFriends(uid: uid)}
         
@@ -38,11 +37,16 @@ class NotificationsVC: TabChildVC {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        FirebaseController.shared.tabBadge = 0
+        
+        FirebaseController.shared.markNotificationsAsRead()
+        //FirebaseController.shared.fetchNotifications()
 //        self.navigationController?.navigationBar.isHidden = true
 //        self.edgesForExtendedLayout = []
     }
     
     @objc func updateData() {
+        //FirebaseController.shared.markNotificationsAsRead()
         emptyNotificationsView.isHidden = true
         tableView.reloadData()
     }
@@ -86,13 +90,22 @@ extension NotificationsVC: UITableViewDataSource, UITableViewDelegate {
         switch notification.type {
         case .forward:
             print("Forward Notification")
-            FirebaseController.shared.fetchMediaItem(forItemID: notification.mediaID!, completion: { (mediaItem) in
-                let mediaViewVC = UIStoryboard(name: "MediaView", bundle: nil).instantiateInitialViewController()?.childViewControllers[0] as! MediaViewVC
-                FirebaseController.shared.currentMediaItem = mediaItem
-                
-                NotificationCenter.default.post(Notification(name: Notifications.didLoadMediaItem))
-                self.navigationController?.pushViewController(mediaViewVC, animated: true)
-            })
+            guard let cell = tableView.cellForRow(at: indexPath) as? NotificationCell else { return }
+            
+            if let image = cell.photoImageView {
+                FirebaseController.shared.photoToPresent = image
+                FirebaseController.shared.fetchMediaItem(forItemID: notification.mediaID!, completion: { (mediaItem) in
+                    FirebaseController.shared.currentMediaItem = mediaItem
+                    
+                    NotificationCenter.default.post(Notification(name: Notifications.didLoadMediaItem))
+                })
+                guard let photoToPresent = FirebaseController.shared.photoToPresent?.image else { return }
+                let mediaViewVC = UIStoryboard(name: "MediaView", bundle: nil).instantiateViewController(withIdentifier: Identifiers.mediaViewVC) as! MediaViewVC
+                mediaViewVC.photo = photoToPresent
+                mediaViewVC.isFromNotification = true
+                let navController = UINavigationController(rootViewController: mediaViewVC)
+                self.present(navController, animated: true, completion: nil)
+            }
             
         case .friendAcceptedRequest:
             print("Friend has accepted friend request")
@@ -103,6 +116,24 @@ extension NotificationsVC: UITableViewDataSource, UITableViewDelegate {
         case .newInboxItem:
             print("Received a new inbox item")
             self.tabBarController?.selectedIndex = 0
+        case .newComment:
+            print("new comment")
+            guard let cell = tableView.cellForRow(at: indexPath) as? NotificationCell else { return }
+            
+            if let image = cell.photoImageView {
+                FirebaseController.shared.photoToPresent = image
+                FirebaseController.shared.fetchMediaItem(forItemID: notification.mediaID!, completion: { (mediaItem) in
+                    FirebaseController.shared.currentMediaItem = mediaItem
+                    
+                    NotificationCenter.default.post(Notification(name: Notifications.didLoadMediaItem))
+                })
+                guard let photoToPresent = FirebaseController.shared.photoToPresent?.image else { return }
+                let mediaViewVC = UIStoryboard(name: "MediaView", bundle: nil).instantiateViewController(withIdentifier: Identifiers.mediaViewVC) as! MediaViewVC
+                mediaViewVC.photo = photoToPresent
+                mediaViewVC.isFromNotification = true
+                let navController = UINavigationController(rootViewController: mediaViewVC)
+                self.present(navController, animated: true, completion: nil)
+            }
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }

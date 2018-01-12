@@ -22,7 +22,11 @@ class FirebaseController {
     
     let storageRef = Storage.storage().reference()
     
-    var inboxItems = [InboxItem]()
+    var inboxItems = [InboxItem]() {
+        didSet {
+            NotificationCenter.default.post(name: Notifications.newInboxItem, object: self)
+        }
+    }
     
     var badgeCount = 0
     
@@ -47,11 +51,32 @@ class FirebaseController {
     
     var friendRequests = [FriendRequest]()
     
+    var tabBadge = 0 {
+        didSet {
+            NotificationCenter.default.post(name: Notifications.updateBadge, object: self)
+        }
+    }
+    
     var eventNotifications = [EventNotification]() {
         didSet {
             NotificationCenter.default.post(name: Notifications.newEventNotification, object: self)
+            let unreadNotifications = eventNotifications.filter { $0.unread }
+            tabBadge = unreadNotifications.count
             if eventNotifications.isEmpty { NotificationCenter.default.post(name: Notifications.emptyNotifications, object: self) }
         }
+    }
+    
+    func markNotificationsAsRead() {
+        guard let currentUser = Auth.auth().currentUser else { return }
+        var readNotifications = [EventNotification]()
+        for notification in eventNotifications {
+            var readNotification = notification
+            readNotification.unread = false
+            readNotifications.append(readNotification)
+        }
+        self.eventNotifications = readNotifications
+        self.eventNotifications.forEach { self.ref.child("users").child(currentUser.uid).child("notifications").child($0.uid).setValue($0.dictionaryRepresentation()) }
+        
     }
     
     var friends = [Friend]()
@@ -88,6 +113,9 @@ class FirebaseController {
             } else {
                 self.ref.child("users").child(uid).setValue(["username": username, "searchableUsername": username.lowercased()])
                 self.ref.child("usernames").child(username.lowercased()).setValue(true)
+                
+                let isRegisteredForRemoteNotifications = UIApplication.shared.isRegisteredForRemoteNotifications
+                if isRegisteredForRemoteNotifications { self.saveToken() }
             }
         }
         
@@ -141,7 +169,7 @@ class FirebaseController {
     }
     
     func checkUserExists(uid: String, completion: @escaping(Bool) -> Void) {
-        self.ref.child("users").child(uid).observeSingleEvent(of: .value) { (snapshot) in
+        self.ref.child("users").child(uid).child("username").observeSingleEvent(of: .value) { (snapshot) in
             completion(snapshot.exists())
         }
     }
@@ -204,81 +232,32 @@ class FirebaseController {
         let inboxRef = ref.child("users").child(currentUser.uid).child("inbox")
         inboxRef.observe(.childAdded) { (snapshot) in
             guard let inboxItemDict = snapshot.value as? [String:Any] else { return }
-            let inboxItem = InboxItem(itemID: snapshot.key, dict: inboxItemDict)
+            var inboxItem = InboxItem(itemID: snapshot.key, dict: inboxItemDict)
             
-            let isUnique = !self.inboxItems.contains(where: { (item) -> Bool in
-                inboxItem.itemID == item.itemID
-            })
+            let originalDate = Date(timeIntervalSinceReferenceDate: inboxItem.timestamp)
+            let threeDays = 259200.0
+            let deadline = Date(timeInterval: threeDays, since: originalDate)
+            let currentTimeInterval = Date().timeIntervalSince1970
+            let currentDate = Date(timeIntervalSinceReferenceDate: currentTimeInterval)
+            let components = Calendar.current.dateComponents([.day, .hour, .minute], from: currentDate, to: deadline)
+            var remaining = ""
             
-            if isUnique {
-                self.ref.child("mediaItems").child(inboxItem.itemID).child("recipients").observeSingleEvent(of: .value, with: { (snapshot) in
-                    guard let recipients = snapshot.value as? [String:Bool] else { return }
-                    
-                    let recipientIDs = Array(recipients.keys)
-                    
-                    if !recipientIDs.contains(currentUser.uid) {
-                        self.inboxItems.append(inboxItem)
-                        
-                        self.inboxItems = self.inboxItems.sorted { $0.timestamp > $1.timestamp }
-                        
-                        if inboxItem.opened == false {
-                            let notification = EventNotification(username: inboxItem.senderUsername,
-                                                                 avatarURL: inboxItem.senderAvatarURL,
-                                                                 userID: inboxItem.senderID,
-                                                                 message: "\(inboxItem.senderUsername) sent you a \(inboxItem.type)!",
-                                mediaURL: inboxItem.downloadURL,
-                                mediaID: inboxItem.itemID,
-                                type: NotificationType.newInboxItem,
-                                timestamp: inboxItem.timestamp)
-                            self.eventNotifications.append(notification)
-                            self.ref.child("users").child(currentUser.uid).child("notifications").childByAutoId().setValue(notification.dictionaryRepresentation())
-                            
-                            //                    let banner = StatusBarNotificationBanner(title: notification.message, style: .success)
-                            //                    banner.show()
-                            
-                            self.eventNotifications = self.eventNotifications.sorted { $0.timestamp > $1.timestamp }
-                        }
-                        NotificationCenter.default.post(name: Notifications.newInboxItem, object: self)
-                    }
-                })
-            }
-        }
-    }
-    
-    func loadInboxItems() {
-        guard let currentUser = Auth.auth().currentUser else { return }
-        let inboxRef = ref.child("users").child(currentUser.uid).child("inbox")
-        inboxRef.observeSingleEvent(of: .value) { (snapshot) in
-            guard let inboxItemsDict = snapshot.value as? [String:[String:Any]] else { return }
-            var inboxItems = [InboxItem]()
-            for (key, value) in inboxItemsDict {
-                var inboxItem = InboxItem(itemID: key, dict: value)
-                
-                let originalDate = Date(timeIntervalSinceReferenceDate: inboxItem.timestamp)
-                let threeDays = 259200.0
-                let deadline = Date(timeInterval: threeDays, since: originalDate)
-                let currentTimeInterval = Date().timeIntervalSince1970
-                let currentDate = Date(timeIntervalSinceReferenceDate: currentTimeInterval)
-                let components = Calendar.current.dateComponents([.day, .hour, .minute], from: currentDate, to: deadline)
-                var remaining = ""
-                if deadline > currentDate {
-                    if components.day == 0 {
-                        if components.hour == 0 {
-                            remaining = "\(components.minute!)m"
-                        } else {
-                            remaining = "\(components.hour!)h"
-                        }
+            if deadline > currentDate {
+                if components.day == 0 {
+                    if components.hour == 0 {
+                        remaining = "\(components.minute!)m"
                     } else {
-                        remaining = "\(components.day!)d"
+                        remaining = "\(components.hour!)h"
                     }
-                    inboxItem.daysRemaining = remaining
-                    inboxItems.append(inboxItem)
                 } else {
-                    self.ref.child("users").child(currentUser.uid).child("inbox").child(key).removeValue()
+                    remaining = "\(components.day!)d"
                 }
+                inboxItem.daysRemaining = remaining
+                self.inboxItems.append(inboxItem)
+                self.inboxItems = self.inboxItems.sorted { $0.timestamp > $1.timestamp }
+            } else {
+                self.ref.child("users").child(currentUser.uid).child("inbox").child(inboxItem.itemID).removeValue()
             }
-            self.inboxItems = inboxItems.sorted { $0.timestamp > $1.timestamp }
-            NotificationCenter.default.post(name: Notifications.didLoadInbox, object: self)
         }
     }
     
@@ -364,7 +343,6 @@ class FirebaseController {
         }
         
         self.ref.child("mediaItems").child(inboxItem.itemID).child("mapReference").observeSingleEvent(of: .value, with: { (snapshot) in
-//            var distance
             if let mapRef = snapshot.value as? [String:[String:Any]], snapshot.exists() {
                 var previousLocation: CLLocation?
                 var distance = 0.0
@@ -439,8 +417,6 @@ class FirebaseController {
                 }
             })
         })
-        
-        loadInboxItems()
     }
     
     // MARK: - Friends
@@ -455,6 +431,11 @@ class FirebaseController {
         
         ref.child("users").child(toUID).child("requests").child("received").child(currentUser.uid).setValue(["username": displayName, "avatarURL": avatarURL])
         ref.child("users").child(currentUser.uid).child("requests").child("sent").child(toUID).setValue(true)
+        
+        let notificationUID = UUID().uuidString
+        let notification = EventNotification(uid: notificationUID, username: displayName, avatarURL: avatarURL, userID: currentUser.uid, message: "\(displayName) sent you a friend request!", mediaURL: nil, mediaID: nil, unread: true, type: .newfriendRequest, timestamp: Date().timeIntervalSince1970)
+        
+        ref.child("users").child(toUID).child("notifications").child(notificationUID).setValue(notification.dictionaryRepresentation())
         
         let banner = StatusBarNotificationBanner(title: "Friend request sent!", style: .success)
         banner.show()
@@ -473,26 +454,6 @@ class FirebaseController {
             
             if isUnique {
                 self.friendRequests.append(friendRequest)
-                
-                
-                let notification = EventNotification(username: friendRequest.username,
-                                                     avatarURL: friendRequest.avatarURL,
-                                                     userID: friendRequest.uid,
-                                                     message: "\(friendRequest.username) sent you a friend request!",
-                                                     mediaURL: nil,
-                                                     mediaID: nil,
-                                                     type: NotificationType.newfriendRequest,
-                                                     timestamp: Date().timeIntervalSince1970)
-                self.eventNotifications.append(notification)
-                
-                
-                
-                self.ref.child("users").child(currentUser.uid).child("notifications").childByAutoId().setValue(notification.dictionaryRepresentation())
-                
-//                let banner = StatusBarNotificationBanner(title: notification.message, style: .success)
-//                banner.show()
-                
-                self.eventNotifications = self.eventNotifications.sorted { $0.timestamp > $1.timestamp }
                 
                 NotificationCenter.default.post(name: Notifications.didLoadFriendRequests, object: self)
             }
@@ -670,7 +631,19 @@ class FirebaseController {
                 
             for uid in friendIDs {
                 self.ref.child("users").child(uid).child("inbox").child(item.itemID).setValue(inboxItem)
+                
+                let notificationUID = UUID().uuidString
+                let notification = EventNotification(uid: notificationUID, username: currentUser.displayName!, avatarURL: currentUser.photoURL?.absoluteString ?? "n/a", userID: currentUID, message: "\(currentUser.displayName!) forwarded a \(item.type) to you!", mediaURL: nil, mediaID: item.itemID, unread: true, type: NotificationType.newInboxItem, timestamp: dateSent)
+                
+                
+                self.ref.child("users").child(uid).child("notifications").child(notificationUID).setValue(notification.dictionaryRepresentation())
             }
+            
+            let notificationUID = UUID().uuidString
+            let notification = EventNotification(uid: notificationUID, username: currentUser.displayName!, avatarURL: currentUser.photoURL?.absoluteString ?? "n/a", userID: currentUID, message: "\(currentUser.displayName!) forwarded your \(item.type)!", mediaURL: item.downloadURL, mediaID: item.itemID, unread: true, type: NotificationType.forward, timestamp: dateSent)
+            
+            self.ref.child("users").child(item.creatorID).child("notifications").child(notificationUID).setValue(notification.dictionaryRepresentation())
+            
             
             self.ref.child("mediaItems").child(item.itemID).child("forwarders").child(currentUID).setValue(true)
             
@@ -678,10 +651,13 @@ class FirebaseController {
                 self.ref.child("mediaItems").child(item.itemID).child("recipients").child(userID).setValue(true)
             }
             
-            self.ref.child("users").child(currentUID).child("forwards").child(item.itemID).setValue(true)
+            if item.creatorID != currentUID {
+                self.ref.child("users").child(currentUID).child("forwards").child(item.itemID).setValue(true)
+            }
 
             self.ref.child("users").child(currentUID).child("inbox").child(item.itemID).removeValue()
-            self.loadInboxItems()
+            
+            self.inboxItems = self.inboxItems.filter { $0.itemID != item.itemID }
             
             let banner = StatusBarNotificationBanner(title: "Your \(item.type) was delivered successfully!", style: .success)
             banner.show()
@@ -713,7 +689,18 @@ class FirebaseController {
                 
             for uid in friendIDs {
                 self.ref.child("users").child(uid).child("inbox").child(item.itemID).setValue(inboxItem)
+                
+                let notificationUID = UUID().uuidString
+                let notification = EventNotification(uid: notificationUID, username: currentUser.displayName!, avatarURL: currentUser.photoURL?.absoluteString ?? "n/a", userID: currentUID, message: "\(currentUser.displayName!) forwarded a \(item.type) to you!", mediaURL: nil, mediaID: item.itemID, unread: true, type: NotificationType.newInboxItem, timestamp: dateSent)
+                
+                
+                self.ref.child("users").child(uid).child("notifications").child(notificationUID).setValue(notification.dictionaryRepresentation())
             }
+            
+            let notificationUID = UUID().uuidString
+            let notification = EventNotification(uid: notificationUID, username: currentUser.displayName!, avatarURL: currentUser.photoURL?.absoluteString ?? "n/a", userID: currentUID, message: "\(currentUser.displayName!) forwarded your \(item.type)!", mediaURL: item.downloadURL, mediaID: item.itemID, unread: true, type: NotificationType.forward, timestamp: dateSent)
+            
+            self.ref.child("users").child(item.creatorID).child("notifications").child(notificationUID).setValue(notification.dictionaryRepresentation())
             
             self.ref.child("mediaItems").child(item.itemID).child("forwarders").child(currentUID).setValue(true)
             
@@ -724,7 +711,8 @@ class FirebaseController {
             }
             
             self.ref.child("users").child(currentUID).child("inbox").child(item.itemID).removeValue()
-            self.loadInboxItems()
+            
+            self.inboxItems = self.inboxItems.filter { $0.itemID != item.itemID }
             
             let banner = StatusBarNotificationBanner(title: "Your \(item.type) was delivered successfully!", style: .success)
             banner.show()
@@ -737,7 +725,40 @@ class FirebaseController {
         guard let currentUser = Auth.auth().currentUser else { return }
         let photoURL = currentUser.photoURL?.absoluteString ?? "n/a"
         let comment = Comment(senderID: currentUser.uid, username: currentUser.displayName!, message: text, timestamp: Date().timeIntervalSince1970, senderAvatarURL: photoURL)
-        ref.child("mediaItems").child(mediaItemID).child("comments").childByAutoId().setValue(comment.dictionaryRepresentation())
+        
+        FirebaseController.shared.fetchMediaItem(forItemID: mediaItemID) { (mediaItem) in
+            let notificationUID = UUID().uuidString
+            let notification = EventNotification(uid: notificationUID,
+                                                 username: comment.username,
+                                                 avatarURL: comment.senderAvatarURL,
+                                                 userID: comment.senderID,
+                                                 message: "\(comment.username) commented on your \(mediaItem.type)!",
+                mediaURL: nil,
+                mediaID: mediaItemID,
+                unread: true,
+                type: NotificationType.newComment,
+                timestamp: comment.timestamp)
+            
+            if mediaItem.creatorID != currentUser.uid {
+                self.ref.child("users").child(mediaItem.creatorID).child("notifications").child(notificationUID).setValue(notification.dictionaryRepresentation())
+            }
+            
+            self.ref.child("mediaItems").child(mediaItemID).child("comments").childByAutoId().setValue(comment.dictionaryRepresentation())
+        }
+    }
+    
+    func fetchNotifications() {
+        guard let currentUser = Auth.auth().currentUser else { return }
+
+        self.ref.child("users").child(currentUser.uid).child("notifications").observeSingleEvent(of: .value) { (snapshot) in
+            guard let notificationsDict = snapshot.value as? [String:[String:Any]] else { return }
+            
+            let notifications = notificationsDict.values.map { EventNotification(dict: $0) }
+            
+            self.eventNotifications = notifications
+            
+            
+        }
     }
     
     func fetchComments(forMediaItemID mediaItemID: String, completion: @escaping ([Comment]) -> Void) {
@@ -920,6 +941,9 @@ class FirebaseController {
     func postVideo(caption: String?, videoURL: URL, thumbnailData: Data, currentLocation: [String:Double]) {
         guard let currentUser = Auth.auth().currentUser else { return }
         
+        let banner = StatusBarNotificationBanner(title: "Your video was posted successfully!", style: .success)
+        banner.show()
+        
         let localFile = videoURL
         let identifier = UUID().uuidString
         let fileRef = storageRef.child("videos/\(identifier)")
@@ -986,8 +1010,6 @@ class FirebaseController {
                         self.ref.child("contest").child(childID).setValue(true)
                     }
                     
-                    let banner = StatusBarNotificationBanner(title: "Your video was posted successfully!", style: .success)
-                    banner.show()
                 }
             }
         }
@@ -995,7 +1017,8 @@ class FirebaseController {
     
     func sendVideo(caption: String?, videoURL: URL, thumbnailData: Data, toUserIDs: [String], currentLocation: [String:Double]) {
         guard let currentUser = Auth.auth().currentUser else { return }
-        
+        let banner = StatusBarNotificationBanner(title: "Your video was delivered successfully!", style: .success)
+        banner.show()
         let localFile = videoURL
         let identifier = UUID().uuidString
         let fileRef = storageRef.child("videos/\(identifier)")
@@ -1045,7 +1068,11 @@ class FirebaseController {
                         
                         self.ref.child("users").child(uid).child("inbox").child(childID).setValue(inboxItem)
                         
-                        self.ref.child("users").child(uid).child("notifications").childByAutoId()
+                        let notificationUID = UUID().uuidString
+                        let notification = EventNotification(uid: notificationUID, username: currentUser.displayName!, avatarURL: currentUser.photoURL?.absoluteString ?? "n/a", userID: currentUID, message: "\(currentUser.displayName!) sent you a video!", mediaURL: nil, mediaID: childID, unread: true, type: NotificationType.newInboxItem, timestamp: dateSent)
+                        
+                        
+                        self.ref.child("users").child(uid).child("notifications").child(notificationUID).setValue(notification.dictionaryRepresentation())
                     }
                     
                     guard let creatorUsername = currentUser.displayName  else { return }
@@ -1082,8 +1109,8 @@ class FirebaseController {
                     
                     self.ref.child("mediaItems").child(childID).child("forwarders").child(currentUID).setValue(true)
                     
-                    toUserIDs.forEach { userID in
-                        self.ref.child("mediaItems").child(childID).child("recipients").child(userID).setValue(true)
+                    for uid in toUserIDs {
+                        self.ref.child("mediaItems").child(childID).child("recipients").child(uid).setValue(true)
                     }
                     
                     if self.contest {
@@ -1099,8 +1126,7 @@ class FirebaseController {
 //                    SVProgressHUD.showSuccess(withStatus: "Forwarded!")
 //                    SVProgressHUD.dismiss(withDelay: 1.5)
                     
-                    let banner = StatusBarNotificationBanner(title: "Your video was delivered successfully!", style: .success)
-                    banner.show()
+                    
                 }
             }
         }
@@ -1156,7 +1182,8 @@ class FirebaseController {
     
     func postPhoto(caption: String?, data: Data, type: String, currentLocation: [String:Double]) {
         guard let currentUser = Auth.auth().currentUser else { return }
-        
+        let banner = StatusBarNotificationBanner(title: "Your photo was posted successfully!", style: .success)
+        banner.show()
         // File to upload
         let localData = data
         
@@ -1219,8 +1246,7 @@ class FirebaseController {
                     self.ref.child("startAMovement").child(childID).setValue(true)
                 }
                 
-                let banner = StatusBarNotificationBanner(title: "Your photo was posted successfully!", style: .success)
-                banner.show()
+                
             }
         }
     }
@@ -1228,7 +1254,8 @@ class FirebaseController {
     func sendPhoto(caption: String?, data: Data, type: String, toUserIDs: [String], currentLocation: [String:Double]) {
         
         guard let currentUser = Auth.auth().currentUser else { return }
-        
+        let banner = StatusBarNotificationBanner(title: "Your photo was delivered successfully!", style: .success)
+        banner.show()
         // File to upload
         let localData = data
         
@@ -1273,7 +1300,11 @@ class FirebaseController {
                     
                     self.ref.child("users").child(uid).child("inbox").child(childID).setValue(inboxItem)
                     
-                    self.ref.child("users").child(uid).child("notifications").childByAutoId()
+                    let notificationUID = UUID().uuidString
+                    let notification = EventNotification(uid: notificationUID, username: currentUser.displayName!, avatarURL: currentUser.photoURL?.absoluteString ?? "n/a", userID: currentUID, message: "\(currentUser.displayName!) sent you a \(type)!", mediaURL: nil, mediaID: childID, unread: true, type: NotificationType.newInboxItem, timestamp: dateSent)
+                    
+                    
+                    self.ref.child("users").child(uid).child("notifications").child(notificationUID).setValue(notification.dictionaryRepresentation())
                 }
                 
                 guard let creatorUsername = currentUser.displayName else { return }
@@ -1309,8 +1340,8 @@ class FirebaseController {
                 
                 self.ref.child("mediaItems").child(childID).child("forwarders").child(currentUID).setValue(true)
                 
-                toUserIDs.forEach { userID in
-                    self.ref.child("mediaItems").child(childID).child("recipients").child(userID).setValue(true)
+                for uid in toUserIDs {
+                    self.ref.child("mediaItems").child(childID).child("recipients").child(uid).setValue(true)
                 }
                 
                 if self.contest {
@@ -1321,8 +1352,7 @@ class FirebaseController {
                     self.ref.child("startAMovement").child(childID).setValue(true)
                 }
                 
-                let banner = StatusBarNotificationBanner(title: "Your photo was delivered successfully!", style: .success)
-                banner.show()
+                
             }
         }
         

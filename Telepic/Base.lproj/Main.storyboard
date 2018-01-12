@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="GZf-cE-x4U">
-    <device id="retina5_5" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="GZf-cE-x4U">
+    <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,10 +12,6 @@
     <customFonts key="customFonts">
         <array key="AvenirNext.ttc">
             <string>AvenirNext-DemiBold</string>
-            <string>AvenirNext-Regular</string>
-        </array>
-        <array key="Nunito-Bold.ttf">
-            <string>Nunito-Bold</string>
         </array>
         <array key="Nunito-Light.ttf">
             <string>Nunito-Light</string>
@@ -31,17 +27,17 @@
                         <viewControllerLayoutGuide type="bottom" id="1l2-g8-jRX"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ZUt-WF-7MH">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginBackground" translatesAutoresizingMaskIntoConstraints="NO" id="wR1-T2-wpa">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hpt-gR-0uX">
-                                <rect key="frame" x="20" y="281" width="374" height="50"/>
+                                <rect key="frame" x="20" y="254.5" width="335" height="44.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="hpt-gR-0uX" secondAttribute="height" multiplier="187:25" id="niU-Nd-ghE"/>
+                                    <constraint firstAttribute="width" secondItem="hpt-gR-0uX" secondAttribute="height" multiplier="7.48" id="niU-Nd-ghE"/>
                                 </constraints>
                                 <state key="normal" image="fbButton">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -51,7 +47,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y0f-Nl-eI6">
-                                <rect key="frame" x="20" y="343" width="374" height="50"/>
+                                <rect key="frame" x="20" y="311" width="335" height="45"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Y0f-Nl-eI6" secondAttribute="height" multiplier="187:25" id="4yp-Ld-cdE"/>
@@ -64,13 +60,13 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="J80-zc-1ZD">
-                                <rect key="frame" x="104" y="174.66666666666663" width="207" height="76.333333333333343"/>
+                                <rect key="frame" x="93.5" y="148" width="188" height="76.5"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="ifI-Wq-d9O">
-                                        <rect key="frame" x="0.6666666666666714" y="0.0" width="206" height="45"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="188" height="45"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start a movement." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="vsY-Ll-dKK">
-                                        <rect key="frame" x="19.333333333333329" y="49" width="168.66666666666669" height="27.333333333333343"/>
+                                        <rect key="frame" x="9.5" y="49" width="169" height="27.5"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="20"/>
                                         <color key="textColor" red="0.99991267919540405" green="1" blue="0.99988144636154175" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -78,7 +74,7 @@
                                 </subviews>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Adq-Qv-X4p">
-                                <rect key="frame" x="85" y="409" width="244" height="17"/>
+                                <rect key="frame" x="76.5" y="372" width="222" height="15.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Adq-Qv-X4p" secondAttribute="height" multiplier="244:17" id="kME-Xi-SjM"/>
                                 </constraints>
@@ -128,11 +124,11 @@
                         <viewControllerLayoutGuide type="bottom" id="SXt-kW-Rb2"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="uz3-zL-dxg">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginBackground" translatesAutoresizingMaskIntoConstraints="NO" id="A2H-G0-bhA">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="80Z-iB-rej">
                                 <rect key="frame" x="0.0" y="20" width="40" height="40"/>
@@ -146,10 +142,10 @@
                                 </connections>
                             </button>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gTd-4u-zdV">
-                                <rect key="frame" x="0.0" y="74" width="414" height="596"/>
+                                <rect key="frame" x="0.0" y="74" width="375" height="527"/>
                             </containerView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qGO-8r-88O">
-                                <rect key="frame" x="110.66666666666669" y="678" width="193" height="50"/>
+                                <rect key="frame" x="91" y="609" width="193" height="50"/>
                                 <state key="normal" image="nextButton"/>
                                 <connections>
                                     <action selector="nextButtonTapped:" destination="Kas-GD-E5E" eventType="touchUpInside" id="8Ns-Dm-ZMl"/>
@@ -190,23 +186,23 @@
                         <viewControllerLayoutGuide type="bottom" id="gJ0-gE-E9U"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="CO3-EB-JoH">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello," textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f90-DZ-6L9">
-                                <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
+                                <rect key="frame" x="20" y="0.0" width="335" height="44"/>
                                 <fontDescription key="fontDescription" name="Nunito-Light" family="Nunito" pointSize="32"/>
                                 <color key="textColor" red="0.99991267919540405" green="1" blue="0.99988144636154175" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What's your email?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QEd-Xa-zKj">
-                                <rect key="frame" x="20" y="55.666666666666671" width="374" height="25.000000000000014"/>
+                                <rect key="frame" x="20" y="56" width="335" height="25"/>
                                 <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="18"/>
                                 <color key="textColor" red="0.99991267919540405" green="1" blue="0.99988144636154175" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="user@email.com" textAlignment="natural" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="cfD-Xm-a1Y">
-                                <rect key="frame" x="20" y="84.666666666666671" width="374" height="33"/>
+                                <rect key="frame" x="20" y="85" width="335" height="33"/>
                                 <color key="textColor" red="0.99991267919540405" green="1" blue="0.99988144636154175" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" name="Nunito-Light" family="Nunito" pointSize="24"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="next"/>
@@ -217,7 +213,7 @@
                                 </userDefinedRuntimeAttributes>
                             </textField>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="afv-26-enF">
-                                <rect key="frame" x="20" y="117.66666666666667" width="374" height="1"/>
+                                <rect key="frame" x="20" y="118" width="335" height="1"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="6IQ-AX-pYG"/>
@@ -259,11 +255,11 @@
                         <viewControllerLayoutGuide type="bottom" id="ZgC-Ey-Nm0"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="WbN-3p-EQg">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vc6-nK-b3Z">
-                                <rect key="frame" x="20" y="150.66666666666666" width="374" height="1"/>
+                                <rect key="frame" x="20" y="150.5" width="335" height="1"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="1" id="QAD-k1-v2r"/>
@@ -272,7 +268,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WFu-IG-c42">
-                                <rect key="frame" x="20" y="0.0" width="374" height="76.666666666666671"/>
+                                <rect key="frame" x="20" y="0.0" width="335" height="76.5"/>
                                 <string key="text">Welcome,
 user@email.com</string>
                                 <fontDescription key="fontDescription" name="Nunito-Light" family="Nunito" pointSize="28"/>
@@ -280,7 +276,7 @@ user@email.com</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="t7U-HD-s3o">
-                                <rect key="frame" x="20" y="117.66666666666666" width="374" height="32.999999999999972"/>
+                                <rect key="frame" x="20" y="117.5" width="335" height="33"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="Nunito-Light" family="Nunito" pointSize="24"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next" secureTextEntry="YES"/>
@@ -291,13 +287,13 @@ user@email.com</string>
                                 </userDefinedRuntimeAttributes>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please create a password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n4c-vt-2qy">
-                                <rect key="frame" x="20" y="88.666666666666671" width="374" height="25"/>
+                                <rect key="frame" x="20" y="88.5" width="335" height="25"/>
                                 <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="6 characters minimum. 1 letter, 1 number required" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SjA-Fv-ETY">
-                                <rect key="frame" x="20" y="159.66666666666663" width="374" height="15.333333333333343"/>
+                                <rect key="frame" x="20" y="159.5" width="335" height="15.5"/>
                                 <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="11"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -341,11 +337,11 @@ user@email.com</string>
                         <viewControllerLayoutGuide type="bottom" id="Ohp-H2-1yi"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ged-og-GtH">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Ws-ci-wYP">
-                                <rect key="frame" x="20" y="136.66666666666666" width="374" height="1"/>
+                                <rect key="frame" x="20" y="137" width="335" height="1"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="GTA-Ml-jfl"/>
@@ -354,7 +350,7 @@ user@email.com</string>
                                 </constraints>
                             </view>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="igt-wf-DPi">
-                                <rect key="frame" x="20" y="103.66666666666666" width="374" height="32.999999999999972"/>
+                                <rect key="frame" x="20" y="104" width="335" height="33"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="Nunito-Light" family="Nunito" pointSize="24"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
@@ -365,13 +361,13 @@ user@email.com</string>
                                 </userDefinedRuntimeAttributes>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create a username. Don't worry, you can change it later." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tPv-Ar-wWc">
-                                <rect key="frame" x="20" y="50.333333333333329" width="374" height="49.333333333333329"/>
+                                <rect key="frame" x="20" y="50.5" width="335" height="49.5"/>
                                 <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What do we call you?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S43-TQ-bzx">
-                                <rect key="frame" x="20" y="0.0" width="374" height="38.333333333333336"/>
+                                <rect key="frame" x="20" y="0.0" width="335" height="38.5"/>
                                 <fontDescription key="fontDescription" name="Nunito-Light" family="Nunito" pointSize="28"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -404,172 +400,6 @@ user@email.com</string>
             </objects>
             <point key="canvasLocation" x="3044.9275362318845" y="698.64130434782612"/>
         </scene>
-        <!--AddFB FriendsVC-->
-        <scene sceneID="J8j-li-aG4">
-            <objects>
-                <viewController storyboardIdentifier="AddFBFriendsVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3JL-Hk-sju" customClass="AddFBFriendsVC" customModule="Telepic" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Zxd-ey-Ou7"/>
-                        <viewControllerLayoutGuide type="bottom" id="kd3-iL-czs"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="MCq-Xk-wsF">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="loginBackground" translatesAutoresizingMaskIntoConstraints="NO" id="v1B-AI-J2M">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hJI-60-yF2">
-                                <rect key="frame" x="20" y="201.33333333333334" width="374" height="1"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="1" id="ILo-S4-gFy"/>
-                                    <constraint firstAttribute="height" constant="1" id="ckK-FR-Iao"/>
-                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="1" id="ukN-0B-RMv"/>
-                                </constraints>
-                            </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add friends from Facebook." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LGz-Kd-aIT">
-                                <rect key="frame" x="20" y="68" width="374" height="32.666666666666671"/>
-                                <fontDescription key="fontDescription" name="Nunito-Light" family="Nunito" pointSize="28"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select people to add to your friends list. You will be able to forward photos to them." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mNt-CK-IPg">
-                                <rect key="frame" x="20" y="112.00000000000001" width="374" height="49.333333333333357"/>
-                                <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="18"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="59" sectionHeaderHeight="20" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4qd-nu-Sf4">
-                                <rect key="frame" x="20" y="202.33333333333331" width="374" height="533.66666666666674"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <color key="separatorColor" white="1" alpha="0.36810793821839083" colorSpace="calibratedWhite"/>
-                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <view key="tableHeaderView" contentMode="scaleToFill" id="Kvk-sA-uEh">
-                                    <rect key="frame" x="0.0" y="0.0" width="374" height="10"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
-                                <view key="tableFooterView" contentMode="scaleToFill" id="dT9-vJ-thD">
-                                    <rect key="frame" x="0.0" y="94" width="374" height="70"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="FBFriendCell" rowHeight="64" id="3rq-wx-UqB" customClass="FBFriendCell" customModule="Telepic" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="30" width="374" height="64"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3rq-wx-UqB" id="AlJ-Bb-rcn">
-                                            <rect key="frame" x="0.0" y="0.0" width="374" height="63.666666666666664"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UNR-7f-Di8">
-                                                    <rect key="frame" x="0.0" y="4" width="55" height="55"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="55" id="6KO-Ej-GaI"/>
-                                                        <constraint firstAttribute="height" constant="55" id="LNP-U8-PoW"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Michael Bart" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="hvZ-4b-ll6">
-                                                    <rect key="frame" x="63" y="19" width="276" height="25"/>
-                                                    <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="18"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="J0u-nL-w5b">
-                                                    <rect key="frame" x="347" y="18" width="27" height="27"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="27" id="4C2-Ao-CkF"/>
-                                                        <constraint firstAttribute="width" constant="27" id="cwK-XM-eJx"/>
-                                                    </constraints>
-                                                </imageView>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstItem="hvZ-4b-ll6" firstAttribute="leading" secondItem="UNR-7f-Di8" secondAttribute="trailing" constant="8" id="1e1-Wn-eg1"/>
-                                                <constraint firstAttribute="trailing" secondItem="J0u-nL-w5b" secondAttribute="trailing" id="90u-yf-Sze"/>
-                                                <constraint firstItem="UNR-7f-Di8" firstAttribute="centerY" secondItem="AlJ-Bb-rcn" secondAttribute="centerY" id="9Ki-pv-IvE"/>
-                                                <constraint firstItem="J0u-nL-w5b" firstAttribute="centerY" secondItem="AlJ-Bb-rcn" secondAttribute="centerY" id="l08-77-5BD"/>
-                                                <constraint firstItem="J0u-nL-w5b" firstAttribute="leading" secondItem="hvZ-4b-ll6" secondAttribute="trailing" constant="8" id="ri4-Pw-fbQ"/>
-                                                <constraint firstItem="hvZ-4b-ll6" firstAttribute="centerY" secondItem="AlJ-Bb-rcn" secondAttribute="centerY" id="uE0-We-eig"/>
-                                                <constraint firstItem="UNR-7f-Di8" firstAttribute="leading" secondItem="AlJ-Bb-rcn" secondAttribute="leading" id="vi1-30-TJg"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <connections>
-                                            <outlet property="avatarImageView" destination="UNR-7f-Di8" id="NUp-7y-DZb"/>
-                                            <outlet property="checkmarkImageView" destination="J0u-nL-w5b" id="ezu-xD-bi5"/>
-                                            <outlet property="nameLabel" destination="hvZ-4b-ll6" id="NWB-Ud-e34"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="3JL-Hk-sju" id="k7F-oa-UXJ"/>
-                                    <outlet property="delegate" destination="3JL-Hk-sju" id="quT-uz-T88"/>
-                                </connections>
-                            </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vdF-LG-OIa">
-                                <rect key="frame" x="107" y="670" width="201" height="58"/>
-                                <state key="normal" image="doneButtonRaised"/>
-                                <connections>
-                                    <action selector="doneButtonTapped:" destination="3JL-Hk-sju" eventType="touchUpInside" id="LJO-fW-lbJ"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4dv-Sf-nkd">
-                                <rect key="frame" x="366" y="20" width="40" height="36"/>
-                                <fontDescription key="fontDescription" name="Nunito-Bold" family="Nunito" pointSize="20"/>
-                                <state key="normal" title="Skip">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="skipButtonTapped:" destination="3JL-Hk-sju" eventType="touchUpInside" id="Ajc-XV-3FQ"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="search friends" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZCd-oz-CbR">
-                                <rect key="frame" x="20" y="173.33333333333334" width="151.33333333333334" height="28"/>
-                                <fontDescription key="fontDescription" name="Nunito-Light" family="Nunito" pointSize="24"/>
-                                <color key="textColor" red="0.0076707964763045311" green="0.56883919239044189" blue="0.71709030866622925" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ZCd-oz-CbR" secondAttribute="trailing" constant="20" symbolic="YES" id="5x1-vp-Dhq"/>
-                            <constraint firstAttribute="trailing" secondItem="mNt-CK-IPg" secondAttribute="trailing" constant="20" id="7lC-Gx-m5L"/>
-                            <constraint firstItem="4qd-nu-Sf4" firstAttribute="leading" secondItem="MCq-Xk-wsF" secondAttribute="leading" constant="20" id="8E6-yB-7Ng"/>
-                            <constraint firstItem="ZCd-oz-CbR" firstAttribute="leading" secondItem="MCq-Xk-wsF" secondAttribute="leading" constant="20" id="Csb-P9-u2o"/>
-                            <constraint firstAttribute="trailing" secondItem="LGz-Kd-aIT" secondAttribute="trailing" constant="20" id="EJo-yn-tQd"/>
-                            <constraint firstItem="LGz-Kd-aIT" firstAttribute="leading" secondItem="MCq-Xk-wsF" secondAttribute="leading" constant="20" id="EhF-aN-C2P"/>
-                            <constraint firstAttribute="trailing" secondItem="hJI-60-yF2" secondAttribute="trailing" constant="20" id="Fte-XU-Mdk"/>
-                            <constraint firstItem="hJI-60-yF2" firstAttribute="top" secondItem="ZCd-oz-CbR" secondAttribute="bottom" id="HlA-gL-MJh"/>
-                            <constraint firstItem="mNt-CK-IPg" firstAttribute="top" secondItem="LGz-Kd-aIT" secondAttribute="bottom" constant="12" id="J3Z-zK-0zM"/>
-                            <constraint firstItem="kd3-iL-czs" firstAttribute="top" secondItem="4qd-nu-Sf4" secondAttribute="bottom" id="KGj-oY-M7a"/>
-                            <constraint firstItem="mNt-CK-IPg" firstAttribute="leading" secondItem="MCq-Xk-wsF" secondAttribute="leading" constant="20" id="Wbc-VN-jbZ"/>
-                            <constraint firstItem="4qd-nu-Sf4" firstAttribute="top" secondItem="hJI-60-yF2" secondAttribute="bottom" id="Z1F-Mw-1i7"/>
-                            <constraint firstItem="vdF-LG-OIa" firstAttribute="centerX" secondItem="MCq-Xk-wsF" secondAttribute="centerX" id="dl8-FY-g6X"/>
-                            <constraint firstItem="hJI-60-yF2" firstAttribute="leading" secondItem="MCq-Xk-wsF" secondAttribute="leading" constant="20" id="e8B-6s-S4w"/>
-                            <constraint firstItem="ZCd-oz-CbR" firstAttribute="top" secondItem="mNt-CK-IPg" secondAttribute="bottom" constant="12" id="eJM-Hj-00O"/>
-                            <constraint firstItem="LGz-Kd-aIT" firstAttribute="top" secondItem="4dv-Sf-nkd" secondAttribute="bottom" constant="12" id="fet-2c-MU6"/>
-                            <constraint firstItem="4dv-Sf-nkd" firstAttribute="top" secondItem="Zxd-ey-Ou7" secondAttribute="bottom" id="idp-Xo-9jq"/>
-                            <constraint firstItem="4dv-Sf-nkd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="MCq-Xk-wsF" secondAttribute="leading" constant="20" symbolic="YES" id="ihi-jS-1v6"/>
-                            <constraint firstAttribute="trailing" secondItem="4dv-Sf-nkd" secondAttribute="trailing" constant="8" id="wTs-qS-p9T"/>
-                            <constraint firstAttribute="trailing" secondItem="4qd-nu-Sf4" secondAttribute="trailing" constant="20" id="y9g-6d-Dk8"/>
-                            <constraint firstItem="kd3-iL-czs" firstAttribute="top" secondItem="vdF-LG-OIa" secondAttribute="bottom" constant="8" id="zyR-lo-yfv"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="doneButton" destination="vdF-LG-OIa" id="XHM-uk-wkc"/>
-                        <outlet property="messageLabel" destination="mNt-CK-IPg" id="Quf-S2-IFd"/>
-                        <outlet property="promptLabel" destination="LGz-Kd-aIT" id="eTY-Fs-2wQ"/>
-                        <outlet property="tableView" destination="4qd-nu-Sf4" id="Vtq-ow-sjJ"/>
-                        <segue destination="RVE-41-zdA" kind="show" identifier="fbUserInbox" id="5wa-yX-luh"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="GOs-Fg-rzC" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3947.826086956522" y="698.64130434782612"/>
-        </scene>
         <!--Home-->
         <scene sceneID="Jrz-8B-kH1">
             <objects>
@@ -587,11 +417,11 @@ user@email.com</string>
                         <viewControllerLayoutGuide type="bottom" id="AA5-ff-Mva"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="haj-Vy-ZLZ">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oCC-K1-is8">
-                                <rect key="frame" x="20" y="150.66666666666666" width="374" height="1"/>
+                                <rect key="frame" x="20" y="150.5" width="335" height="1"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="1" id="VrP-ij-Xux"/>
@@ -599,7 +429,7 @@ user@email.com</string>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JFs-EE-MZk">
-                                <rect key="frame" x="20" y="0.0" width="374" height="76.666666666666671"/>
+                                <rect key="frame" x="20" y="0.0" width="335" height="76.5"/>
                                 <string key="text">Welcome back,
 user@email.com</string>
                                 <fontDescription key="fontDescription" name="Nunito-Light" family="Nunito" pointSize="28"/>
@@ -607,13 +437,13 @@ user@email.com</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Looks like you already have an account!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b14-n1-QlL">
-                                <rect key="frame" x="20" y="88.666666666666671" width="374" height="25"/>
+                                <rect key="frame" x="20" y="88.5" width="335" height="25"/>
                                 <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ppv-Va-KJ1">
-                                <rect key="frame" x="20" y="117.66666666666666" width="374" height="32.999999999999972"/>
+                                <rect key="frame" x="20" y="117.5" width="335" height="33"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="Nunito-Light" family="Nunito" pointSize="24"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next" secureTextEntry="YES"/>
@@ -671,8 +501,6 @@ user@email.com</string>
     </scenes>
     <resources>
         <image name="backArrow" width="22" height="19"/>
-        <image name="checkmark" width="27" height="27"/>
-        <image name="doneButtonRaised" width="201" height="58"/>
         <image name="emailButton" width="374" height="50"/>
         <image name="fbButton" width="374" height="50"/>
         <image name="hasAccount" width="245" height="17"/>
@@ -681,6 +509,6 @@ user@email.com</string>
         <image name="nextButton" width="193" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Kxx-a6-2Y3"/>
+        <segue reference="Mv4-ea-ZtU"/>
     </inferredMetricsTieBreakers>
 </document>

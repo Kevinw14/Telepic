@@ -24,15 +24,11 @@ class MediaViewVC: UIViewController {
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var usernameLabel: UILabel!
     
-    //var mediaItem: MediaItem?
     var photo: UIImage?
     var panGestureRecognizer = UIPanGestureRecognizer()
-    
     let zoomTransitioningDelegate = ZoomTransitioningDelegate()
-    
-    var playerLayer: AVPlayerLayer?
-    var player: AVPlayer?
-    var playerIsPaused = true
+    var looper: AVPlayerLooper?
+    var player: AVQueuePlayer?
     
     @IBOutlet weak var numberOfCommentsLabel: UILabel!
     let activityIndicatorView: UIActivityIndicatorView = {
@@ -53,35 +49,29 @@ class MediaViewVC: UIViewController {
         return button
     }()
     
+    var notificationMediaID: String?
+    var isFromNotification = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         if let photo = photo {
             self.mediaImageView.image = photo
         }
         
-        if FirebaseController.shared.currentMediaItem?.type == "video" {
-            if let videoURL = FirebaseController.shared.currentMediaItem?.downloadURL, let url = URL(string: videoURL) {
-                player = AVPlayer(url: url)
-                
-            }
-        }
-        
-        updateViews()
+        self.playButton.isHidden = true
         
         self.edgesForExtendedLayout = []
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd(_:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
         
         topBarTopConstraint.constant = -120
         bottomBarBottomConstraint.constant = 80
         
         self.mediaImageView.contentMode = .scaleAspectFit
         
-        playButton.isHidden = true
-        
         avatarImageView.layer.cornerRadius = avatarImageView.frame.width / 2
         avatarImageView.clipsToBounds = true
+        
+        updateViews()
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateViews), name: Notifications.didLoadMediaItem, object: nil)
         
@@ -103,19 +93,6 @@ class MediaViewVC: UIViewController {
         self.navigationController?.navigationBar.backgroundColor = .clear
         self.navigationController?.delegate = zoomTransitioningDelegate
         self.tabBarController?.tabBar.isHidden = true
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        player?.pause()
-        player = nil
-    }
-    
-    @objc func playerItemDidReachEnd(_ note: Notification) {
-        player?.actionAtItemEnd = .none
-        player?.seek(to: kCMTimeZero)
-        player?.play()
     }
     
     @IBAction func creatorTapped(_ sender: Any) {
@@ -187,6 +164,24 @@ class MediaViewVC: UIViewController {
     @objc func updateViews() {
         guard let mediaItem = FirebaseController.shared.currentMediaItem else { return }
         
+        if mediaItem.type == "video" {
+            let videoURL = mediaItem.downloadURL
+            mediaImageView.addSubview(playButton)
+            playButton.isHidden = false
+            playButton.centerXAnchor.constraint(equalTo: mediaImageView.centerXAnchor).isActive = true
+            playButton.centerYAnchor.constraint(equalTo: mediaImageView.centerYAnchor).isActive = true
+            playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            if let url = URL(string: videoURL) {
+                let asset = AVAsset(url: url)
+                let item = AVPlayerItem(asset: asset)
+                self.player = AVQueuePlayer(playerItem: item)
+                self.looper = AVPlayerLooper(player: self.player!, templateItem: item)
+            }
+        } else {
+            playButton.isHidden = true
+        }
+        
         self.numberOfCommentsLabel.text = ""
         self.avatarImageView.image = #imageLiteral(resourceName: "avatar-1")
         
@@ -199,6 +194,7 @@ class MediaViewVC: UIViewController {
         FirebaseController.shared.fetchAvatarImage(forUID: mediaItem.creatorID, completion: { (avatarURL) in
             self.avatarImageView.kf.setImage(with: URL(string: avatarURL))
         })
+        
     }
     
     @objc func pan(_ sender: UIPanGestureRecognizer) {
@@ -225,67 +221,47 @@ class MediaViewVC: UIViewController {
     }
     
     func close() {
-        self.topBarTopConstraint.constant = -120
-        self.bottomBarBottomConstraint.constant = 80
-        self.view.layoutIfNeeded()
-        self.tabBarController?.tabBar.isHidden = false
-        self.navigationController?.navigationBar.isHidden = false
-        self.navigationController?.popViewController(animated: true)
+        if isFromNotification {
+            self.dismiss(animated: true, completion: nil)
+        } else {
+            self.topBarTopConstraint.constant = -120
+            self.bottomBarBottomConstraint.constant = 80
+            self.view.layoutIfNeeded()
+            self.tabBarController?.tabBar.isHidden = false
+            self.navigationController?.navigationBar.isHidden = false
+            self.navigationController?.popViewController(animated: true)
+        }
     }
     
     @objc func photoTapped() {
-        if topBar.alpha == 1 {
-            UIView.animate(withDuration: 0.3) {
-                self.topBar.alpha = 0
-                self.bottomBar.alpha = 0
-                self.numberOfCommentsLabel.alpha = 0
+        if FirebaseController.shared.currentMediaItem?.type == "video" {
+            if player != nil {
+                let playerViewController = AVPlayerViewController()
+                playerViewController.player = self.player
+                
+                self.present(playerViewController, animated: false, completion: {
+                    playerViewController.player?.play()
+                })
             }
         } else {
-            UIView.animate(withDuration: 0.3, animations: {
-                self.topBar.alpha = 1
-                self.bottomBar.alpha = 1
-                self.numberOfCommentsLabel.alpha = 1
-            })
-        }
-        
-        if FirebaseController.shared.currentMediaItem?.type == "video" {
-            if player != nil && self.playerIsPaused {
-                if player?.status.rawValue == 1 {
-                    SVProgressHUD.dismiss()
-                    player?.play()
-                    playButton.isHidden = true
-                    self.playerIsPaused = false
-                } else {
-                    SVProgressHUD.show()
+            if topBar.alpha == 1 {
+                UIView.animate(withDuration: 0.3) {
+                    self.topBar.alpha = 0
+                    self.bottomBar.alpha = 0
+                    self.numberOfCommentsLabel.alpha = 0
                 }
             } else {
-                player?.pause()
-                playButton.isHidden = false
-                self.playerIsPaused = true
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.topBar.alpha = 1
+                    self.bottomBar.alpha = 1
+                    self.numberOfCommentsLabel.alpha = 1
+                })
             }
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        if player != nil {
-            
-            
-            playerLayer = AVPlayerLayer(player: player)
-            playerLayer?.videoGravity = .resizeAspectFill
-            playerLayer?.backgroundColor = UIColor.clear.cgColor
-            playerLayer?.frame = mediaImageView.frame
-            mediaImageView.layer.addSublayer(playerLayer!)
-
-            mediaImageView.addSubview(playButton)
-            playButton.centerXAnchor.constraint(equalTo: mediaImageView.centerXAnchor).isActive = true
-            playButton.centerYAnchor.constraint(equalTo: mediaImageView.centerYAnchor).isActive = true
-            playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-            
-            playButton.isHidden = false
-        }
         
         topBarTopConstraint.constant = 0
         bottomBarBottomConstraint.constant = 0
@@ -301,16 +277,6 @@ class MediaViewVC: UIViewController {
         return true
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 extension MediaViewVC: ZoomingViewController {
@@ -322,8 +288,3 @@ extension MediaViewVC: ZoomingViewController {
         return mediaImageView
     }
 }
-
-//protocol MediaViewDelegate: class {
-//    func presentMediaView(withImage image: UIImage)
-//}
-

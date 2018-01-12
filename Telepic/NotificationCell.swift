@@ -58,6 +58,13 @@ class NotificationCell: UITableViewCell {
             self.declineButton.isHidden = true
             self.photoImageView.alpha = 1
         }
+        
+        if notification.type == .newComment {
+            FirebaseController.shared.fetchMediaItem(forItemID: notification.mediaID!, completion: { (mediaItem) in
+                let url = URL(string: mediaItem.downloadURL)
+                self.photoImageView.kf.setImage(with: url)
+            })
+        }
 
         let userStringRange = (notification.message as NSString).range(of: notification.username)
         

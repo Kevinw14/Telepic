@@ -30,13 +30,11 @@ class InboxCell: UITableViewCell {
     @IBOutlet weak var footerView: UIView!
     @IBOutlet weak var creatorAvatarImageView: UIImageView!
     @IBOutlet weak var creatorLabel: UILabel!
-    @IBOutlet weak var fullscreenButton: UIButton!
     
     var inboxItem: InboxItem?
     weak var delegate: InboxItemDelegate?
-    var playerLayer: AVPlayerLayer?
-    var player: AVPlayer?
-    var playerIsPaused = false
+    var player: AVQueuePlayer?
+    var looper: AVPlayerLooper?
     var gif: UIImage?
     
     let activityIndicatorView: UIActivityIndicatorView = {
@@ -53,8 +51,7 @@ class InboxCell: UITableViewCell {
         let image = UIImage(named: "playButton")
         button.tintColor = .white
         button.setImage(image, for: .normal)
-        
-        button.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
+        button.isUserInteractionEnabled = false
         return button
     }()
     
@@ -66,9 +63,6 @@ class InboxCell: UITableViewCell {
         
         let tapToViewGesture = UITapGestureRecognizer(target: self, action: #selector(viewPhoto))
         blurView.addGestureRecognizer(tapToViewGesture)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(didReachItemEnd), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(stopPlayer), name: Notifications.stopPlayer, object: nil)
     }
     
     
@@ -76,42 +70,30 @@ class InboxCell: UITableViewCell {
     func setUpCell() {
         guard let inboxItem = inboxItem else { return }
         
-        FirebaseController.shared.fetchComments(forMediaItemID: inboxItem.itemID, completion: { (comments) in
-            self.numberOfCommentsLabel.isHidden = false
-            self.numberOfCommentsLabel.text = "\(comments.count)"
-        })
-        
-        if inboxItem.type == "photo" {
-            let photoURL = URL(string: inboxItem.downloadURL)
-            photoImageView.kf.setImage(with: photoURL)
-            playButton.isHidden = true
-            fullscreenButton.isHidden = true
-        } else if inboxItem.type == "gif" {
-            let url = URL(string: inboxItem.downloadURL)
-            self.photoImageView.kf.setImage(with: url)
-            playButton.isHidden = true
-            fullscreenButton.isHidden = true
-        } else {
-            let thumbnailURL = URL(string: inboxItem.thumbnailURL)
-            photoImageView.kf.setImage(with: thumbnailURL)
-            messageLabel.text = "Video Received!"
-            playButton.isHidden = false
-            fullscreenButton.isHidden = false
-            photoImageView.addSubview(activityIndicatorView)
+        if inboxItem.type == "video" {
+            self.photoImageView.addSubview(playButton)
+            self.playButton.centerXAnchor.constraint(equalTo: self.photoImageView.centerXAnchor).isActive = true
+            self.playButton.centerYAnchor.constraint(equalTo: self.photoImageView.centerYAnchor).isActive = true
+            self.playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            self.playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
             
-            activityIndicatorView.centerXAnchor.constraint(equalTo: photoImageView.centerXAnchor).isActive = true
-            activityIndicatorView.centerYAnchor.constraint(equalTo: photoImageView.centerYAnchor).isActive = true
-            activityIndicatorView.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            activityIndicatorView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-            activityIndicatorView.stopAnimating()
-            
-            photoImageView.addSubview(playButton)
-            playButton.isUserInteractionEnabled = false
-            playButton.centerXAnchor.constraint(equalTo: photoImageView.centerXAnchor).isActive = true
-            playButton.centerYAnchor.constraint(equalTo: photoImageView.centerYAnchor).isActive = true
-            playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            let videoURL = inboxItem.downloadURL
+            if let url = URL(string: videoURL) {
+                let asset = AVAsset(url: url)
+                let item = AVPlayerItem(asset: asset)
+                self.player = AVQueuePlayer(playerItem: item)
+                self.looper = AVPlayerLooper(player: self.player!, templateItem: item)
+            }
         }
+        
+        FirebaseController.shared.fetchComments(forMediaItemID: inboxItem.itemID, completion: { (comments) in
+            if inboxItem.caption != nil && comments.count == 1 {
+                self.numberOfCommentsLabel.isHidden = true
+            } else {
+                self.numberOfCommentsLabel.isHidden = false
+                self.numberOfCommentsLabel.text = "\(comments.count)"
+            }
+        })
         
         let senderAvatarURL = URL(string:inboxItem.senderAvatarURL)
         senderAvatarImageView.kf.setImage(with: senderAvatarURL, placeholder: #imageLiteral(resourceName: "avatar-1"), options: nil, progressBlock: nil) { (image, error, cacheType, imageURL) in
@@ -180,63 +162,12 @@ class InboxCell: UITableViewCell {
         delegate?.forwardItem(inboxItem, cell: self)
     }
     
-    @IBAction func fullscreenButtonTapped(_ sender: Any) {
-        let playerViewController = AVPlayerViewController()
-        playerViewController.player = self.player
-        print("tapped fullscreen button")
-        delegate?.presentVideoFullScreen(controller: playerViewController)
-    }
-    
-    @objc func handlePlay() {
-        print("tapped")
-        if let videoURL = inboxItem?.downloadURL, let url = URL(string: videoURL) {
-            player = AVPlayer(url: url)
-            playerLayer = AVPlayerLayer(player: player)
-            playerLayer?.videoGravity = .resizeAspectFill
-            playerLayer?.backgroundColor = UIColor.clear.cgColor
-            playerLayer?.frame = photoImageView.bounds
-            photoImageView.layer.addSublayer(playerLayer!)
-            
-            photoImageView.addSubview(playButton)
-            playButton.centerXAnchor.constraint(equalTo: photoImageView.centerXAnchor).isActive = true
-            playButton.centerYAnchor.constraint(equalTo: photoImageView.centerYAnchor).isActive = true
-            playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-            
-            player?.play()
-            playButton.isHidden = true
-            activityIndicatorView.startAnimating()
-            print("Attempting to play video...")
-        }
-    }
-    
-    @objc func stopPlayer() {
-        player?.pause()
-        player = nil
-    }
-    
-    @objc func didReachItemEnd() {
-        if self.player != nil {
-            self.player!.seek(to: kCMTimeZero)
-            self.player!.play()
-        } else {
-            print("couldn't repeat")
-        }
-    }
-    
     @objc func photoTapped(_ sender: UITapGestureRecognizer) {
+        
         if inboxItem?.type == "video" {
-            if player == nil {
-                handlePlay()
-            } else if self.playerIsPaused {
-                player?.play()
-                playButton.isHidden = true
-                self.playerIsPaused = false
-            } else {
-                player?.pause()
-                playButton.isHidden = false
-                self.playerIsPaused = true
-            }
+            let playerViewController = AVPlayerViewController()
+            playerViewController.player = self.player
+            self.delegate?.presentVideoFullScreen(controller: playerViewController)
         } else {
             if let _ = self.photoImageView.image, let item = self.inboxItem {
                 FirebaseController.shared.fetchMediaItem(forItemID: item.itemID, completion: { (mediaItem) in
@@ -253,10 +184,6 @@ class InboxCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        playerLayer?.removeFromSuperlayer()
-        player?.pause()
-        player = nil
-        activityIndicatorView.stopAnimating()
         self.inboxItem = nil
         self.numberOfCommentsLabel.text = ""
         self.captionLabel.isHidden = false
@@ -266,27 +193,17 @@ class InboxCell: UITableViewCell {
         guard let inboxItem = inboxItem else { return }
         UIView.animate(withDuration: 0.3) {
             self.blurView.alpha = 0
-            //self.blurView.isHidden = true
             self.photoReceivedLabel.alpha = 0
-            //self.photoReceivedLabel.isHidden = true
             self.forwardButton.isHidden = false
-            //self.daysRemainingLabel.isHidden = true
         }
-        
-        // Record location and set inboxItem `opened` to true
-        delegate?.recordUserLocation(item: inboxItem)
-
-        
-        // record the location the photo was viewed
-        // add photo to array of viewed photos
-        // remove photo from array of
+        delegate?.recordUserLocation(cell: self, item: inboxItem)
     }
 }
 
 protocol InboxItemDelegate: class {
     func goFullscreen(_ imageView: UIImageView)
     func dismissFullscreen(_ sender: UITapGestureRecognizer)
-    func recordUserLocation(item: InboxItem)
+    func recordUserLocation(cell: UITableViewCell, item: InboxItem)
     func forwardItem(_ inboxItem: InboxItem, cell: UITableViewCell)
     func segueToMapVC(withItemID itemID: String)
     func segueToProfileVC(withUID uid: String, username: String)

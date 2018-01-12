@@ -36,6 +36,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     var uploads = [Upload]()
     var forwards = 0
     var isCurrentUser = true
+    var fromMediaView = false
     
     let zoomTransitioningDelegate = ZoomTransitioningDelegate()
     
@@ -99,19 +100,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         avatarImageView.clipsToBounds = true
         avatarImageView.layer.cornerRadius = avatarImageView.frame.width / 2
         
-        // Check if user is currently viewing their own profile.
-        if isCurrentUser {
-            guard let currentUID = Auth.auth().currentUser?.uid else { return }
-            self.userID = currentUID
-            self.username = Auth.auth().currentUser?.displayName!
-            self.setUpViews()
-            DispatchQueue.main.async {
-                FirebaseController.shared.fetchUser(uid: currentUID, completion: { (user) in
-                    self.user = user
-                    NotificationCenter.default.post(Notification(name: Notifications.didLoadUser))
-                })
-            }
-        }
+        
         self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
@@ -128,6 +117,23 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // Check if user is currently viewing their own profile.
+        if !fromMediaView {
+            if isCurrentUser {
+                guard let currentUID = Auth.auth().currentUser?.uid else { return }
+                self.userID = currentUID
+                self.username = Auth.auth().currentUser?.displayName!
+                DispatchQueue.main.async {
+                    FirebaseController.shared.fetchUser(uid: currentUID, completion: { (user) in
+                        self.user = user
+                        NotificationCenter.default.post(Notification(name: Notifications.didLoadUser))
+                    })
+                }
+            }
+        } else {
+            fromMediaView = false
+        }
         
         self.edgesForExtendedLayout = []
         self.navigationController?.delegate = zoomTransitioningDelegate
@@ -445,6 +451,7 @@ extension ProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
                 NotificationCenter.default.post(Notification(name: Notifications.didLoadMediaItem))
             })
             self.presentMediaViewVC()
+            self.fromMediaView = true
         }
     }
 }
@@ -491,6 +498,6 @@ extension ProfileVC: ZoomingViewController {
     }
     
     func zoomingImageView(for transition: ZoomTransitioningDelegate) -> UIImageView? {
-        return FirebaseController.shared.photoToPresent!
+        return FirebaseController.shared.photoToPresent ?? nil
     }
 }

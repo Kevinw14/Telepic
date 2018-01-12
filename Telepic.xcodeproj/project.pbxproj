@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2A02B7B31FBDEAFE003B4366 /* FriendListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A02B7B21FBDEAFE003B4366 /* FriendListVC.swift */; };
+		2A0474852003D96A00F4DE75 /* AddFBFriendsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0474842003D96A00F4DE75 /* AddFBFriendsVC.swift */; };
 		2A06DBFD1F5D967900824E62 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A06DBFC1F5D967900824E62 /* GoogleService-Info.plist */; };
 		2A06DBFF1F5DA4AE00824E62 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A06DBFE1F5DA4AE00824E62 /* LoginVC.swift */; };
 		2A06DC011F5DA6BA00824E62 /* EmailLoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A06DC001F5DA6BA00824E62 /* EmailLoginVC.swift */; };
@@ -87,7 +88,6 @@
 		2AAE36131F5EF38400FDEA96 /* ExistingAccountPWInputVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAE36121F5EF38400FDEA96 /* ExistingAccountPWInputVC.swift */; };
 		2AAE36151F5EF3C100FDEA96 /* NewAccountPWInputVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAE36141F5EF3C100FDEA96 /* NewAccountPWInputVC.swift */; };
 		2AAE36171F5F026800FDEA96 /* CreateUsernameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAE36161F5F026800FDEA96 /* CreateUsernameVC.swift */; };
-		2AAE36191F6046C800FDEA96 /* AddFBFriendsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAE36181F6046C800FDEA96 /* AddFBFriendsVC.swift */; };
 		2AAE361C1F604CE000FDEA96 /* FBFriendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAE361B1F604CE000FDEA96 /* FBFriendCell.swift */; };
 		2AB8D3561FE831C500089466 /* InviteFriendsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB8D3551FE831C500089466 /* InviteFriendsVC.swift */; };
 		2AB8F98A1FA0DA5900958036 /* ForwardsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB8F9891FA0DA5900958036 /* ForwardsVC.swift */; };
@@ -144,6 +144,7 @@
 
 /* Begin PBXFileReference section */
 		2A02B7B21FBDEAFE003B4366 /* FriendListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListVC.swift; sourceTree = "<group>"; };
+		2A0474842003D96A00F4DE75 /* AddFBFriendsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFBFriendsVC.swift; sourceTree = "<group>"; };
 		2A06DBFC1F5D967900824E62 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2A06DBFE1F5DA4AE00824E62 /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		2A06DC001F5DA6BA00824E62 /* EmailLoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailLoginVC.swift; sourceTree = "<group>"; };
@@ -227,7 +228,6 @@
 		2AAE36121F5EF38400FDEA96 /* ExistingAccountPWInputVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExistingAccountPWInputVC.swift; sourceTree = "<group>"; };
 		2AAE36141F5EF3C100FDEA96 /* NewAccountPWInputVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewAccountPWInputVC.swift; sourceTree = "<group>"; };
 		2AAE36161F5F026800FDEA96 /* CreateUsernameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateUsernameVC.swift; sourceTree = "<group>"; };
-		2AAE36181F6046C800FDEA96 /* AddFBFriendsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddFBFriendsVC.swift; sourceTree = "<group>"; };
 		2AAE361B1F604CE000FDEA96 /* FBFriendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBFriendCell.swift; sourceTree = "<group>"; };
 		2AB8D3551FE831C500089466 /* InviteFriendsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendsVC.swift; sourceTree = "<group>"; };
 		2AB8F9891FA0DA5900958036 /* ForwardsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardsVC.swift; sourceTree = "<group>"; };
@@ -525,9 +525,9 @@
 				2AAE36121F5EF38400FDEA96 /* ExistingAccountPWInputVC.swift */,
 				2AAE36141F5EF3C100FDEA96 /* NewAccountPWInputVC.swift */,
 				2AAE36161F5F026800FDEA96 /* CreateUsernameVC.swift */,
-				2AAE36181F6046C800FDEA96 /* AddFBFriendsVC.swift */,
 				2AD3C8141F61ABC700DD16D3 /* ConnectOrSkipVC.swift */,
 				2A5475151FB3684100FDFF69 /* LoginContainerVC.swift */,
+				2A0474842003D96A00F4DE75 /* AddFBFriendsVC.swift */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -686,6 +686,8 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Telepic/Pods-Telepic-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
+				"${BUILT_PRODUCTS_DIR}/Cache/Cache.framework",
+				"${BUILT_PRODUCTS_DIR}/CropViewController/CropViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKShareKit/FBSDKShareKit.framework",
@@ -695,7 +697,10 @@
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/Gallery/Gallery.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/Hue/Hue.framework",
+				"${BUILT_PRODUCTS_DIR}/Imaginary/Imaginary.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
+				"${BUILT_PRODUCTS_DIR}/Lightbox/Lightbox.framework",
 				"${BUILT_PRODUCTS_DIR}/MarqueeLabel/MarqueeLabel.framework",
 				"${BUILT_PRODUCTS_DIR}/NotificationBannerSwift/NotificationBannerSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Pageboy/Pageboy.framework",
@@ -705,13 +710,17 @@
 				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SteviaLayout/Stevia.framework",
+				"${BUILT_PRODUCTS_DIR}/TOCropViewController/TOCropViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/Tabman/Tabman.framework",
+				"${BUILT_PRODUCTS_DIR}/Viewer/Viewer.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cache.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CropViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKShareKit.framework",
@@ -721,7 +730,10 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gallery.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Hue.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Imaginary.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lightbox.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MarqueeLabel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NotificationBannerSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Pageboy.framework",
@@ -731,7 +743,9 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stevia.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TOCropViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Tabman.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Viewer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
@@ -816,7 +830,6 @@
 				2A3221FB1FB395B20023F68E /* CustomInteractor.swift in Sources */,
 				2AD298D21F9E4CB90048E29E /* UserAnnotation.swift in Sources */,
 				2ADD59AD1FAB82E7002FADB1 /* CreateGroupPageVC.swift in Sources */,
-				2AAE36191F6046C800FDEA96 /* AddFBFriendsVC.swift in Sources */,
 				2ABFF18D1F8E6FF6008E4026 /* SearchableUser.swift in Sources */,
 				2AE696D11FCCA1E9004CD493 /* EditProfileVC.swift in Sources */,
 				2ACF566E1F7AB9DE007689D9 /* NotificationsVC.swift in Sources */,
@@ -854,6 +867,7 @@
 				2ADD59AB1FAB82BE002FADB1 /* CreateGroupVC.swift in Sources */,
 				2ADD59B11FAB8330002FADB1 /* NameGroupVC.swift in Sources */,
 				2AD298DA1F9E8CA20048E29E /* MediaItem.swift in Sources */,
+				2A0474852003D96A00F4DE75 /* AddFBFriendsVC.swift in Sources */,
 				2ACF56701F7ABA16007689D9 /* NotificationCell.swift in Sources */,
 				2AC30EA61FA783DB005BF3AD /* CommentCell.swift in Sources */,
 				2AA77A981F85617F009C2625 /* UserController.swift in Sources */,

@@ -9,8 +9,11 @@
 import UIKit
 import FirebaseAuth
 import Stevia
+import FBSDKCoreKit
+import FBSDKShareKit
+import AddressBook
 
-class SettingsVC: UITableViewController {
+class SettingsVC: UITableViewController, FBSDKAppInviteDialogDelegate {
 
     lazy var backBarButton: UIBarButtonItem = {
         let btn = UIButton(type: .system)
@@ -108,6 +111,43 @@ class SettingsVC: UITableViewController {
             }))
             present(alertController, animated: true, completion: nil)
         }
+        
+        if tableView.cellForRow(at: indexPath)?.reuseIdentifier == "inviteFriendsCell" {
+            let isUsingFacebook = UserDefaults.standard.value(forKey: "isUsingFacebook") as! Bool
+            
+            if isUsingFacebook {
+                let inviteDialog = FBSDKAppInviteDialog()
+                
+                if inviteDialog.canShow() {
+                    let appLinkURL = URL(string: "https://itunes.apple.com/app/id1279816444")
+                    let previewImageURL = URL(string: "")
+                    
+                    let inviteContent = FBSDKAppInviteContent()
+                    inviteContent.appLinkURL = appLinkURL
+                    inviteContent.appInvitePreviewImageURL = previewImageURL
+                    
+                    inviteDialog.content = inviteContent
+                    inviteDialog.delegate = self
+                    self.navigationController?.navigationBar.isHidden = true
+                    inviteDialog.show()
+                }
+            } else {
+                let ac = UIAlertController(title: "Not Using Facebook", message: "Log in using Facebook to use this feature.", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                present(ac, animated: true, completion: nil)
+            }
+        }
+        
+        
+    }
+    func appInviteDialog(_ appInviteDialog: FBSDKAppInviteDialog!, didCompleteWithResults results: [AnyHashable : Any]!) {
+        print(results)
+        self.navigationController?.navigationBar.isHidden = false
+    }
+    
+    func appInviteDialog(_ appInviteDialog: FBSDKAppInviteDialog!, didFailWithError error: Error!) {
+        print("Did fail with error")
+        self.navigationController?.navigationBar.isHidden = false
     }
     
 //    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
