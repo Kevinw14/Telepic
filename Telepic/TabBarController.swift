@@ -71,6 +71,7 @@ class TabBarController: UITabBarController, FBSDKAppInviteDialogDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        
         if self.inviteFriendsAlert {
             self.inviteFriendsAlert = false
             let ac = UIAlertController(title: "Invite Friends", message: "Send an app invite to your friends on Facebook.", preferredStyle: .alert)

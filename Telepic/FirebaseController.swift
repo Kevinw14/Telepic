@@ -755,7 +755,7 @@ class FirebaseController {
             
             let notifications = notificationsDict.values.map { EventNotification(dict: $0) }
             
-            self.eventNotifications = notifications
+            self.eventNotifications = notifications.sorted { $0.timestamp > $1.timestamp }
             
             
         }

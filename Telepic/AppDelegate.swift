@@ -120,7 +120,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     }
                 }
             }
-        } else if application.applicationState == .active {
+        } else  {
             FirebaseController.shared.fetchNotifications()
         }
     }
@@ -144,7 +144,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         application.applicationIconBadgeNumber = 0
         FirebaseController.shared.resetBadgeCount()
         AppEventsLogger.activate(application)
-        
+        FirebaseController.shared.fetchNotifications()
+
         //FirebaseController.remoteConfig.configSettings = RemoteConfigSettings(developerModeEnabled: true)!
         //        FirebaseController.remoteConfig.fetch(withExpirationDuration: 1) { (status, error) in
         //            if let error = error {
