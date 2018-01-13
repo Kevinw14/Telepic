@@ -139,7 +139,7 @@ class CaptionVC: UIViewController, UITextViewDelegate {
     
     @objc func done() {
         let sendVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: Identifiers.sendVC) as! SendVC
-        sendVC.caption = self.captionTextView.text == "Write a caption..." ? nil : self.captionTextView.text
+        sendVC.caption = self.captionTextView.text == "Write a caption..." || self.captionTextView.text == "" ? nil : self.captionTextView.text
         sendVC.fromCaption = true
         if let thumbnail = thumbnail { sendVC.data = UIImageJPEGRepresentation(thumbnail, 1.0)}
         if let image = image {
