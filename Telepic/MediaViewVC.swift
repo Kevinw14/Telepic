@@ -123,11 +123,16 @@ class MediaViewVC: UIViewController {
     }
     
     @IBAction func commentsButtonTapped(_ sender: Any) {
+        toCommentsVC()
+    }
+    
+    func toCommentsVC() {
         guard let mediaItemID = FirebaseController.shared.currentMediaItem?.itemID else { return }
         let commentsVC = UIStoryboard(name: "Comments", bundle: nil).instantiateViewController(withIdentifier: Identifiers.commentsVC) as! CommentsVC
         commentsVC.mediaItemID = mediaItemID
         self.navigationController?.navigationBar.isHidden = false
         self.navigationController?.pushViewController(commentsVC, animated: true)
+        
     }
     
     @IBAction func forwardButtonTapped(_ sender: Any) {

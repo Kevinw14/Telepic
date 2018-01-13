@@ -140,8 +140,9 @@ extension TabBarController: GalleryControllerDelegate {
                     captionVC.videoURL = tempPath
                     let thumbnail = self.getThumbnail(forURL: tempPath)
                     captionVC.thumbnail = thumbnail
+                    controller.dismiss(animated: false, completion: nil)
                     let navController = UINavigationController(rootViewController: captionVC)
-                    controller.present(navController, animated: true, completion: nil)
+                    self.present(navController, animated: true, completion: nil)
 //                    let controller = AVPlayerViewController()
 //                    controller.player = AVPlayer(url: tempPath)
 //                    let videoEditorController = UIVideoEditorController()
@@ -187,14 +188,16 @@ extension TabBarController: GalleryControllerDelegate {
                     captionVC.isGif = true
                     captionVC.data = imageData
                     captionVC.image = selectedImage
+                    controller.dismiss(animated: false, completion: nil)
                     let navController = UINavigationController(rootViewController: captionVC)
-                    controller.present(navController, animated: true, completion: nil)
+                    self.present(navController, animated: true, completion: nil)
                 }
             } else {
                 selectedImage = UIImage(data: imageData)!
                 let filtersVC = FiltersVC(image: selectedImage!)
+                controller.dismiss(animated: false, completion: nil)
                 let navController = UINavigationController(rootViewController: filtersVC)
-                controller.present(navController, animated: true, completion: nil)
+                self.present(navController, animated: true, completion: nil)
             }
             gallery = nil
         }

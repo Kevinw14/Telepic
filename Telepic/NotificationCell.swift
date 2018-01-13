@@ -61,8 +61,13 @@ class NotificationCell: UITableViewCell {
         
         if notification.type == .newComment {
             FirebaseController.shared.fetchMediaItem(forItemID: notification.mediaID!, completion: { (mediaItem) in
-                let url = URL(string: mediaItem.downloadURL)
-                self.photoImageView.kf.setImage(with: url)
+                if mediaItem.type == "video" {
+                    let url = URL(string: mediaItem.thumbnailURL)
+                    self.photoImageView.kf.setImage(with: url)
+                } else {
+                    let url = URL(string: mediaItem.downloadURL)
+                    self.photoImageView.kf.setImage(with: url)
+                }
             })
         }
 

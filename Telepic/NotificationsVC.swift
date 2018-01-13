@@ -132,7 +132,9 @@ extension NotificationsVC: UITableViewDataSource, UITableViewDelegate {
                 mediaViewVC.photo = photoToPresent
                 mediaViewVC.isFromNotification = true
                 let navController = UINavigationController(rootViewController: mediaViewVC)
-                self.present(navController, animated: true, completion: nil)
+                self.present(navController, animated: true, completion: {
+                    mediaViewVC.toCommentsVC()
+                })
             }
         }
         tableView.deselectRow(at: indexPath, animated: true)
