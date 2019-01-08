@@ -18,22 +18,30 @@ class TabVC: TabmanViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         self.viewControllers = [
             childViewController(withTitle: "Notifications"),
             childViewController(withTitle: "Forwards")
         ]
-        self.bar.items = viewControllers.flatMap { Item(title: $0.pageTitle!) }
+        self.bar.items = viewControllers.compactMap { Item(title: $0.pageTitle!) }
         
         self.dataSource = self
         
         self.bar.style = .buttonBar
         
         self.bar.appearance = TabmanBar.Appearance({ (appearance) in
+//            appearance.style.background = .solid(color: .white)
+//            appearance.layout.height = .explicit(value: 45)
+//            appearance.indicator.color = UIColor(hexString: "#10BB6C")
+//            appearance.indicator.lineWeight = TabmanIndicator.LineWeight.normal
+//            appearance.indicator.compresses = true
+//            appearance.style.bottomSeparatorColor = UIColor(hexString: "#DBDBDB")
+//
+//            appearance.state.selectedColor = UIColor(hexString: "#333333")
+//            appearance.text.font = UIFont(name: "AvenirNext-DemiBold", size: 17.0)
             
             appearance.style.background = .solid(color: .white)
             appearance.layout.height = .explicit(value: 45)
-            appearance.indicator.color = UIColor(hexString: "#10BB6C")
+            appearance.indicator.color = UIColor(hexString: "2DAAFC")
             appearance.indicator.lineWeight = TabmanIndicator.LineWeight.normal
             appearance.indicator.compresses = true
             appearance.style.bottomSeparatorColor = UIColor(hexString: "#DBDBDB")

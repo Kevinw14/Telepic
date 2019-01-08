@@ -63,9 +63,10 @@ extension SelectGroupsVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let cell = tableView.cellForRow(at: indexPath) as? GroupCell else { return }
-        
+//        cell.groupNameLabel.textColor = UIColor(hexString: "ffffff")
+//        cell.contentView.backgroundColor = UIColor(hexString: "10BB6C")
         cell.groupNameLabel.textColor = UIColor(hexString: "ffffff")
-        cell.contentView.backgroundColor = UIColor(hexString: "10BB6C")
+        cell.contentView.backgroundColor = UIColor(hexString: "2DAAFC")
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

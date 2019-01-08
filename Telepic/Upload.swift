@@ -10,6 +10,7 @@ import Foundation
 
 struct Upload {
     var uid: String
+    var newFoward: Bool?
     var downloadURL: String
     var timestamp: Double
     var type: String
@@ -23,5 +24,6 @@ extension Upload {
         self.timestamp = dict["timestamp"] as! Double
         self.type = dict["type"] as! String
         self.thumbnailURL = dict["thumbnailURL"] as! String
+        self.newFoward = dict["newForward"] as? Bool
     }
 }

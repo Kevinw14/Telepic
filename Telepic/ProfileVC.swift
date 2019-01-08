@@ -9,6 +9,7 @@
 import UIKit
 import Kingfisher
 import FirebaseAuth
+import FirebaseDatabase
 import SVProgressHUD
 
 class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -84,7 +85,6 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.collectionView.contentInsetAdjustmentBehavior = .never
         self.scrollView.contentInsetAdjustmentBehavior = .never
 
@@ -95,7 +95,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         NotificationCenter.default.addObserver(self, selector: #selector(getUploads), name: Notifications.didUploadMedia, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(getUserData), name: Notifications.userDataChanged, object: nil)
         
-        self.collectionView.register(UINib(nibName: "ThumbnailCell", bundle: nil), forCellWithReuseIdentifier: "thumbnailCell")
+        self.collectionView.register(UINib(nibName: "ProfileThumbnailCell", bundle: nil), forCellWithReuseIdentifier: "ThumbnailCell")
         
         avatarImageView.clipsToBounds = true
         avatarImageView.layer.cornerRadius = avatarImageView.frame.width / 2
@@ -110,9 +110,8 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary
-        
-        self.hidesBottomBarWhenPushed = false
         self.tabBarController?.tabBar.isHidden = false
+        self.hidesBottomBarWhenPushed = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -147,8 +146,6 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         ]
         
         self.navigationController?.navigationBar.titleTextAttributes = titleAttrs
-        
-        self.tabBarController?.tabBar.isHidden = false
         
         setUpBarButtons()
     }
@@ -414,11 +411,12 @@ extension ProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "thumbnailCell", for: indexPath) as? ThumbnailCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ThumbnailCell", for: indexPath) as? ProfileThumbnailCell else { return UICollectionViewCell() }
 
         let upload = uploads[indexPath.row]
         let urlString = upload.type == "video" ?  upload.thumbnailURL : upload.downloadURL
         
+        cell.newFowardLabel.isHidden = !(upload.newFoward ?? false)
         let url = URL(string: urlString)
         
         if upload.type == "gif" {
@@ -441,9 +439,12 @@ extension ProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) as? ThumbnailCell else { return }
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ProfileThumbnailCell else { return }
+        let upload = uploads[indexPath.row]
         
         if let image = cell.thumbnailImageView {
+            FirebaseController.shared.readNewForward(upload: upload)
+            cell.newFowardLabel.isHidden = true
             FirebaseController.shared.photoToPresent = image
             FirebaseController.shared.fetchMediaItem(forItemID: uploads[indexPath.row].uid, completion: { (item) in
                 FirebaseController.shared.currentMediaItem = item

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ThumbnailCell" id="gTV-IL-0wX" customClass="ProfileThumbnailCell" customModule="Telepic" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="315" height="297"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="315" height="297"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <button hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GGE-Uw-9ZV">
+                        <rect key="frame" x="145" y="136" width="25" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="GGE-Uw-9ZV" secondAttribute="height" multiplier="1:1" id="8Gs-9L-Kkm"/>
+                            <constraint firstAttribute="width" constant="25" id="aty-Uj-KSy"/>
+                            <constraint firstAttribute="height" constant="25" id="vc7-6L-sLT"/>
+                        </constraints>
+                        <state key="normal" image="playButton"/>
+                    </button>
+                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="•" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bf4-Sj-fzB">
+                        <rect key="frame" x="153.5" y="0.0" width="8" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.1764705882" green="0.66666666669999997" blue="0.98823529409999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo1" translatesAutoresizingMaskIntoConstraints="NO" id="Grx-Gw-WRA">
+                        <rect key="frame" x="0.0" y="29" width="315" height="268"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="Grx-Gw-WRA" secondAttribute="height" multiplier="315:268" id="q9X-2a-Zav"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="bf4-Sj-fzB" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="AHa-Oa-eEw"/>
+                <constraint firstItem="Grx-Gw-WRA" firstAttribute="top" secondItem="bf4-Sj-fzB" secondAttribute="bottom" constant="8" id="RXH-bs-S8q"/>
+                <constraint firstAttribute="trailing" secondItem="Grx-Gw-WRA" secondAttribute="trailing" id="WJz-lu-Ibg"/>
+                <constraint firstItem="Grx-Gw-WRA" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="eMJ-Oh-yiX"/>
+                <constraint firstItem="bf4-Sj-fzB" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="fsq-sV-X7k"/>
+                <constraint firstItem="GGE-Uw-9ZV" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="g9b-YX-Psh"/>
+                <constraint firstItem="GGE-Uw-9ZV" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="hnU-Q7-4Pk"/>
+                <constraint firstAttribute="bottom" secondItem="Grx-Gw-WRA" secondAttribute="bottom" id="o6A-VZ-TiQ"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <size key="customSize" width="315" height="297"/>
+            <connections>
+                <outlet property="newFowardLabel" destination="bf4-Sj-fzB" id="V5m-LZ-j7n"/>
+                <outlet property="playButton" destination="GGE-Uw-9ZV" id="Q93-Kl-As7"/>
+                <outlet property="thumbnailImageView" destination="Grx-Gw-WRA" id="YdG-2o-u55"/>
+            </connections>
+            <point key="canvasLocation" x="191.19999999999999" y="4.0479760119940034"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="photo1" width="375" height="366"/>
+        <image name="playButton" width="32" height="38"/>
+    </resources>
+</document>

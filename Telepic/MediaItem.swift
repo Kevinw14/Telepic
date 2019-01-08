@@ -21,6 +21,8 @@ struct MediaItem {
     var forwards: Int
     var mapReference: [String:[String:Any]]
     var milesTraveled: Double
+//    var imageHeight: CGFloat
+//    var imageWidth: CGFloat
     var forwardList: [String:[String:Any]]?
 }
 
@@ -38,6 +40,8 @@ extension MediaItem {
         self.forwards = dict["forwards"] as! Int
         self.mapReference = dict["mapReference"] as! [String:[String:Any]]
         self.milesTraveled = dict["milesTraveled"] as! Double
+//        self.imageHeight = dict["imageHeight"] as! CGFloat
+//        self.imageWidth = dict["imageWidth"] as! CGFloat
         if let forwardList = dict["forwardList"] as? [String:[String:Any]] {
             self.forwardList = forwardList
         }

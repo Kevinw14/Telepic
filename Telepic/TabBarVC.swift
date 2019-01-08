@@ -30,7 +30,7 @@ class TabBarVC: UIViewController, ControlTabBarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         FirebaseController.shared.fetchFriendRequests()
         updateBadge()
         NotificationCenter.default.addObserver(self, selector: #selector(updateBadge), name: Notifications.newEventNotification, object: nil)

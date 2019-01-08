@@ -39,6 +39,15 @@ class TabBarController: UITabBarController, FBSDKAppInviteDialogDelegate {
         FirebaseController.shared.fetchNotifications()
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateBadge), name: Notifications.updateBadge, object: nil)
+        
+        guard let currentUser = Auth.auth().currentUser else { return }
+        FirebaseController.shared.fetchAvatarImage(forUID: currentUser.uid) { (avatarURL) in
+        let url = URL(string: avatarURL)!
+            FirebaseController.shared.fetchAvatarImage(creatorAvatarURL: url, completion: { (image) in
+                
+            })
+            
+        }
     }
     
     @objc func updateBadge() {
@@ -102,11 +111,19 @@ extension TabBarController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         //NotificationCenter.default.post(Notification(name: Notifications.stopPlayer))
 
+//        if let navigationController = viewControllers?[selectedIndex] as? UINavigationController {
+//            for myController in navigationController.viewControllers.flatMap({ $0 as? ExploreVC }) {
+//                myController.dismissSearch()
+//            }
+//        }
+        
         if viewController is ImagePickerVC {
             
             let gallery = GalleryController()
             gallery.delegate = self
             Gallery.Config.VideoEditor.maximumDuration = 30
+            Gallery.Config.Camera.imageLimit = 1
+            Gallery.Config.Camera.BottomContainer.backgroundColor = .white
             Gallery.Config.VideoEditor.savesEditedVideoToLibrary = false
             Gallery.Config.Camera.recordLocation = false
             Gallery.Config.VideoEditor.quality = AVAssetExportPresetMediumQuality
@@ -177,10 +194,10 @@ extension TabBarController: GalleryControllerDelegate {
     }
     
     func galleryController(_ controller: GalleryController, didSelectImages images: [Image]) {
-//        controller.dismiss(animated: true, completion: nil)
+        //        controller.dismiss(animated: true, completion: nil)
         let captionVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: Identifiers.captionVC) as! CaptionVC
         var selectedImage: UIImage?
-
+        
         if let (imageData, uti) = images[0].uiImageData() {
             if UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
                 if let gif = UIImage.gif(data: imageData) {
@@ -202,8 +219,6 @@ extension TabBarController: GalleryControllerDelegate {
             gallery = nil
         }
     }
-    
-    
 }
 
 extension TabBarController: UIVideoEditorControllerDelegate {

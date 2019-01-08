@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 
 struct Comment {
     var senderID: String
@@ -211,6 +212,7 @@ extension CommentsVC: UITableViewDelegate, UITableViewDataSource {
         
         let comment = comments[indexPath.row]
         cell.comment = comment
+        cell.delegate = self
         cell.setUpViews()
         
         let date = NSDate(timeIntervalSince1970: comment.timestamp)
@@ -282,5 +284,14 @@ extension CommentsVC: UITextViewDelegate {
             postButton.isEnabled = false
             postButton.setTitleColor(placeHolderColor, for: .normal)
         }
+    }
+}
+
+extension CommentsVC: CommentDelegate {
+    func openUrl(url: URL) {
+        let config = SFSafariViewController.Configuration()
+        config.entersReaderIfAvailable = false
+        let vc = SFSafariViewController(url: URL(string: "https://www.hackingwithswift.com/read/32/3/how-to-use-sfsafariviewcontroller-to-browse-a-web-page")!, configuration: config)
+        present(vc, animated: true, completion: nil)
     }
 }

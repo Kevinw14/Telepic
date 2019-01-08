@@ -27,6 +27,11 @@ class InboxVC: UIViewController {
     var mediaItem: MediaItem?
     let dateFormatter = DateFormatter()
     let calendar = Calendar.current
+    var comments: [Comment] = [] {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
     let zoomTransitioningDelegate = ZoomTransitioningDelegate()
     
@@ -34,13 +39,11 @@ class InboxVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        tableView.register(BoxCell.self, forCellReuseIdentifier: "inboxCell")
         let isRegisteredForRemoteNotifications = UIApplication.shared.isRegisteredForRemoteNotifications
         if isRegisteredForRemoteNotifications { FirebaseController.shared.saveToken() }
         
         SVProgressHUD.show()
-        tableView.estimatedRowHeight = 400
-        tableView.rowHeight = UITableViewAutomaticDimension
         
         tableView.isHidden = true
         emptyInboxLabel.isHidden = true
@@ -76,9 +79,14 @@ class InboxVC: UIViewController {
         
         tableView.reloadData()
         
+//        let titleAttrs = [
+//            NSAttributedStringKey.foregroundColor: UIColor(hexString: "10BB6C"),
+//            NSAttributedStringKey.font: UIFont(name: "ProximaNova-Bold", size: 24)
+//        ]
+        
         let titleAttrs = [
-            NSAttributedStringKey.foregroundColor: UIColor(hexString: "10BB6C"),
-            NSAttributedStringKey.font: UIFont(name: "Nunito-Bold", size: 24)
+            NSAttributedStringKey.foregroundColor: UIColor(hexString: "2DAAFC"),
+            NSAttributedStringKey.font: UIFont(name: "ProximaNova-Bold", size: 32)
         ]
         
         self.navigationController?.navigationBar.titleTextAttributes = titleAttrs
@@ -124,32 +132,35 @@ extension InboxVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "inboxCell") as? InboxCell else { return UITableViewCell() }
+//        let inboxItem = inboxItems[indexPath.row]
         
-        let inboxItem = inboxItems[indexPath.row]
-        cell.inboxItem = inboxItem
+//        guard let cell = tableView.dequeueReusableCell(withIdentifier: "inboxCell") as? BoxCell else { return UITableViewCell() }
 
-        cell.setUpCell()
+        let inboxItem = inboxItems[indexPath.row]
+        let cell = BoxCell(inboxItem: inboxItem,parentTableView: self.tableView, reuseIdentifier: "inboxCell")
         cell.photoImageView.kf.indicatorType = .activity
-        
+//        cell.inboxItem = inboxItem
+//        cell.setUpCell()
+//        cell.sizeToFit()
         cell.delegate = self
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        (cell as! InboxCell).photoImageView.kf.cancelDownloadTask()
+        (cell as! BoxCell).photoImageView.kf.cancelDownloadTask()
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let cell = cell as? InboxCell else { return }
-        guard let inboxItem = cell.inboxItem else { return }
+        guard let cell = cell as? BoxCell else { return }
+        let inboxItem = cell.inboxItem 
         
-        if inboxItem.caption == nil || inboxItem.caption == "" {
-            cell.captionLabel.isHidden = true
-        }
+//        if inboxItem.caption == nil || inboxItem.caption == "" {
+//            cell.captionLabel.isHidden = true
+//        }
         
         if inboxItem.type == "photo" {
+//            guard let inboxItem = inboxItem else { return }
             let photoURL = URL(string: inboxItem.downloadURL)
             cell.photoImageView.kf.setImage(with: photoURL,
                                             placeholder: nil,
@@ -160,14 +171,15 @@ extension InboxVC: UITableViewDelegate, UITableViewDataSource {
             })
             cell.playButton.isHidden = true
         } else if inboxItem.type == "gif" {
+//            guard let inboxItem = inboxItem else { return }
             let url = URL(string: inboxItem.downloadURL)
             cell.photoImageView.kf.setImage(with: url)
             cell.playButton.isHidden = true
         } else {
-            let thumbnailURL = URL(string: inboxItem.thumbnailURL)
-            cell.photoImageView.kf.setImage(with: thumbnailURL)
-            cell.messageLabel.text = "Video Received!"
-            cell.playButton.isHidden = false
+//            let thumbnailURL = URL(string: inboxItem.thumbnailURL)
+//            cell.photoImageView.kf.setImage(with: thumbnailURL)
+//            cell.messageLabel.text = "Video Received!"
+//            cell.playButton.isHidden = false
 //            cell.photoImageView.addSubview(activityIndicatorView)
 //
 //            activityIndicatorView.centerXAnchor.constraint(equalTo: photoImageView.centerXAnchor).isActive = true
@@ -184,11 +196,21 @@ extension InboxVC: UITableViewDelegate, UITableViewDataSource {
             cell.playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         }
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let inboxItem = inboxItems[indexPath.row]
+        
+        if inboxItem.caption != nil && inboxItem.caption != "" {
+            return 610
+        } else {
+            return 580
+        }
+    }
 }
 
 extension InboxVC: UITableViewDataSourcePrefetching {
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        let indexes = indexPaths.flatMap { $0.row }
+        let indexes = indexPaths.compactMap { $0.row }
         
         let urls = indexes.map { URL(string: self.inboxItems[$0].downloadURL)! }
         
@@ -346,6 +368,18 @@ extension InboxVC: PresentMediaDelegate {
         self.hidesBottomBarWhenPushed = true
         mediaViewVC.photo = image
         self.navigationController?.pushViewController(mediaViewVC, animated: true)
+    }
+}
+
+extension InboxVC: CaptionLabelDelegate {
+    func didTapURL(captionLabel: CaptionLabel, url: URL) {
+       let webViewController = WebViewController(url: url)
+        navigationController?.pushViewController(webViewController, animated: true)
+    }
+    func didTapCustom(captionLabel: CaptionLabel) {
+        tableView.beginUpdates()
+        captionLabel.text = captionLabel.pretext
+        tableView.endUpdates()
     }
 }
 

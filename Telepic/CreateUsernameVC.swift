@@ -33,7 +33,7 @@ extension CreateUsernameVC: LoginChildDelegate {
     func getNextVC(completion: @escaping (UIViewController) -> Void) {
         guard let username = usernameTextField.text else { return }
         
-        if username.characters.count <= 24 {
+        if username.count <= 24 {
             
             UserController.shared.currentUser.username = username
             

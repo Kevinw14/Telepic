@@ -14,6 +14,7 @@ class AddFriendCell: UITableViewCell {
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var sendRequestButton: UIButton!
     
+    
     var uid: String!
     weak var delegate: AddFriendDelegate?
         

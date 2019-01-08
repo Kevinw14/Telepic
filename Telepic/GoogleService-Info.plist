@@ -7,34 +7,34 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>241207708343-b0bjq0fvr8atvrr920rbmfokb5na478o.apps.googleusercontent.com</string>
+	<string>335511810455-q7e3j93r8fmdkj3oa7jbbcrakcbmcav2.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.241207708343-b0bjq0fvr8atvrr920rbmfokb5na478o</string>
+	<string>com.googleusercontent.apps.335511810455-q7e3j93r8fmdkj3oa7jbbcrakcbmcav2</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCYYh2tgN7rbOWvCAMy3SPJa8Y30LJ39Hg</string>
+	<string>AIzaSyDh5l6I-MkKV2DENNbi-mU0dH0H-1_jZYM</string>
 	<key>GCM_SENDER_ID</key>
-	<string>241207708343</string>
+	<string>335511810455</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.TelepicLLC.Telepic</string>
+	<string>com.KevinWoodsDevelopment.KevinWood.Telepic</string>
 	<key>PROJECT_ID</key>
-	<string>telepic-da364</string>
+	<string>telepic-33a33</string>
 	<key>STORAGE_BUCKET</key>
-	<string>telepic-da364.appspot.com</string>
+	<string>telepic-33a33.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_GCM_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:241207708343:ios:0d68bf72e097db55</string>
+	<string>1:335511810455:ios:090a47438ef0ed45</string>
 	<key>DATABASE_URL</key>
-	<string>https://telepic-da364.firebaseio.com</string>
+	<string>https://telepic-33a33.firebaseio.com</string>
 </dict>
 </plist>

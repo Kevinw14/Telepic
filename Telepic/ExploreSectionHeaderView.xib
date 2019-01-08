@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="AvenirNext.ttc">
-            <string>AvenirNext-DemiBold</string>
-        </array>
-    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -23,32 +19,38 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="section" translatesAutoresizingMaskIntoConstraints="NO" id="QAv-xn-E1B">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Most Forwarded" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q8C-Me-aY1">
-                        <rect key="frame" x="14" y="12.5" width="107" height="20"/>
+                        <rect key="frame" x="14" y="12" width="107" height="20"/>
                         <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="14"/>
                         <color key="textColor" red="0.31372549019607843" green="0.31372549019607843" blue="0.31372549019607843" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rve-nQ-kaz">
+                        <rect key="frame" x="284" y="12" width="20" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="20" id="c07-KU-ago"/>
+                            <constraint firstAttribute="height" constant="21" id="mzM-I2-APy"/>
+                        </constraints>
+                        <color key="tintColor" red="0.31372549019607843" green="0.31372549019607843" blue="0.31372549019607843" alpha="1" colorSpace="calibratedRGB"/>
+                        <state key="normal" image="ellipsis"/>
+                    </button>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="QAv-xn-E1B" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="1Zl-xc-kHB"/>
                     <constraint firstItem="Q8C-Me-aY1" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="14" id="212-cg-qhf"/>
-                    <constraint firstAttribute="bottom" secondItem="QAv-xn-E1B" secondAttribute="bottom" id="B2R-V5-4yi"/>
-                    <constraint firstItem="QAv-xn-E1B" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="VkR-La-Vhy"/>
+                    <constraint firstAttribute="trailing" secondItem="Rve-nQ-kaz" secondAttribute="trailing" constant="16" id="Cxx-Sd-RkS"/>
+                    <constraint firstItem="Rve-nQ-kaz" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Q8C-Me-aY1" secondAttribute="trailing" constant="8" id="LEB-H3-Pk8"/>
+                    <constraint firstItem="Rve-nQ-kaz" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="sv4-sw-N4U"/>
                     <constraint firstItem="Q8C-Me-aY1" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="wVH-6p-PFy"/>
-                    <constraint firstAttribute="trailing" secondItem="QAv-xn-E1B" secondAttribute="trailing" id="xbp-SU-xfC"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="sectionLabel" destination="Q8C-Me-aY1" id="gzq-PY-Vel"/>
             </connections>
+            <point key="canvasLocation" x="137.59999999999999" y="138.53073463268368"/>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="section" width="375" height="40"/>
+        <image name="ellipsis" width="75" height="75"/>
     </resources>
 </document>

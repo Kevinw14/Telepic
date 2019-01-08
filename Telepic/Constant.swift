@@ -27,4 +27,9 @@ class Constant {
         
         return totalWidth / column
     }
+    
+    static let SFFont: String = "SFProText-Light"
+    static let avenirNextDemiBold: String = "AvenirNext-DemiBold"
+    static let avenirNextMedium: String = "AvenirNext-Medium"
+    static let avenirNextRegular: String = "AvenirNext-Regular"
 }

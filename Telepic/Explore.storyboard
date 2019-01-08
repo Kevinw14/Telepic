@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ik6-yX-YTd">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ik6-yX-YTd">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -33,7 +34,7 @@
             </objects>
             <point key="canvasLocation" x="-38" y="-125"/>
         </scene>
-        <!--Explore-->
+        <!--ExploreVC-->
         <scene sceneID="dY8-2u-F70">
             <objects>
                 <viewController storyboardIdentifier="exploreVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="K7A-o9-BX8" customClass="ExploreVC" customModule="Telepic" customModuleProvider="target" sceneMemberID="viewController">
@@ -45,41 +46,37 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="sYh-wr-Auf">
-                                    <rect key="frame" x="0.0" y="321" width="375" height="1"/>
+                                    <rect key="frame" x="0.0" y="421" width="375" height="1"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="categoryRow" rowHeight="131" id="EKE-o1-z0T" customClass="CategoryRowCell" customModule="Telepic" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CategoryCell" rowHeight="131" id="EKE-o1-z0T" customClass="CategoryTableViewCell" customModule="Telepic" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="131"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="EKE-o1-z0T" id="2BU-9U-TMb">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="130.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="maU-3G-FkR">
+                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="maU-3G-FkR">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="130.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="1" minimumInteritemSpacing="1" id="4mg-rK-iyg">
-                                                        <size key="itemSize" width="123" height="106"/>
+                                                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="NRU-of-Etz">
+                                                        <size key="itemSize" width="50" height="50"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="thumbnailCell" id="ETq-w8-KQc" customClass="ThumbnailCell" customModule="Telepic" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="12.5" width="123" height="106"/>
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CategoryCell" id="ETq-w8-KQc" customClass="PostCategoryCell" customModule="Telepic" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                                                <rect key="frame" x="0.0" y="0.0" width="123" height="106"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                             </view>
                                                         </collectionViewCell>
                                                     </cells>
-                                                    <connections>
-                                                        <outlet property="dataSource" destination="EKE-o1-z0T" id="RNN-G0-okb"/>
-                                                        <outlet property="delegate" destination="EKE-o1-z0T" id="Lpc-wh-nSb"/>
-                                                    </connections>
                                                 </collectionView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -92,55 +89,93 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
-                                            <outlet property="collectionView" destination="maU-3G-FkR" id="GNc-ev-G9J"/>
+                                            <outlet property="collectionView" destination="maU-3G-FkR" id="DPL-VD-9cD"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="startAMovementCell" rowHeight="162" id="lB9-mq-hsX" customClass="StartAMovementCell" customModule="Telepic" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="159" width="375" height="162"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ForwardCell" rowHeight="131" id="IFS-vA-BKe" customClass="ForwardCell" customModule="Telepic" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="159" width="375" height="131"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lB9-mq-hsX" id="QGb-aA-4Q3">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="161.5"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="IFS-vA-BKe" id="Xjq-hU-muR">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="130.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="wGU-aA-FaC">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="161.5"/>
+                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="8IR-u1-7FO">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="130.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="0.0" id="ZN3-NN-OnI">
-                                                        <size key="itemSize" width="126" height="125"/>
+                                                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="1Zp-a9-h3x">
+                                                        <size key="itemSize" width="50" height="50"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="thumbnailCell" id="CbY-PS-wg4" customClass="ThumbnailCell" customModule="Telepic" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="126" height="125"/>
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ThumbnailCell" id="Dsd-Mq-aSP" customClass="ProfileThumbnailCell" customModule="Telepic" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                                                <rect key="frame" x="0.0" y="0.0" width="126" height="125"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                             </view>
                                                         </collectionViewCell>
                                                     </cells>
-                                                    <connections>
-                                                        <outlet property="dataSource" destination="lB9-mq-hsX" id="LCS-0d-Ywn"/>
-                                                        <outlet property="delegate" destination="lB9-mq-hsX" id="ztj-fO-KLd"/>
-                                                    </connections>
                                                 </collectionView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
-                                                <constraint firstItem="wGU-aA-FaC" firstAttribute="top" secondItem="QGb-aA-4Q3" secondAttribute="top" id="Blw-Ge-Y3L"/>
-                                                <constraint firstAttribute="bottom" secondItem="wGU-aA-FaC" secondAttribute="bottom" id="Bnw-lP-Eg1"/>
-                                                <constraint firstAttribute="trailing" secondItem="wGU-aA-FaC" secondAttribute="trailing" id="KC2-nJ-iab"/>
-                                                <constraint firstItem="wGU-aA-FaC" firstAttribute="leading" secondItem="QGb-aA-4Q3" secondAttribute="leading" id="srx-5g-jm1"/>
+                                                <constraint firstAttribute="trailing" secondItem="8IR-u1-7FO" secondAttribute="trailing" id="6a3-P8-LiE"/>
+                                                <constraint firstItem="8IR-u1-7FO" firstAttribute="top" secondItem="Xjq-hU-muR" secondAttribute="top" id="6jC-zJ-UPq"/>
+                                                <constraint firstAttribute="bottom" secondItem="8IR-u1-7FO" secondAttribute="bottom" id="n7s-Am-UhF"/>
+                                                <constraint firstItem="8IR-u1-7FO" firstAttribute="leading" secondItem="Xjq-hU-muR" secondAttribute="leading" id="x4k-GJ-jK3"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
-                                            <outlet property="collectionView" destination="wGU-aA-FaC" id="bDl-Ai-4ji"/>
+                                            <outlet property="collectionView" destination="8IR-u1-7FO" id="z75-1V-qON"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MilesTraveledCell" rowHeight="131" id="qy0-2M-Ckk" customClass="MilesTraveledCell" customModule="Telepic" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="290" width="375" height="131"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qy0-2M-Ckk" id="TRw-Ll-NcA">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="130.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Rrf-N4-Ac4">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="130.5"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="awG-bt-vBy">
+                                                        <size key="itemSize" width="50" height="50"/>
+                                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    </collectionViewFlowLayout>
+                                                    <cells>
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ThumbnailCell" id="48b-V7-E0a" customClass="ProfileThumbnailCell" customModule="Telepic" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                            </view>
+                                                        </collectionViewCell>
+                                                    </cells>
+                                                </collectionView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstItem="Rrf-N4-Ac4" firstAttribute="leading" secondItem="TRw-Ll-NcA" secondAttribute="leading" id="2ri-aX-v6u"/>
+                                                <constraint firstAttribute="trailing" secondItem="Rrf-N4-Ac4" secondAttribute="trailing" id="Irb-g1-vHY"/>
+                                                <constraint firstItem="Rrf-N4-Ac4" firstAttribute="top" secondItem="TRw-Ll-NcA" secondAttribute="top" id="Qwn-qF-cSm"/>
+                                                <constraint firstAttribute="bottom" secondItem="Rrf-N4-Ac4" secondAttribute="bottom" id="Ysw-io-Dud"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outlet property="collectionView" destination="Rrf-N4-Ac4" id="DGo-Ux-3LM"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <sections/>
                                 <connections>
                                     <outlet property="dataSource" destination="K7A-o9-BX8" id="vDu-OH-J6J"/>
                                     <outlet property="delegate" destination="K7A-o9-BX8" id="vWf-4f-cmv"/>
@@ -150,20 +185,20 @@
                         <color key="backgroundColor" red="0.97647058823529409" green="0.97647058823529409" blue="0.97647058823529409" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="SaB-dz-5Rd" firstAttribute="trailing" secondItem="Yd0-eM-T4l" secondAttribute="trailing" id="Gh9-le-qG7"/>
-                            <constraint firstItem="SaB-dz-5Rd" firstAttribute="bottom" secondItem="Yd0-eM-T4l" secondAttribute="bottom" id="eqx-Y0-Zit"/>
                             <constraint firstItem="SaB-dz-5Rd" firstAttribute="top" secondItem="Yd0-eM-T4l" secondAttribute="top" id="hTW-PG-mki"/>
+                            <constraint firstAttribute="bottom" secondItem="SaB-dz-5Rd" secondAttribute="bottom" id="lqd-j2-ujB"/>
                             <constraint firstItem="SaB-dz-5Rd" firstAttribute="leading" secondItem="Yd0-eM-T4l" secondAttribute="leading" id="qUZ-3Q-Oj9"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Yd0-eM-T4l"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Explore" id="Yek-b6-duN"/>
+                    <navigationItem key="navigationItem" id="Yek-b6-duN"/>
                     <connections>
                         <outlet property="tableView" destination="SaB-dz-5Rd" id="lhW-6C-WCx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K8P-PE-m2D" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="769" y="-125"/>
+            <point key="canvasLocation" x="1178.4000000000001" y="-137.18140929535232"/>
         </scene>
     </scenes>
     <resources>

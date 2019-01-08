@@ -15,7 +15,6 @@ struct InboxItem {
     var downloadURL: String
     var thumbnailURL: String
     var opened: Bool
-    
     var senderID: String // User
     var senderUsername: String
     var senderAvatarURL: String
@@ -29,6 +28,7 @@ struct InboxItem {
 //    var videoURL: String
     
     var commentsRef: String
+    var commentIDs: [String]
     var mapRef: String
 }
 
@@ -50,7 +50,12 @@ extension InboxItem {
         let creatorAvatarURL = dict["creatorAvatarURL"] as! String
         
         let timestamp = dict["timestamp"] as! Double
+        let commentDictionary = dict["comments"] as? [String:Any]
         
+        var fetchedCommentIDs: [String] = []
+        commentDictionary?.forEach({ (key, _) in
+            fetchedCommentIDs.append(key)
+        })
         
         self.init(itemID: itemID,
                   type: type,
@@ -67,6 +72,7 @@ extension InboxItem {
                   daysRemaining: "3d",
                   timestamp: timestamp,
                   commentsRef: "noRef",
+                  commentIDs: fetchedCommentIDs,
                   mapRef: "noRef")
     }
     

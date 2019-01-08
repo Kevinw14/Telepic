@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ThumbnailCell" id="Qzq-fQ-D6K" customClass="ThumbCell" customModule="Telepic" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="311" height="311"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                <rect key="frame" x="0.0" y="0.0" width="311" height="311"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo1" translatesAutoresizingMaskIntoConstraints="NO" id="WEx-tn-iir">
+                        <rect key="frame" x="0.0" y="0.0" width="311" height="311"/>
+                    </imageView>
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="epD-Jx-Qre">
+                        <rect key="frame" x="139.5" y="136.5" width="32" height="38"/>
+                        <state key="normal" image="playButton"/>
+                    </button>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="WEx-tn-iir" firstAttribute="top" secondItem="Qzq-fQ-D6K" secondAttribute="top" id="3b6-As-Dnf"/>
+                <constraint firstAttribute="bottom" secondItem="epD-Jx-Qre" secondAttribute="bottom" constant="136.5" id="6lo-mc-Doc"/>
+                <constraint firstAttribute="bottom" secondItem="WEx-tn-iir" secondAttribute="bottom" id="Ddi-5I-tWe"/>
+                <constraint firstAttribute="trailing" secondItem="epD-Jx-Qre" secondAttribute="trailing" constant="139.5" id="Fem-R6-X3s"/>
+                <constraint firstItem="epD-Jx-Qre" firstAttribute="leading" secondItem="Qzq-fQ-D6K" secondAttribute="leading" constant="139.5" id="VJt-qy-k7J"/>
+                <constraint firstAttribute="trailing" secondItem="WEx-tn-iir" secondAttribute="trailing" id="hOi-3S-yVE"/>
+                <constraint firstItem="epD-Jx-Qre" firstAttribute="top" secondItem="Qzq-fQ-D6K" secondAttribute="top" constant="136.5" id="mAe-o9-GW0"/>
+                <constraint firstItem="WEx-tn-iir" firstAttribute="leading" secondItem="Qzq-fQ-D6K" secondAttribute="leading" id="mP8-Of-KAT"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="w07-sc-lBe"/>
+            <size key="customSize" width="374" height="311"/>
+            <connections>
+                <outlet property="playButton" destination="epD-Jx-Qre" id="Xon-Cr-G3a"/>
+                <outlet property="thumbnailImageView" destination="WEx-tn-iir" id="fOy-M5-7p1"/>
+            </connections>
+            <point key="canvasLocation" x="436" y="-127.28635682158921"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="photo1" width="375" height="366"/>
+        <image name="playButton" width="32" height="38"/>
+    </resources>
+</document>

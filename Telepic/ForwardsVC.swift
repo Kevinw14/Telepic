@@ -99,7 +99,7 @@ extension ForwardsVC: UICollectionViewDataSource, UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "thumbnailCell", for: indexPath) as? ThumbnailCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "thumbnailCell", for: indexPath) as? ProfileThumbnailCell else { return UICollectionViewCell() }
         
         let forward = forwards[indexPath.row]
         let urlString = forward.type == "video" ?  forward.thumbnailURL : forward.downloadURL
@@ -119,7 +119,7 @@ extension ForwardsVC: UICollectionViewDataSource, UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) as? ThumbnailCell else { return }
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ProfileThumbnailCell else { return }
         
         if let image = cell.thumbnailImageView {
             FirebaseController.shared.photoToPresent = image

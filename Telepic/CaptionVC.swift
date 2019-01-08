@@ -63,9 +63,7 @@ class CaptionVC: UIViewController, UITextViewDelegate {
     }
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
-//        self.navigationController?.navigationBar.isHidden = false
+        super.viewDidLoad()//        self.navigationController?.navigationBar.isHidden = false
         
         previewImageView.clipsToBounds = true
         previewImageView.isUserInteractionEnabled = true
@@ -85,7 +83,7 @@ class CaptionVC: UIViewController, UITextViewDelegate {
         
         if let image = image {
             self.previewImageView.image = image
-        } else if let videoURL = videoURL, let thumbnail = thumbnail {
+        } else if let _ = videoURL, let thumbnail = thumbnail {
             self.previewImageView.image = thumbnail
             self.previewImageView.addSubview(playButton)
             playButton.centerVertically()

@@ -45,11 +45,22 @@ class UserAnnotationView: MKAnnotationView {
 //            label.layer.borderColor = UIColor(hexString: "10BB6C").cgColor
 //            self.addSubview(label)
             
+//            if userAnnotation.isCreator {
+//                let borderView = UIView()
+//                borderView.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+//                borderView.backgroundColor = .clear
+//                borderView.layer.borderColor = UIColor(hexString: "10BB6C").cgColor
+//                borderView.layer.borderWidth = 2
+//                borderView.layer.cornerRadius = borderView.frame.width / 2
+//                borderView.clipsToBounds = true
+//                self.addSubview(borderView)
+//            }
+            
             if userAnnotation.isCreator {
                 let borderView = UIView()
                 borderView.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
                 borderView.backgroundColor = .clear
-                borderView.layer.borderColor = UIColor(hexString: "10BB6C").cgColor
+                borderView.layer.borderColor = UIColor(hexString: "2DAAFC").cgColor
                 borderView.layer.borderWidth = 2
                 borderView.layer.cornerRadius = borderView.frame.width / 2
                 borderView.clipsToBounds = true

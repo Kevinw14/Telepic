@@ -60,7 +60,7 @@ class FiltersVC: UIViewController {
     
     func thumbFromImage(_ img: UIImage) -> UIImage {
         let width: CGFloat = img.size.width / 5
-        let height: CGFloat = img.size.height / 5
+        let height: CGFloat = width
         UIGraphicsBeginImageContext(CGSize(width:width, height:height))
         img.draw(in: CGRect(x:0, y:0, width:width, height:height))
         let smallImage = UIGraphicsGetImageFromCurrentImageContext()
@@ -91,6 +91,7 @@ class FiltersVC: UIViewController {
         let cancelBtn = UIButton(type: .system)
         cancelBtn.setTitle("Cancel", for: .normal)
         cancelBtn.sizeToFit()
+        cancelBtn.setTitleColor(.gray, for: .normal)
         cancelBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside)
         let leftBarButtonItem = UIBarButtonItem(customView: cancelBtn)
         
@@ -99,6 +100,30 @@ class FiltersVC: UIViewController {
         
         navigationItem.leftBarButtonItem = leftBarButtonItem
         navigationItem.rightBarButtonItem = rightBarButtonItem
+        
+        v.filterButton.addTarget(self, action: #selector(handleFilterTap), for: .touchUpInside)
+        v.editButton.addTarget(self, action: #selector(handleEditTap), for: .touchUpInside)
+        v.filterButton.isSelected = true
+        v.editButton.isSelected = false
+    }
+    
+    private func handleSelectionColor() {
+        v.filterButton.isSelected ? v.filterButton.setTitleColor(.black, for: .normal) : v.filterButton.setTitleColor(.gray, for: .normal)
+        v.editButton.isSelected ? v.editButton.setTitleColor(.black, for: .normal) : v.filterButton.setTitleColor(.gray, for: .normal)
+    }
+    
+    @objc private func handleFilterTap() {
+        print("Filtered Tapped")
+        v.filterButton.isSelected = true
+        v.editButton.isSelected = false
+        handleSelectionColor()
+    }
+    
+    @objc private func handleEditTap() {
+        print("Edit Tapped")
+        v.filterButton.isSelected = false
+        v.editButton.isSelected = true
+        handleSelectionColor()
     }
     
     @objc func handleTap() {
@@ -156,5 +181,14 @@ extension FiltersVC: UICollectionViewDelegate {
         if selectedFilter.name != "" {
             self.isImageFiltered = true
         }
+    }
+}
+
+extension FiltersVC: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = collectionView.frame.width / 3.7
+        let height = width + 30
+        return CGSize(width: width, height: height)
     }
 }

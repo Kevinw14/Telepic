@@ -26,7 +26,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>37</string>
+	<string>41</string>
 	<key>FacebookAppID</key>
 	<string>130302114259339</string>
 	<key>FacebookDisplayName</key>
@@ -42,6 +42,11 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>We need access to your photo library so you can upload a video or photo.</string>
 	<key>NSCameraUsageDescription</key>
@@ -56,6 +61,12 @@
 	<string>We need access to your photos so you can share them with others.</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>SF-Pro-Text-Light.otf</string>
+		<string>proximanova-semibold-webfont.ttf</string>
+		<string>proximanova-regularitalic-webfont.ttf</string>
+		<string>proximanova-regular-webfont.ttf</string>
+		<string>proximanova-light-webfont.ttf</string>
+		<string>proximanova-bold-webfont.ttf</string>
 		<string>Nunito-Black.ttf</string>
 		<string>Nunito-BlackItalic.ttf</string>
 		<string>Nunito-Bold.ttf</string>

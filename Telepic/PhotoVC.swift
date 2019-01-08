@@ -48,7 +48,7 @@ class PhotoVC: UIViewController {
         sendButton.setTitle("Send", for: .normal)
         sendButton.setTitleColor(.white, for: .normal)
         view.addSubview(sendButton)
-        sendButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -20).isActive = true
+        sendButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
         sendButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         sendButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
         sendButton.heightAnchor.constraint(equalToConstant: 30).isActive = true

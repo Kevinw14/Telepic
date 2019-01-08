@@ -217,6 +217,14 @@ extension UIImage{
     
     
 }
+
+extension Date {
+    var dateString: String {
+        let dateFormatter = DateFormatter()
+        return dateFormatter.timeSince(from: self as NSDate, numericDates: true)
+    }
+}
+
 extension DateFormatter {
     /**
      Formats a date as the time since that date (e.g., “Last week, yesterday, etc.”).

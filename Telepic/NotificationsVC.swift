@@ -32,6 +32,8 @@ class NotificationsVC: TabChildVC {
         NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: Notifications.newEventNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: Notifications.didLoadFriendRequests, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: Notifications.reloadNotifications, object: nil)
+        guard let navigationHeight =  self.navigationController?.navigationBar.frame.height else { return }
+        self.tableView.contentInset = UIEdgeInsetsMake(navigationHeight, 0, 0, 0)
     }
     
     override func viewWillAppear(_ animated: Bool) {

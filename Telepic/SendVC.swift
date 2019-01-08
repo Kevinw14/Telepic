@@ -48,7 +48,7 @@ class SendVC: UIViewController {
         super.viewDidLoad()
         
         self.navigationController?.navigationBar.isHidden = true
-        doneButton.setTitle("Done", for: .normal)
+        doneButton.setTitle("Foward", for: .normal)
         
         if let item = inboxItemBeingSent {
             FirebaseController.shared.fetchValidForwardTargets(itemID: item.itemID, creatorID: item.creatorID)

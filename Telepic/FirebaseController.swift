@@ -111,8 +111,8 @@ class FirebaseController {
             if let error = error {
                 print(error.localizedDescription)
             } else {
-                self.ref.child("users").child(uid).setValue(["username": username, "searchableUsername": username.lowercased()])
-                self.ref.child("usernames").child(username.lowercased()).setValue(true)
+                self.ref.child("users/\(uid)").updateChildValues(["username": username, "searchableUsername": username.lowercased()])
+                self.ref.child("usernames/\(uid)").child(username.lowercased()).setValue(true)
                 
                 let isRegisteredForRemoteNotifications = UIApplication.shared.isRegisteredForRemoteNotifications
                 if isRegisteredForRemoteNotifications { self.saveToken() }
@@ -191,12 +191,46 @@ class FirebaseController {
         }
     }
     
+    func fetchAvatarImage(creatorAvatarURL url: URL, completion: @escaping(UIImage?) -> Void) {
+        let dataTask = URLSession.shared.dataTask(with: url) { (data, _, error) in
+            if let error = error {
+                print("Error fetching image: \(error.localizedDescription)")
+                return
+            }
+            
+            if let data = data {
+                let image = UIImage(data: data)
+                DispatchQueue.main.async {
+                    completion(image)
+                }
+            }
+        }
+        dataTask.resume()
+    }
+    
+    func fetchFurthestTraveled(completion: @escaping([MediaItem]) -> Void) {
+        self.ref.child("mediaItems").queryOrdered(byChild: "milesTraveled").queryLimited(toLast: 50).queryStarting(atValue: 1).observeSingleEvent(of: .value) { (snapshot) in
+            if let dictionary = snapshot.value as? [String:Any] {
+                var fetchedFurthestTravel: [MediaItem] = []
+                dictionary.forEach({ (key, value) in
+                    guard let travelDictionary = value as? [String:Any] else { return }
+                    let mediaItem = MediaItem(itemID: key, dict: travelDictionary)
+//                    print(mediaItem.creatorUsername, mediaItem.milesTraveled)
+                    fetchedFurthestTravel.append(mediaItem)
+                })
+                DispatchQueue.main.async {
+                    completion(fetchedFurthestTravel)
+                }
+            }
+        }
+    }
+    
     func searchUsers(text: String) {
         var users = [SearchableUser]()
         self.filteredUsers = users
         
         if text != "" {
-            ref.child("users").queryOrdered(byChild: "searchableUsername").queryStarting(atValue: text).queryEnding(atValue: text+"\u{f8ff}").queryLimited(toLast: 20).observeSingleEvent(of: .value, with: { (snapshot) in
+            ref.child("users").queryOrdered(byChild: "searchableUsername").queryStarting(atValue: text).queryEnding(atValue: text + "\u{f8ff}").queryLimited(toLast: 20).observeSingleEvent(of: .value, with: { (snapshot) in
                 guard let usersDict = snapshot.value as? [String:[String:Any]] else { return }
                 for (key, value) in usersDict {
                     let username = value["username"] as! String
@@ -214,7 +248,6 @@ class FirebaseController {
                                 } else {
                                     users.append(SearchableUser(uid: key, username: username, avatarURL: avatarURL))
                                 }
-                                print(self.filteredUsers)
                                 self.filteredUsers = users
                                 NotificationCenter.default.post(Notification(name: Notifications.didLoadUsers))
                             })
@@ -543,6 +576,22 @@ class FirebaseController {
         }
     }
     
+    func fetchCategories(completion: @escaping([Category]?) -> Void) {
+        Database.database().reference().child("categories").observeSingleEvent(of: .value) { (snapshot) in
+            if let dictionary = snapshot.value as? [String:Any] {
+                var fetchedCategories: [Category] = []
+                dictionary.forEach({ (_, value) in
+                    guard let categoryDictionary = value as? [String:Any] else { return }
+                    let category = Category(dictionary: categoryDictionary)
+                    fetchedCategories.append(category)
+                })
+                DispatchQueue.main.async {
+                    completion(fetchedCategories)
+                }
+            }
+        }
+    }
+    
     func fetchMediaItem(forItemID itemID: String, completion: @escaping (MediaItem) -> Void) {
         
         self.ref.child("mediaItems").child(itemID).observeSingleEvent(of: .value) { (snapshot) in
@@ -557,6 +606,8 @@ class FirebaseController {
                 let forwards = mediaItemDict["forwards"] as! Int
                 let mapReference = mediaItemDict["mapReference"] as! [String:[String:Any]]
                 let milesTraveled = mediaItemDict["milesTraveled"] as! Double
+//                let imageHeight = mediaItemDict["imageHeight"] as! CGFloat
+//                let imageWidth = mediaItemDict["imageWidth"] as! CGFloat
                 let forwardList = mediaItemDict["forwardList"] as? [String:[String:Any]] ?? nil
                 
                 FirebaseController.shared.fetchUser(uid: creatorID, completion: { (user) in
@@ -564,6 +615,22 @@ class FirebaseController {
                     let creatorAvatarURL = user["avatarURL"] as? String ?? "n/a"
                     
                     let mediaItem = MediaItem(itemID: itemID, timestamp: timestamp, type: type, caption: caption, creatorUsername: creatorUsername, creatorID: creatorID, creatorAvatarURL: creatorAvatarURL, downloadURL: downloadURL, thumbnailURL: thumbnailURL, forwards: forwards, mapReference: mapReference, milesTraveled: milesTraveled, forwardList: forwardList)
+                    
+//                    let mediaItem = MediaItem(itemID: itemID,
+//                                              timestamp: timestamp,
+//                                              type: type,
+//                                              caption: caption,
+//                                              creatorUsername: creatorUsername,
+//                                              creatorID: creatorID,
+//                                              creatorAvatarURL: creatorAvatarURL,
+//                                              downloadURL: downloadURL,
+//                                              thumbnailURL: thumbnailURL,
+//                                              forwards: forwards,
+//                                              mapReference: mapReference,
+//                                              milesTraveled: milesTraveled,
+//                                              imageHeight: imageHeight,
+//                                              imageWidth: imageWidth,
+//                                              forwardList: forwardList)
                     completion(mediaItem)
                 })
                 
@@ -603,10 +670,10 @@ class FirebaseController {
 //                completion(forwardList)
 //            }
 //        }
-//    }
+//
     
     func forwardMediaItem(_ item: MediaItem, toFriendIDs friendIDs: [String]) {
-        guard let currentUser = Auth.auth().currentUser else { return }
+        guard let currentUser = Auth.auth().currentUser else { print("Broke Media Item"); return }
         
         if let currentUID = Auth.auth().currentUser?.uid {
             
@@ -626,6 +693,7 @@ class FirebaseController {
                 "creatorAvatarURL": item.creatorAvatarURL,
                 "timestamp": dateSent
             ]
+            
             let itemObject = InboxItem(itemID: item.itemID, dict: inboxItem)
             
                 
@@ -646,7 +714,7 @@ class FirebaseController {
             
             
             self.ref.child("mediaItems").child(item.itemID).child("forwarders").child(currentUID).setValue(true)
-            
+            self.ref.child("users/\(currentUser.uid)/uploads/\(item.itemID)").updateChildValues(["newForward":true])
             friendIDs.forEach { userID in
                 self.ref.child("mediaItems").child(item.itemID).child("recipients").child(userID).setValue(true)
             }
@@ -663,11 +731,12 @@ class FirebaseController {
             banner.show()
             
             NotificationCenter.default.post(Notification(name: Notifications.didForwardMedia))
+            print("Fowarded Media Item")
         }
     }
     
     func forwardInboxItem(_ item: InboxItem, toFriendIDs friendIDs: [String]) {
-        guard let currentUser = Auth.auth().currentUser else { return }
+        guard let currentUser = Auth.auth().currentUser else { print("Broke Inbox Item"); return }
         
         if let currentUID = Auth.auth().currentUser?.uid {
             
@@ -702,8 +771,9 @@ class FirebaseController {
             
             self.ref.child("users").child(item.creatorID).child("notifications").child(notificationUID).setValue(notification.dictionaryRepresentation())
             
+            self.ref.child("mediaitems/\(item.creatorID)/\(item.itemID)")
             self.ref.child("mediaItems").child(item.itemID).child("forwarders").child(currentUID).setValue(true)
-            
+            self.ref.child("users/\(currentUser.uid)/uploads/\(item.itemID)").updateChildValues(["newForward":true])
             self.ref.child("users").child(currentUID).child("forwards").child(item.itemID).setValue(true)
             
             friendIDs.forEach { userID in
@@ -718,6 +788,7 @@ class FirebaseController {
             banner.show()
             
             NotificationCenter.default.post(Notification(name: Notifications.didForwardMedia))
+            print("Foward Inbox Item")
         }
     }
     
@@ -980,7 +1051,7 @@ class FirebaseController {
                     let adjustedLatitude = currentLocation["latitude"]! + (Double(randomDistance) * 0.01)
                     let adjustedLongitude = currentLocation["longitude"]! + (Double(randomDistance) * 0.01)
                     
-                    var mediaItem: [String:Any] = [
+                    let mediaItem: [String:Any] = [
                         "timestamp": dateSent,
                         "type": "video",
                         "creatorUsername": creatorUsername,
@@ -1085,7 +1156,7 @@ class FirebaseController {
                     let adjustedLatitude = currentLocation["latitude"]! + (Double(randomDistance) * 0.01)
                     let adjustedLongitude = currentLocation["longitude"]! + (Double(randomDistance) * 0.01)
                     
-                    var mediaItem: [String:Any] = [
+                    let mediaItem: [String:Any] = [
                         "timestamp": dateSent,
                         "type": "video",
                         "creatorUsername": creatorUsername,
@@ -1191,7 +1262,7 @@ class FirebaseController {
         let fileRef = storageRef.child("images/\(identifier)")
         
         // Upload file and metadata to the object
-        let uploadTask = fileRef.putData(localData, metadata: nil) { (metadata, error) in
+        fileRef.putData(localData, metadata: nil) { (metadata, error) in
             guard let metadata = metadata else {
                 // Uh-oh, an error occurred!
                 return
@@ -1216,7 +1287,7 @@ class FirebaseController {
                 let adjustedLatitude = currentLocation["latitude"]! + (Double(randomDistance) * 0.01)
                 let adjustedLongitude = currentLocation["longitude"]! + (Double(randomDistance) * 0.01)
                 
-                var mediaItem: [String:Any] = [
+                let mediaItem: [String:Any] = [
                     "timestamp": dateSent,
                     "type": type,
                     "creatorAvatarURL": creatorAvatarURL,
@@ -1249,6 +1320,11 @@ class FirebaseController {
                 
             }
         }
+    }
+    
+    func readNewForward(upload: Upload) {
+        guard let user = Auth.auth().currentUser else { return }
+        ref.child("users/\(user.uid)/uploads/\(upload.uid)/newForward").setValue(false)
     }
     
     func sendPhoto(caption: String?, data: Data, type: String, toUserIDs: [String], currentLocation: [String:Double]) {
@@ -1316,7 +1392,7 @@ class FirebaseController {
                 let adjustedLatitude = currentLocation["latitude"]! + (Double(randomDistance) * 0.01)
                 let adjustedLongitude = currentLocation["longitude"]! + (Double(randomDistance) * 0.01)
                 
-                var mediaItem: [String:Any] = [
+                let mediaItem: [String:Any] = [
                     "timestamp": dateSent,
                     "type": type,
                     "creatorAvatarURL": creatorAvatarURL,

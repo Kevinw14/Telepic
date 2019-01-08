@@ -80,7 +80,7 @@ extension CategoryRowCell: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "thumbnailCell", for: indexPath) as? ThumbnailCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "thumbnailCell", for: indexPath) as? ProfileThumbnailCell else { return UICollectionViewCell() }
         
         let item = updatedItems[indexPath.row]
         
@@ -102,7 +102,7 @@ extension CategoryRowCell: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) as? ThumbnailCell else { return }
+        guard let cell = collectionView.cellForItem(at: indexPath) as? ProfileThumbnailCell else { return }
         
         let mediaItem = self.updatedItems[indexPath.row]
         if let imageView = cell.thumbnailImageView {

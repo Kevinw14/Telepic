@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         self.window = UIWindow(frame: UIScreen.main.bounds)
         let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let homeStoryboard: UIStoryboard = UIStoryboard(name: "Home", bundle: nil)
-        
+        self.window?.makeKeyAndVisible()
 //        do {
 //            try Auth.auth().signOut()
 //        } catch let signOutError as NSError {
