@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		05F8F09CE2ED55F5365682D7 /* Pods_Telepic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A99C788EF4E757F027E0514 /* Pods_Telepic.framework */; };
 		0A11923A218B944900D12372 /* AddFriendCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A119239218B944900D12372 /* AddFriendCell.xib */; };
 		0A1641D7218B536200061D7E /* proximanova-semibold-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0A1641D2218B532000061D7E /* proximanova-semibold-webfont.ttf */; };
 		0A1641D8218B536200061D7E /* proximanova-light-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0A1641D3218B533700061D7E /* proximanova-light-webfont.ttf */; };
@@ -149,7 +150,6 @@
 		2AE696D11FCCA1E9004CD493 /* EditProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE696D01FCCA1E9004CD493 /* EditProfileVC.swift */; };
 		2AE9BDEB1F9690F2007CCF50 /* SendVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9BDEA1F9690F2007CCF50 /* SendVC.swift */; };
 		2AE9BDED1F969945007CCF50 /* FriendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9BDEC1F969945007CCF50 /* FriendCell.swift */; };
-		2C92C96832E4CC561850D46E /* Pods_Telepic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5541979CB7346D8B9127109 /* Pods_Telepic.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -312,9 +312,9 @@
 		2AE696D01FCCA1E9004CD493 /* EditProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileVC.swift; sourceTree = "<group>"; };
 		2AE9BDEA1F9690F2007CCF50 /* SendVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendVC.swift; sourceTree = "<group>"; };
 		2AE9BDEC1F969945007CCF50 /* FriendCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendCell.swift; sourceTree = "<group>"; };
-		57F0175D7FE62023A86E28FC /* Pods-Telepic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telepic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Telepic/Pods-Telepic.debug.xcconfig"; sourceTree = "<group>"; };
-		853CCFC10405AAC95016F671 /* Pods-Telepic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telepic.release.xcconfig"; path = "Pods/Target Support Files/Pods-Telepic/Pods-Telepic.release.xcconfig"; sourceTree = "<group>"; };
-		C5541979CB7346D8B9127109 /* Pods_Telepic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Telepic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		51F8DE167F8CC941C3D2F37B /* Pods-Telepic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telepic.release.xcconfig"; path = "Pods/Target Support Files/Pods-Telepic/Pods-Telepic.release.xcconfig"; sourceTree = "<group>"; };
+		5A99C788EF4E757F027E0514 /* Pods_Telepic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Telepic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E8FE5E89DC476D3E58DDF17B /* Pods-Telepic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telepic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Telepic/Pods-Telepic.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -325,7 +325,7 @@
 				2A2B4D391F86A60B00D98F78 /* AddressBookUI.framework in Frameworks */,
 				2A2B4D371F86A5DF00D98F78 /* MapKit.framework in Frameworks */,
 				2A2B4D351F86A5D400D98F78 /* CoreLocation.framework in Frameworks */,
-				2C92C96832E4CC561850D46E /* Pods_Telepic.framework in Frameworks */,
+				05F8F09CE2ED55F5365682D7 /* Pods_Telepic.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -461,8 +461,8 @@
 			children = (
 				2A9AFA481F4F4DC600B86F49 /* Telepic */,
 				2A9AFA471F4F4DC600B86F49 /* Products */,
-				A0B2E34C62EDCF7F67A8C012 /* Pods */,
 				FDD1A74034749E62C1E4A0B2 /* Frameworks */,
+				3980BE691F3826A4083F0DCA /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -620,11 +620,11 @@
 			name = Profile;
 			sourceTree = "<group>";
 		};
-		A0B2E34C62EDCF7F67A8C012 /* Pods */ = {
+		3980BE691F3826A4083F0DCA /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				57F0175D7FE62023A86E28FC /* Pods-Telepic.debug.xcconfig */,
-				853CCFC10405AAC95016F671 /* Pods-Telepic.release.xcconfig */,
+				E8FE5E89DC476D3E58DDF17B /* Pods-Telepic.debug.xcconfig */,
+				51F8DE167F8CC941C3D2F37B /* Pods-Telepic.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -635,7 +635,7 @@
 				2A2B4D381F86A60B00D98F78 /* AddressBookUI.framework */,
 				2A2B4D361F86A5DF00D98F78 /* MapKit.framework */,
 				2A2B4D341F86A5D400D98F78 /* CoreLocation.framework */,
-				C5541979CB7346D8B9127109 /* Pods_Telepic.framework */,
+				5A99C788EF4E757F027E0514 /* Pods_Telepic.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -647,12 +647,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2A9AFA581F4F4DC600B86F49 /* Build configuration list for PBXNativeTarget "Telepic" */;
 			buildPhases = (
-				644E1969F3AFD8D986BA80B6 /* [CP] Check Pods Manifest.lock */,
+				7776769C769211D940281243 /* [CP] Check Pods Manifest.lock */,
 				2A9AFA421F4F4DC600B86F49 /* Sources */,
 				2A9AFA431F4F4DC600B86F49 /* Frameworks */,
 				2A9AFA441F4F4DC600B86F49 /* Resources */,
-				154382BFA98A245DBEA51995 /* [CP] Embed Pods Frameworks */,
 				2A54750E1FB2222600FDFF69 /* Embed App Extensions */,
+				5008122CFCDC0B3443AD9ACD /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -675,7 +675,7 @@
 				TargetAttributes = {
 					2A9AFA451F4F4DC600B86F49 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = DJ9Q6RC5SN;
+						DevelopmentTeam = XUF99SR6PQ;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -756,14 +756,17 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		154382BFA98A245DBEA51995 /* [CP] Embed Pods Frameworks */ = {
+		5008122CFCDC0B3443AD9ACD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputFileListPaths = (
+			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Telepic/Pods-Telepic-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/ActiveLabel/ActiveLabel.framework",
+				"${BUILT_PRODUCTS_DIR}/AutoInsetter/AutoInsetter.framework",
 				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
 				"${BUILT_PRODUCTS_DIR}/Cache/Cache.framework",
 				"${BUILT_PRODUCTS_DIR}/CropViewController/CropViewController.framework",
@@ -775,9 +778,8 @@
 				"${BUILT_PRODUCTS_DIR}/FacebookShare/FacebookShare.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/Gallery/Gallery.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/GreedoLayout/GreedoLayout.framework",
-				"${BUILT_PRODUCTS_DIR}/Hue/Hue.framework",
 				"${BUILT_PRODUCTS_DIR}/Imaginary/Imaginary.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/Lightbox/Lightbox.framework",
@@ -786,12 +788,10 @@
 				"${BUILT_PRODUCTS_DIR}/Pageboy/Pageboy.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/PryntTrimmerView/PryntTrimmerView.framework",
-				"${BUILT_PRODUCTS_DIR}/PureLayout/PureLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/RSKImageCropper/RSKImageCropper.framework",
 				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SteviaLayout/Stevia.framework",
-				"${BUILT_PRODUCTS_DIR}/TOCropViewController/TOCropViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/Tabman/Tabman.framework",
 				"${BUILT_PRODUCTS_DIR}/Viewer/Viewer.framework",
 				"${BUILT_PRODUCTS_DIR}/YPImagePicker/YPImagePicker.framework",
@@ -799,8 +799,11 @@
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ActiveLabel.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AutoInsetter.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cache.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CropViewController.framework",
@@ -812,9 +815,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookShare.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gallery.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GreedoLayout.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Hue.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Imaginary.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lightbox.framework",
@@ -823,12 +825,10 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Pageboy.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PryntTrimmerView.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PureLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RSKImageCropper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stevia.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TOCropViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Tabman.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Viewer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YPImagePicker.framework",
@@ -840,16 +840,20 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Telepic/Pods-Telepic-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		644E1969F3AFD8D986BA80B6 /* [CP] Check Pods Manifest.lock */ = {
+		7776769C769211D940281243 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-Telepic-checkManifestLockResult.txt",
 			);
@@ -1102,12 +1106,12 @@
 		};
 		2A9AFA591F4F4DC600B86F49 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 57F0175D7FE62023A86E28FC /* Pods-Telepic.debug.xcconfig */;
+			baseConfigurationReference = E8FE5E89DC476D3E58DDF17B /* Pods-Telepic.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Telepic/Telepic.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = DJ9Q6RC5SN;
+				DEVELOPMENT_TEAM = XUF99SR6PQ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1115,7 +1119,7 @@
 				INFOPLIST_FILE = Telepic/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.KevinWoodsDevelopment.KevinWood.Telepic;
+				PRODUCT_BUNDLE_IDENTIFIER = com.TylerClonts.Telepic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "./Telepic/Telepic-BridgingHeader.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -1125,12 +1129,12 @@
 		};
 		2A9AFA5A1F4F4DC600B86F49 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 853CCFC10405AAC95016F671 /* Pods-Telepic.release.xcconfig */;
+			baseConfigurationReference = 51F8DE167F8CC941C3D2F37B /* Pods-Telepic.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Telepic/Telepic.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = DJ9Q6RC5SN;
+				DEVELOPMENT_TEAM = XUF99SR6PQ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1138,7 +1142,7 @@
 				INFOPLIST_FILE = Telepic/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.KevinWoodsDevelopment.KevinWood.Telepic;
+				PRODUCT_BUNDLE_IDENTIFIER = com.TylerClonts.Telepic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "./Telepic/Telepic-BridgingHeader.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
