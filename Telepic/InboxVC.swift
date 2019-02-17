@@ -85,8 +85,8 @@ class InboxVC: UIViewController {
 //        ]
         
         let titleAttrs = [
-            NSAttributedStringKey.foregroundColor: UIColor(hexString: "2DAAFC"),
-            NSAttributedStringKey.font: UIFont(name: "ProximaNova-Bold", size: 32)
+            NSAttributedString.Key.foregroundColor: UIColor(hexString: "2DAAFC"),
+            NSAttributedString.Key.font: UIFont(name: "ProximaNova-Bold", size: 32)
         ]
         
         self.navigationController?.navigationBar.titleTextAttributes = titleAttrs
@@ -277,7 +277,7 @@ extension InboxVC: InboxItemDelegate {
     }
     
     func segueToProfileVC(withUID uid: String, username: String) {
-        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController()?.childViewControllers[0] as! ProfileVC
+        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController()?.children[0] as! ProfileVC
         profileVC.userID = uid
         if Auth.auth().currentUser!.uid != uid {
             profileVC.isCurrentUser = false
@@ -345,8 +345,8 @@ extension InboxVC: CLLocationManagerDelegate {
         alertController.addAction(cancelAction)
         
         let openAction = UIAlertAction(title: "Open Settings", style: .default) { (action) in
-            if let url = URL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            if let url = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(url, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
             }
         }
         alertController.addAction(openAction)
@@ -393,3 +393,8 @@ extension InboxVC: ZoomingViewController {
     }
 }
 
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
+}

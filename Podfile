@@ -20,7 +20,7 @@ target 'Telepic' do
   pod 'SVProgressHUD'
   pod 'Kingfisher', '~> 4.0'
   pod 'Tabman', '~> 1.0'
-  pod 'Gallery', '~> 2.0.2'
+  pod 'Gallery'
   pod 'CropViewController'
   pod 'Viewer'
   pod 'GreedoLayout'

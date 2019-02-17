@@ -941,18 +941,22 @@ class FirebaseController {
                 return
             }
             // Metadata contains file metadata such as size, content-type, and download URL.
-            guard let downloadURL = metadata.downloadURL()?.absoluteString else { print("No Download URL"); return }
-            
-            // store downloadURL at database
-            self.ref.child("users").child(currentUser.uid).child("avatarURL").setValue(downloadURL)
-            
-            let changeRequest = currentUser.createProfileChangeRequest()
-            changeRequest.photoURL = URL(string: downloadURL)
-            changeRequest.commitChanges { (error) in
-                if let error = error {
-                    print(error.localizedDescription)
+            self.storageRef.downloadURL { (url, error) in
+                guard let downloadURL = url else {
+                    // Uh-oh, an error occurred!
+                    return
+                }
+                // store downloadURL at database
+                self.ref.child("users").child(currentUser.uid).child("avatarURL").setValue(downloadURL)
+                let changeRequest = currentUser.createProfileChangeRequest()
+                changeRequest.photoURL = downloadURL
+                changeRequest.commitChanges { (error) in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    }
                 }
             }
+            
         }
         
         // Listen for state changes, errors, and completion of the upload.
@@ -1022,7 +1026,8 @@ class FirebaseController {
         let uploadTask = fileRef.putFile(from: localFile)
         
         uploadTask.observe(.success) { (snapshot) in
-            guard let downloadURL = snapshot.metadata?.downloadURL()?.absoluteString else { return }
+            snapshot.metadata?.storageReference?.downloadURL(completion: { (url, error) in
+                guard let downloadURL = url else {return}
             
             let data = thumbnailData
             let thumbnailRef = self.storageRef.child("thumbnails/\(identifier)")
@@ -1030,8 +1035,11 @@ class FirebaseController {
                 guard let thumbnailMetadata = thumbnailMetadata else {
                     return
                 }
-                
-                guard let thumbnailURL = thumbnailMetadata.downloadURL()?.absoluteString else { print("Missing thumbnail"); return }
+                thumbnailMetadata.storageReference?.downloadURL(completion: { (url, error) in
+                    guard let thumbnailURL = url else {
+                        // Uh-oh, an error occurred!
+                        return
+                    }
                 
                 // store downloadURL at database
                 if let currentUID = Auth.auth().currentUser?.uid {
@@ -1082,7 +1090,9 @@ class FirebaseController {
                     }
                     
                 }
+                    })
             }
+        })
         }
     }
     
@@ -1097,7 +1107,10 @@ class FirebaseController {
         let uploadTask = fileRef.putFile(from: localFile)
         
         uploadTask.observe(.success) { (snapshot) in
-            guard let downloadURL = snapshot.metadata?.downloadURL()?.absoluteString else { return }
+            
+            snapshot.metadata?.storageReference?.downloadURL(completion: { (url, error) in
+                guard let downloadURL = url else {return}
+            
             
             let data = thumbnailData
             let thumbnailRef = self.storageRef.child("thumbnails/\(identifier)")
@@ -1106,7 +1119,13 @@ class FirebaseController {
                     return
                 }
                 
-                guard let thumbnailURL = thumbnailMetadata.downloadURL()?.absoluteString else { print("Missing thumbnail"); return }
+//                guard let thumbnailURL = thumbnailMetadata.downloadURL()?.absoluteString else { print("Missing thumbnail"); return }
+                
+                thumbnailMetadata.storageReference?.downloadURL(completion: { (url, error) in
+                    guard let thumbnailURL = url else {
+                        // Uh-oh, an error occurred!
+                        return
+                    }
                 
                 // store downloadURL at database
                 if let currentUID = Auth.auth().currentUser?.uid {
@@ -1196,10 +1215,10 @@ class FirebaseController {
 //                    SVProgressHUD.setBackgroundColor(.white)
 //                    SVProgressHUD.showSuccess(withStatus: "Forwarded!")
 //                    SVProgressHUD.dismiss(withDelay: 1.5)
-                    
-                    
-                }
+                    }
+                })
             }
+    })
         }
         
         
@@ -1268,7 +1287,11 @@ class FirebaseController {
                 return
             }
             // Metadata contains file metadata such as size, content-type, and download URL.
-            guard let downloadURL = metadata.downloadURL()?.absoluteString else { print("No Download URL"); return }
+            
+            metadata.storageReference?.downloadURL(completion: { (url, error) in
+                guard let downloadURL = url else {return}
+            
+            
             
             // store downloadURL at database
             if let currentUID = Auth.auth().currentUser?.uid {
@@ -1319,9 +1342,9 @@ class FirebaseController {
                 
                 
             }
-        }
+            })
     }
-    
+        }
     func readNewForward(upload: Upload) {
         guard let user = Auth.auth().currentUser else { return }
         ref.child("users/\(user.uid)/uploads/\(upload.uid)/newForward").setValue(false)
@@ -1345,7 +1368,9 @@ class FirebaseController {
                 return
             }
             // Metadata contains file metadata such as size, content-type, and download URL.
-            guard let downloadURL = metadata.downloadURL()?.absoluteString else { print("No Download URL"); return }
+//            guard let downloadURL = metadata.downloadURL()?.absoluteString else { print("No Download URL"); return }
+            metadata.storageReference?.downloadURL(completion: { (url, error) in
+                guard let downloadURL = url else {return}
             
             // store downloadURL at database
             if let currentUID = Auth.auth().currentUser?.uid {
@@ -1427,77 +1452,30 @@ class FirebaseController {
                 if self.startAMovement {
                     self.ref.child("startAMovement").child(childID).setValue(true)
                 }
-                
-                
             }
-        }
-        
-        // Listen for state changes, errors, and completion of the upload.
-        uploadTask.observe(.resume) { (snapshot) in
-            // Upload resumed, also fires when the upload starts
-        }
-        
-        uploadTask.observe(.pause) { (snapshot) in
-            // Upload paused
-        }
-        
-        uploadTask.observe(.progress) { (snapshot) in
-            // Upload reported progress
-//            let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount)
-//            print(percentComplete)
-//            SVProgressHUD.setDefaultMaskType(.black)
-//            SVProgressHUD.setBackgroundColor(.white)
-//            SVProgressHUD.showProgress(Float(percentComplete))
-        }
-        
-        uploadTask.observe(.success) { (snapshot) in
-            // Upload completed successfully
-            // store downloadURL
-            
-//            SVProgressHUD.setDefaultMaskType(.black)
-//            SVProgressHUD.setBackgroundColor(.white)
-//            SVProgressHUD.showSuccess(withStatus: "Forwarded!")
-//            SVProgressHUD.dismiss(withDelay: 1.5)
-        }
-        
-        uploadTask.observe(.failure) { (snapshot) in
-//            if let error = snapshot.error {
-//                switch (StorageErrorCode(rawValue: error.code)!) {
-//                case .objectNotFound:
-//                    // File doesn't exist
-//                    break
-//                case .unauthorized:
-//                    // User doesn't have permission to access file
-//                    break
-//                case .cancelled:
-//                    // User canceled the upload
-//                    break
-//                case .unknown:
-//                    // Unknown error occurred, inspect the server response
-//                    break
-//                default:
-//                    // A separate error occurred. This is a good place to retry the upload.
-//                    break
-//                }
-//            }
-            if let error = snapshot.error {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    
-//    func isEmailInUse(_ email: String, completion: @escaping ((Error?) -> Void) = {_ in}) -> Bool? {
-//        var isEmailInUse: Bool?
-//
-//        Auth.auth().fetchProviders(forEmail: email) { (providers, error) in
-//            if let error = error {
-//                print(error.localizedDescription)
-//                return
-//            }
-//            // if there are no providers, the email is not in
-//            if let providers = providers { isEmailInUse = !providers.isEmpty }
+        })
+
+
+//        uploadTask.observe(.resume) { (snapshot) in
 //        }
-//        return isEmailInUse
+//
+//        uploadTask.observe(.pause) { (snapshot) in
+//        }
+//
+//        uploadTask.observe(.progress) { (snapshot) in
+//
+//        }
+//
+//        uploadTask.observe(.success) { (snapshot) in
+//
+//        }
+//
+//        uploadTask.observe(.failure) { (snapshot) in
+//
+//            if let error = snapshot.error {
+//                print(error.localizedDescription)
+//        }
 //    }
+}
+    }
 }

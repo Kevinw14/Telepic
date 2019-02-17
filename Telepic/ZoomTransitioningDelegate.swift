@@ -20,7 +20,7 @@ enum TransitionState {
 
 class ZoomTransitioningDelegate: NSObject {
     var transitionDuration = 0.5
-    var operation: UINavigationControllerOperation = .none
+    var operation: UINavigationController.Operation = .none
     private let zoomScale = CGFloat(15)
     private let backgroundScale = CGFloat(0.7)
     
@@ -116,7 +116,7 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
 }
 
 extension ZoomTransitioningDelegate: UINavigationControllerDelegate {
-    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         
         let isZooming = FirebaseController.shared.isZooming
         if fromVC is ZoomingViewController && toVC is ZoomingViewController && isZooming {

@@ -73,9 +73,9 @@ class NotificationCell: UITableViewCell {
 
         let userStringRange = (notification.message as NSString).range(of: notification.username)
         
-        let attributedString = NSMutableAttributedString(string: notification.message, attributes: [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 14)])
+        let attributedString = NSMutableAttributedString(string: notification.message, attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)])
         
-        attributedString.setAttributes([NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor : UIColor.black], range: userStringRange)
+        attributedString.setAttributes([NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14), NSAttributedString.Key.foregroundColor : UIColor.black], range: userStringRange)
         
         messageLabel.attributedText = attributedString
         

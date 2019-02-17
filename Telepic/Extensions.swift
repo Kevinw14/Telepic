@@ -94,7 +94,7 @@ extension UISearchBar {
     func setPlaceholderTextColor(color: UIColor) {
         
         if let textField = getSearchBarTextField() {
-            textField.attributedPlaceholder = NSAttributedString(string: self.placeholder != nil ? self.placeholder! : "", attributes: [NSAttributedStringKey.foregroundColor: color])
+            textField.attributedPlaceholder = NSAttributedString(string: self.placeholder != nil ? self.placeholder! : "", attributes: [NSAttributedString.Key.foregroundColor: color])
         }
     }
     
@@ -125,22 +125,22 @@ extension MKMapRect {
     init(x: Double, y: Double, width: Double, height: Double) {
         self.init(origin: MKMapPoint(x: x, y: y), size: MKMapSize(width: width, height: height))
     }
-    var minX: Double { return MKMapRectGetMinX(self) }
-    var minY: Double { return MKMapRectGetMinY(self) }
-    var midX: Double { return MKMapRectGetMidX(self) }
-    var midY: Double { return MKMapRectGetMidY(self) }
-    var maxX: Double { return MKMapRectGetMaxX(self) }
-    var maxY: Double { return MKMapRectGetMaxY(self) }
+    var minX: Double { return self.minX }
+    var minY: Double { return self.minY }
+    var midX: Double { return self.midX }
+    var midY: Double { return self.midY }
+    var maxX: Double { return self.maxX }
+    var maxY: Double { return self.maxY }
     func intersects(_ rect: MKMapRect) -> Bool {
-        return MKMapRectIntersectsRect(self, rect)
+        return self.intersects(rect)
     }
     func contains(_ coordinate: CLLocationCoordinate2D) -> Bool {
-        return MKMapRectContainsPoint(self, MKMapPointForCoordinate(coordinate))
+        return self.contains(MKMapPoint.init(coordinate))
     }
 }
 
 let CLLocationCoordinate2DMax = CLLocationCoordinate2D(latitude: 90, longitude: 180)
-let MKMapPointMax = MKMapPointForCoordinate(CLLocationCoordinate2DMax)
+let MKMapPointMax = MKMapPoint.init(CLLocationCoordinate2DMax)
 
 extension CLLocationCoordinate2D: Hashable {
     public var hashValue: Int {
@@ -155,7 +155,7 @@ public func ==(lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool
 typealias ZoomScale = Double
 extension ZoomScale {
     func zoomLevel() -> Double {
-        let totalTilesAtMaxZoom = MKMapSizeWorld.width / 256
+        let totalTilesAtMaxZoom = MKMapSize.world.width / 256
         let zoomLevelAtMaxZoom = log2(totalTilesAtMaxZoom)
         return max(0, zoomLevelAtMaxZoom + floor(log2(self) + 0.5))
     }

@@ -10,6 +10,7 @@ import UIKit
 
 class FiltersVC: UIViewController {
     
+    
     override var prefersStatusBarHidden: Bool { return true }
     
     var v = FiltersView()
@@ -58,6 +59,7 @@ class FiltersVC: UIViewController {
         }
     }
     
+    
     func thumbFromImage(_ img: UIImage) -> UIImage {
         let width: CGFloat = img.size.width / 5
         let height: CGFloat = width
@@ -81,7 +83,7 @@ class FiltersVC: UIViewController {
         v.collectionView.delegate = self
         v.collectionView.selectItem(at: IndexPath(row: 0, section: 0),
                                     animated: false,
-                                    scrollPosition: UICollectionViewScrollPosition.bottom)
+                                    scrollPosition: UICollectionView.ScrollPosition.bottom)
         let btn = UIButton(type: .system)
         btn.setTitle("Next", for: .normal)
         btn.sizeToFit()

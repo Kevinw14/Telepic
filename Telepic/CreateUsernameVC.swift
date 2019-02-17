@@ -71,7 +71,8 @@ extension CreateUsernameVC: LoginChildDelegate {
                         if isUnique {
                             Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
                                 SVProgressHUD.dismiss()
-                                guard let uid = user?.uid else { return }
+                                
+                                guard let uid = user?.user.uid else { return }
                                 if let error = error {
                                     print(error.localizedDescription)
                                 } else {

@@ -27,9 +27,9 @@ class CreateGroupVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: UIResponder.keyboardDidHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(selectingMembers), name: Notifications.isSelectingMembers, object: nil)
         
         
@@ -88,7 +88,7 @@ class CreateGroupVC: UIViewController {
     }
     
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        let endFrame = ((notification as Notification).userInfo?[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let endFrame = ((notification as Notification).userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         
         if keyboardShowing {
             bottomConstraint.constant = -(view.bounds.height - endFrame.origin.y)

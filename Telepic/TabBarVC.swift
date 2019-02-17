@@ -73,9 +73,9 @@ class TabBarVC: UIViewController, ControlTabBarDelegate {
         tabButtons[previousIndex].isSelected = false
         
         let previousVC = viewControllers[previousIndex]
-        previousVC.willMove(toParentViewController: nil)
+        previousVC.willMove(toParent: nil)
         previousVC.view.removeFromSuperview()
-        previousVC.removeFromParentViewController()
+        previousVC.removeFromParent()
         
         sender.isSelected = true
         
@@ -83,16 +83,16 @@ class TabBarVC: UIViewController, ControlTabBarDelegate {
             if let profileVC = vc.viewControllers[0] as? ProfileVC {
                 profileVC.isCurrentUser = true
             }
-            addChildViewController(vc)
+            addChild(vc)
             vc.view.frame = contentView.bounds
             contentView.addSubview(vc.view)
-            vc.didMove(toParentViewController: self)
+            vc.didMove(toParent: self)
         } else {
             let vc = viewControllers[selectedIndex]
-            addChildViewController(vc)
+            addChild(vc)
             vc.view.frame = contentView.bounds
             contentView.addSubview(vc.view)
-            vc.didMove(toParentViewController: self)
+            vc.didMove(toParent: self)
         }
     }
     
@@ -133,17 +133,17 @@ class TabBarVC: UIViewController, ControlTabBarDelegate {
         tabButtons[previousIndex].isSelected = false
         
         let previousVC = viewControllers[previousIndex]
-        previousVC.willMove(toParentViewController: nil)
+        previousVC.willMove(toParent: nil)
         previousVC.view.removeFromSuperview()
-        previousVC.removeFromParentViewController()
+        previousVC.removeFromParent()
         
         tabButtons[selectedIndex].isSelected = true
         
         let vc = viewControllers[selectedIndex]
-        addChildViewController(vc)
+        addChild(vc)
         vc.view.frame = contentView.bounds
         contentView.addSubview(vc.view)
-        vc.didMove(toParentViewController: self)
+        vc.didMove(toParent: self)
     }
 
     /*
@@ -181,14 +181,17 @@ class TabBarVC: UIViewController, ControlTabBarDelegate {
 }
 
 extension TabBarVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
         if let videoURL = info["UIImagePickerControllerReferenceURL"] as? URL {
             self.dismiss(animated: true, completion: {
                 let newVC = VideoVC(videoURL: videoURL)
                 self.present(newVC, animated: true, completion: nil)
             })
         }
-        if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+        if let image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.editedImage)] as? UIImage {
             self.dismiss(animated: true, completion: {
                 let newVC = PhotoVC(image: image)
                 self.present(newVC, animated: true, completion: nil)
@@ -224,4 +227,14 @@ extension TabBarVC: UIViewControllerTransitioningDelegate {
         animator.presenting = false
         return animator
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
 }

@@ -25,7 +25,7 @@ class ExploreVC: UIViewController {
     
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(handleRefresh(_:)), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(handleRefresh(_:)), for: UIControl.Event.valueChanged)
         //refreshControl.tintColor = UIColor(hexString: "1BBB6A")
         
         return refreshControl
@@ -267,7 +267,7 @@ extension ExploreVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func segueToProfileVC(withUID uid: String, username: String) {
-        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController()?.childViewControllers[0] as! ProfileVC
+        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController()?.children[0] as! ProfileVC
         profileVC.userID = uid
         if Auth.auth().currentUser!.uid != uid {
             profileVC.isCurrentUser = false

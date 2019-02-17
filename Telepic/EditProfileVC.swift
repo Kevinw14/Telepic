@@ -28,7 +28,7 @@ class EditProfileVC: UITableViewController, UITextViewDelegate {
         }
         
         tableView.estimatedRowHeight = 202
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -51,11 +51,11 @@ class EditProfileVC: UITableViewController, UITextViewDelegate {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+        return UITableView.automaticDimension
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return UITableViewAutomaticDimension
+        return UITableView.automaticDimension
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

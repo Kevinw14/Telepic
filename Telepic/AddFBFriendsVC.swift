@@ -24,7 +24,7 @@ class AddFBFriendsVC: UIViewController, FBSDKAppInviteDialogDelegate {
         if isUsingFacebook {
             let inviteDialog = FBSDKAppInviteDialog()
             
-            if inviteDialog.canShow() {
+            if inviteDialog.canShow {
                 let appLinkURL = URL(string: "https://itunes.apple.com/app/id1279816444")
                 let previewImageURL = URL(string: "")
                 

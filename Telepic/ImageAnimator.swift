@@ -32,7 +32,7 @@ class ImageAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         })
         
         containerView.addSubview(toView)
-        containerView.bringSubview(toFront: imageView)
+        containerView.bringSubviewToFront(imageView)
 
         if !self.presenting {
             

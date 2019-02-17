@@ -32,7 +32,7 @@ class MediaViewVC: UIViewController {
     
     @IBOutlet weak var numberOfCommentsLabel: UILabel!
     let activityIndicatorView: UIActivityIndicatorView = {
-        let aiv = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        let aiv = UIActivityIndicatorView(style: .whiteLarge)
         aiv.translatesAutoresizingMaskIntoConstraints = false
         aiv.hidesWhenStopped = true
         aiv.startAnimating()

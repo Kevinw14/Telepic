@@ -88,7 +88,7 @@ class TabBarController: UITabBarController, FBSDKAppInviteDialogDelegate {
                 
                 let inviteDialog = FBSDKAppInviteDialog()
                 
-                if inviteDialog.canShow() {
+                if inviteDialog.canShow {
                     let appLinkURL = URL(string: "https://itunes.apple.com/app/id1279816444")
                     let previewImageURL = URL(string: "")
                     
@@ -174,13 +174,13 @@ extension TabBarController: GalleryControllerDelegate {
             }
         }
     }
-    
+
     func getThumbnail(forURL videoURL: URL) -> UIImage? {
         do {
             let asset = AVURLAsset(url: videoURL)
             let imgGenerator = AVAssetImageGenerator(asset: asset)
             imgGenerator.appliesPreferredTrackTransform = true
-            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(0, 1), actualTime: nil)
+            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
             let thumbnail = UIImage(cgImage: cgImage)
             return thumbnail
         } catch let error {
@@ -194,32 +194,43 @@ extension TabBarController: GalleryControllerDelegate {
     }
     
     func galleryController(_ controller: GalleryController, didSelectImages images: [Image]) {
+        
         //        controller.dismiss(animated: true, completion: nil)
         let captionVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: Identifiers.captionVC) as! CaptionVC
         var selectedImage: UIImage?
         
-        if let (imageData, uti) = images[0].uiImageData() {
-            if UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
-                if let gif = UIImage.gif(data: imageData) {
-                    selectedImage = gif
-                    captionVC.isGif = true
-                    captionVC.data = imageData
-                    captionVC.image = selectedImage
+        let imageAsset = images[0].asset
+        let image = imageAsset.image
+//        let options = PHContentEditingInputRequestOptions()
+        guard let imageData = image.pngData() else {return}
+        
+       if let imageType = imageAsset.value(forKey: "uniformTypeIdentifier") as? String  {
+                
+                if imageType == (kUTTypeGIF as String) {
+                    debugPrint("This asset is a GIF👍")
+                    if let gif = UIImage.gif(data: imageData) {
+                        selectedImage = gif
+                        captionVC.isGif = true
+                        captionVC.data = imageData
+                        captionVC.image = selectedImage
+                        controller.dismiss(animated: false, completion: nil)
+                        let navController = UINavigationController(rootViewController: captionVC)
+                        self.present(navController, animated: true, completion: nil)
+                    }
+                } else {
+                    selectedImage = UIImage(data: imageData)!
+                    let filtersVC = FiltersVC(image: selectedImage!)
                     controller.dismiss(animated: false, completion: nil)
-                    let navController = UINavigationController(rootViewController: captionVC)
+                    let navController = UINavigationController(rootViewController: filtersVC)
                     self.present(navController, animated: true, completion: nil)
                 }
-            } else {
-                selectedImage = UIImage(data: imageData)!
-                let filtersVC = FiltersVC(image: selectedImage!)
-                controller.dismiss(animated: false, completion: nil)
-                let navController = UINavigationController(rootViewController: filtersVC)
-                self.present(navController, animated: true, completion: nil)
+                self.gallery = nil
+
+                }
+                
             }
-            gallery = nil
-        }
-    }
 }
+    
 
 extension TabBarController: UIVideoEditorControllerDelegate {
     func videoEditorController(_ editor: UIVideoEditorController, didSaveEditedVideoToPath editedVideoPath: String) {
@@ -230,3 +241,27 @@ extension TabBarController: UIVideoEditorControllerDelegate {
         print("cancelled")
     }
 }
+extension PHAsset {
+    
+    var image : UIImage {
+        var thumbnail: UIImage? = nil
+        let options = PHImageRequestOptions()
+        options.deliveryMode = .highQualityFormat
+        options.version = .current
+        options.isSynchronous = true
+        options.isNetworkAccessAllowed = true
+        options.resizeMode = .exact
+        
+        options.progressHandler = {  (progress, error, stop, info) in
+            print("progress: \(progress)")
+        }
+        
+        PHImageManager.default().requestImage(for: self, targetSize: CGSize(width: self.pixelWidth, height: self.pixelHeight), contentMode: .aspectFit, options: options) { (image, info) in
+            print("dict: \(String(describing: info))")
+            print("image size: \(String(describing: image?.size))")
+            thumbnail = image!
+        }
+        return thumbnail!
+    }
+}
+

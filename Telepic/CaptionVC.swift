@@ -92,9 +92,9 @@ class CaptionVC: UIViewController, UITextViewDelegate {
             playButton.width(30)
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: UIResponder.keyboardDidHideNotification, object: nil)
         
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGestureHandler))
     }
@@ -139,17 +139,17 @@ class CaptionVC: UIViewController, UITextViewDelegate {
         let sendVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: Identifiers.sendVC) as! SendVC
         sendVC.caption = self.captionTextView.text == "Write a caption..." || self.captionTextView.text == "" ? nil : self.captionTextView.text
         sendVC.fromCaption = true
-        if let thumbnail = thumbnail { sendVC.data = UIImageJPEGRepresentation(thumbnail, 1.0)}
+        if let thumbnail = thumbnail { sendVC.data = thumbnail.jpegData(compressionQuality: 1.0)}
         if let image = image {
             if let data = data {
                 sendVC.data = data
                 sendVC.currentType = "gif"
             } else {
-                sendVC.data = UIImageJPEGRepresentation(image, 1.0)
+                sendVC.data = image.jpegData(compressionQuality: 1.0)
                 sendVC.currentType = "photo"
             }
         }
-        if let videoURL = videoURL, let thumbnail = thumbnail { sendVC.videoURL = videoURL; sendVC.data = UIImageJPEGRepresentation(thumbnail, 1.0); sendVC.currentType = "video" }
+        if let videoURL = videoURL, let thumbnail = thumbnail { sendVC.videoURL = videoURL; sendVC.data = thumbnail.jpegData(compressionQuality: 1.0); sendVC.currentType = "video" }
         FirebaseController.shared.contest = contestOfTheWeekSwitch.isOn
         FirebaseController.shared.startAMovement = startAMovementSwitch.isOn
         self.navigationController?.pushViewController(sendVC, animated: true)
@@ -164,7 +164,7 @@ class CaptionVC: UIViewController, UITextViewDelegate {
     }
     
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        let endFrame = ((notification as Notification).userInfo?[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let endFrame = ((notification as Notification).userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         
         if keyboardShowing {
 //            captionViewTopConstraint.constant = -(view.bounds.height - endFrame.origin.y)

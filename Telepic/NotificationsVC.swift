@@ -33,7 +33,7 @@ class NotificationsVC: TabChildVC {
         NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: Notifications.didLoadFriendRequests, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: Notifications.reloadNotifications, object: nil)
         guard let navigationHeight =  self.navigationController?.navigationBar.frame.height else { return }
-        self.tableView.contentInset = UIEdgeInsetsMake(navigationHeight, 0, 0, 0)
+        self.tableView.contentInset = UIEdgeInsets.init(top: navigationHeight, left: 0, bottom: 0, right: 0)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -143,7 +143,7 @@ extension NotificationsVC: UITableViewDataSource, UITableViewDelegate {
     }
     
     func segueToProfileVC(withUID uid: String, username: String) {
-        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController()?.childViewControllers[0] as! ProfileVC
+        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController()?.children[0] as! ProfileVC
         profileVC.userID = uid
         profileVC.isCurrentUser = false
         profileVC.username = username

@@ -53,17 +53,17 @@ class LoginContainerVC: UIViewController {
 
         //NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: UIResponder.keyboardDidHideNotification, object: nil)
         
         
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGestureHandler))
         
-        rootNavVC.willMove(toParentViewController: self)
+        rootNavVC.willMove(toParent: self)
         self.containerView.addSubview(rootNavVC.view)
-        self.addChildViewController(rootNavVC)
-        rootNavVC.didMove(toParentViewController: self)
+        self.addChild(rootNavVC)
+        rootNavVC.didMove(toParent: self)
     }
     
     @IBAction func backButtonTapped(_ sender: UIButton) {
@@ -103,7 +103,7 @@ class LoginContainerVC: UIViewController {
     }
     
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        let endFrame = ((notification as Notification).userInfo?[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let endFrame = ((notification as Notification).userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         
         if keyboardShowing {
             bottomConstraint.constant = view.bounds.height - endFrame.origin.y + 8
@@ -130,7 +130,7 @@ class LoginContainerVC: UIViewController {
 }
 
 extension LoginContainerVC: UINavigationControllerDelegate {
-    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         switch operation {
         case .push:
             self.customInteractor = CustomInteractor(attachTo: toVC)

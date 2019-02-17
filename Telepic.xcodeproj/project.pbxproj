@@ -676,7 +676,7 @@
 					2A9AFA451F4F4DC600B86F49 = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = XUF99SR6PQ;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -1122,8 +1122,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.TylerClonts.Telepic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "./Telepic/Telepic-BridgingHeader.h";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -1145,8 +1144,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.TylerClonts.Telepic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "./Telepic/Telepic-BridgingHeader.h";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};

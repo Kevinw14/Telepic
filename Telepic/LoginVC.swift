@@ -23,14 +23,14 @@ class LoginVC: UIViewController {
     @IBAction func facebookButtonTapped(_ sender: Any) {
         let loginManager = LoginManager()
         loginManager.loginBehavior = .web
-        loginManager.logIn([.publicProfile, .userFriends], viewController: self) { (loginResult) in
+        loginManager.logIn(readPermissions: [.publicProfile, .userFriends], viewController : self) { loginResult in
             switch loginResult {
             case .failed(let error):
                 print(error)
             case .cancelled:
-                print("User cancelled login.")
+                print("User cancelled login")
             case .success(let grantedPermissions, let declinedPermissions, let accessToken):
-                print("Logged in!")
+                print("Logged in")
                 
                 let credential = FacebookAuthProvider.credential(withAccessToken: accessToken.authenticationToken)
                 Auth.auth().signIn(with: credential, completion: { (user, error) in

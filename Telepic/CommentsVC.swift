@@ -87,7 +87,7 @@ class CommentsVC: UIViewController {
         
         self.edgesForExtendedLayout = []
 
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 74
         
         postButton.isEnabled = false
@@ -95,9 +95,9 @@ class CommentsVC: UIViewController {
         inputTextView.delegate = self
         //inputTextView.textContainerInset = .zero
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow), name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide), name: UIResponder.keyboardDidHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(showEmptyCommentsView), name: Notifications.emptyComments, object: nil)
         
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGestureHandler))
@@ -110,8 +110,8 @@ class CommentsVC: UIViewController {
         }
         
         let titleAttrs = [
-            NSAttributedStringKey.foregroundColor: UIColor(hexString: "333333"),
-            NSAttributedStringKey.font: UIFont(name: "AvenirNext-DemiBold", size: 18)
+            NSAttributedString.Key.foregroundColor: UIColor(hexString: "333333"),
+            NSAttributedString.Key.font: UIFont(name: "AvenirNext-DemiBold", size: 18)
         ]
         
         self.navigationController?.navigationBar.titleTextAttributes = titleAttrs
@@ -171,7 +171,7 @@ class CommentsVC: UIViewController {
     }
 
     @objc func keyboardWillChangeFrame(_ notification: Notification) {
-        let endFrame = ((notification as Notification).userInfo?[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let endFrame = ((notification as Notification).userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         
         print(self.navigationController?.navigationBar.frame.height)
         
@@ -242,7 +242,7 @@ extension CommentsVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func segueToProfileVC(withUID uid: String, username: String) {
-        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController()?.childViewControllers[0] as! ProfileVC
+        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController()?.children[0] as! ProfileVC
         
         profileVC.isCurrentUser = false
         profileVC.username = username

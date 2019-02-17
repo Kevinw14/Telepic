@@ -40,8 +40,8 @@ class SettingsVC: UITableViewController, FBSDKAppInviteDialogDelegate {
         super.viewWillAppear(animated)
         
         let titleAttrs = [
-            NSAttributedStringKey.foregroundColor: UIColor(hexString: "333333"),
-            NSAttributedStringKey.font: UIFont(name: "AvenirNext-DemiBold", size: 18)
+            NSAttributedString.Key.foregroundColor: UIColor(hexString: "333333"),
+            NSAttributedString.Key.font: UIFont(name: "AvenirNext-DemiBold", size: 18)
         ]
         
         self.navigationController?.navigationBar.titleTextAttributes = titleAttrs
@@ -118,7 +118,7 @@ class SettingsVC: UITableViewController, FBSDKAppInviteDialogDelegate {
             if isUsingFacebook {
                 let inviteDialog = FBSDKAppInviteDialog()
                 
-                if inviteDialog.canShow() {
+                if inviteDialog.canShow {
                     let appLinkURL = URL(string: "https://itunes.apple.com/app/id1279816444")
                     let previewImageURL = URL(string: "")
                     

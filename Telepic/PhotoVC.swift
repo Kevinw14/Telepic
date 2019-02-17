@@ -38,7 +38,7 @@ class PhotoVC: UIViewController {
         backgroundImageView.image = backgroundImage
         view.addSubview(backgroundImageView)
         let cancelButton = UIButton(frame: CGRect(x: 10.0, y: 10.0, width: 30.0, height: 30.0))
-        cancelButton.setImage(#imageLiteral(resourceName: "closeWhite"), for: UIControlState())
+        cancelButton.setImage(#imageLiteral(resourceName: "closeWhite"), for: UIControl.State())
         cancelButton.addTarget(self, action: #selector(cancel), for: .touchUpInside)
         view.addSubview(cancelButton)
         
@@ -59,7 +59,7 @@ class PhotoVC: UIViewController {
     }
     
     @objc func send() {
-        let data = UIImageJPEGRepresentation(backgroundImage, 0.8)!
+        let data = backgroundImage.jpegData(compressionQuality: 0.8)!
         let sendVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: "SendVC") as! SendVC
         sendVC.data = data
 //        sendVC.isHeroEnabled = true

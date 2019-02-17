@@ -141,8 +141,8 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         self.navigationController?.navigationBar.backgroundColor = .white
         
         let titleAttrs = [
-            NSAttributedStringKey.foregroundColor: UIColor(hexString: "333333"),
-            NSAttributedStringKey.font: UIFont(name: "AvenirNext-DemiBold", size: 18)
+            NSAttributedString.Key.foregroundColor: UIColor(hexString: "333333"),
+            NSAttributedString.Key.font: UIFont(name: "AvenirNext-DemiBold", size: 18)
         ]
         
         self.navigationController?.navigationBar.titleTextAttributes = titleAttrs
@@ -367,7 +367,10 @@ extension ProfileVC {
         dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
         var avatarImage: UIImage
         
         if let possibleImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
@@ -388,6 +391,11 @@ extension ProfileVC {
 }
 
 extension ProfileVC: RSKImageCropViewControllerDelegate {
+    func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect, rotationAngle: CGFloat) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    
     func imageCropViewControllerDidCancelCrop(_ controller: RSKImageCropViewController) {
         dismiss(animated: true, completion: nil)
     }
@@ -396,7 +404,7 @@ extension ProfileVC: RSKImageCropViewControllerDelegate {
         self.avatarImageView.image = croppedImage
         dismiss(animated: true, completion: nil)
         
-        let imageData = UIImagePNGRepresentation(croppedImage)
+        let imageData = croppedImage.pngData()
         FirebaseController.shared.uploadProfilePhoto(data: imageData!)
     }
 }
@@ -501,4 +509,9 @@ extension ProfileVC: ZoomingViewController {
     func zoomingImageView(for transition: ZoomTransitioningDelegate) -> UIImageView? {
         return FirebaseController.shared.photoToPresent ?? nil
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
 }

@@ -56,8 +56,8 @@ class AddFriendVC: UIViewController, UITableViewDataSource, UISearchResultsUpdat
         self.navigationItem.leftBarButtonItem = leftBarButton
         
         let titleAttrs = [
-            NSAttributedStringKey.foregroundColor: UIColor(hexString: "333333"),
-            NSAttributedStringKey.font: UIFont(name: "AvenirNext-DemiBold", size: 18)
+            NSAttributedString.Key.foregroundColor: UIColor(hexString: "333333"),
+            NSAttributedString.Key.font: UIFont(name: "AvenirNext-DemiBold", size: 18)
         ]
         
         self.navigationController?.navigationBar.titleTextAttributes = titleAttrs
@@ -121,7 +121,7 @@ class AddFriendVC: UIViewController, UITableViewDataSource, UISearchResultsUpdat
     }
     
     func segueToProfileVC(withUID uid: String, username: String) {
-        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController()?.childViewControllers[0] as! ProfileVC
+        let profileVC = UIStoryboard(name: "Profile", bundle: nil).instantiateInitialViewController()?.children[0] as! ProfileVC
         profileVC.userID = uid
         if Auth.auth().currentUser!.uid != uid {
             profileVC.isCurrentUser = false

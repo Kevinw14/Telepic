@@ -37,8 +37,8 @@ class ForwardListVC: UITableViewController {
         super.viewWillAppear(animated)
         
         let titleAttrs = [
-            NSAttributedStringKey.foregroundColor: UIColor(hexString: "333333"),
-            NSAttributedStringKey.font: UIFont(name: "AvenirNext-DemiBold", size: 18)
+            NSAttributedString.Key.foregroundColor: UIColor(hexString: "333333"),
+            NSAttributedString.Key.font: UIFont(name: "AvenirNext-DemiBold", size: 18)
         ]
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.isHidden = false
