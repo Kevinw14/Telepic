@@ -235,7 +235,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
                     let upload = Upload(uid: key, dict: value)
                     uploads.append(upload)
                 }
-                self.uploads = uploads.sorted { $0.timestamp > $1.timestamp }
+                self.uploads = uploads.sorted { ($0.timestamp ?? 0) > ($1.timestamp ?? 0) }
                 self.uploadsLabel.text = "\(uploads.count)"
                 self.collectionView.reloadData()
             }
@@ -289,7 +289,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
                 if uploads.isEmpty {
                     self.uploads = uploads
                 } else {
-                    self.uploads = uploads.sorted { $0.timestamp > $1.timestamp }
+                    self.uploads = uploads.sorted { ($0.timestamp ?? 0) > ($1.timestamp ?? 0) }
                 }
                 
                 let forwardCount = userDict["forwardCount"] as? Int ?? 0
@@ -425,10 +425,11 @@ extension ProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
         let urlString = upload.type == "video" ?  upload.thumbnailURL : upload.downloadURL
         
         cell.newFowardLabel.isHidden = !(upload.newFoward ?? false)
-        let url = URL(string: urlString)
+        let url = URL(string: urlString!)
         
         if upload.type == "gif" {
-            let gifImage = UIImage.gif(url: urlString)
+            
+            let gifImage = UIImage.gif(url: urlString!)
             cell.thumbnailImageView.image = gifImage
         } else {
             

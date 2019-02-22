@@ -94,8 +94,8 @@ class MediaViewVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //self.navigationController?.setNavigationBarHidden(false, animated: false)
-//        self.navigationController?.navigationBar.isHidden = true
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.navigationController?.navigationBar.isHidden = true
         self.navigationItem.hidesBackButton = true
         self.navigationController?.navigationBar.backgroundColor = .clear
         self.navigationController?.delegate = zoomTransitioningDelegate

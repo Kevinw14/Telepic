@@ -252,10 +252,10 @@ extension PHAsset {
         options.isNetworkAccessAllowed = true
         options.resizeMode = .exact
         
-        options.progressHandler = {  (progress, error, stop, info) in
-            print("progress: \(progress)")
-        }
-        
+//        options.progressHandler = {  (progress, error, stop, info) in
+//            print("progress: \(progress)")
+//        }
+//        
         PHImageManager.default().requestImage(for: self, targetSize: CGSize(width: self.pixelWidth, height: self.pixelHeight), contentMode: .aspectFit, options: options) { (image, info) in
             print("dict: \(String(describing: info))")
             print("image size: \(String(describing: image?.size))")
