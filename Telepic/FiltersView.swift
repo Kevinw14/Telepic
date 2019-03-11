@@ -53,7 +53,7 @@ class FiltersView: UIView {
         collectionView.showsHorizontalScrollIndicator = false
         filterButton.setTitleColor(.black, for: .normal)
         filterButton.setTitle("Filter", for: .normal)
-        editButton.setTitleColor(.black, for: .normal)
+        editButton.setTitleColor(.gray, for: .normal)
         editButton.setTitle("Edit", for: .normal)
     }
     

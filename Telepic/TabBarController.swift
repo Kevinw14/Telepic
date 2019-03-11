@@ -14,6 +14,7 @@ import Gallery
 import MobileCoreServices
 import FBSDKShareKit
 import FBSDKCoreKit
+import YPImagePicker
 
 class TabBarController: UITabBarController, FBSDKAppInviteDialogDelegate {
 
@@ -21,6 +22,8 @@ class TabBarController: UITabBarController, FBSDKAppInviteDialogDelegate {
     var gallery: GalleryController!
     let editor: VideoEditing = VideoEditor()
     var inviteFriendsAlert = false
+    
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +52,8 @@ class TabBarController: UITabBarController, FBSDKAppInviteDialogDelegate {
             
         }
     }
+    
+
     
     @objc func updateBadge() {
         if FirebaseController.shared.tabBadge > 0 {
@@ -118,17 +123,47 @@ extension TabBarController: UITabBarControllerDelegate {
 //        }
         
         if viewController is ImagePickerVC {
+            var config = YPImagePickerConfiguration()
+            config.library.onlySquare = false
+            config.onlySquareImagesFromCamera = true
+            config.targetImageSize = .original
+            config.usesFrontCamera = true
+            config.showsFilters = true
+            config.shouldSaveNewPicturesToAlbum = true
+            config.video.compression = AVAssetExportPresetHighestQuality
+            config.albumName = "MyGreatAppName"
+            config.screens = [.library, .photo, .video]
+            config.startOnScreen = .photo
+            config.video.recordingTimeLimit = 10
+            config.video.libraryTimeLimit = 20
+            config.showsCrop = .rectangle(ratio: (16/9))
+            config.wordings.libraryTitle = "Gallery"
+            config.hidesStatusBar = false
             
-            let gallery = GalleryController()
-            gallery.delegate = self
-            Gallery.Config.VideoEditor.maximumDuration = 30
-            Gallery.Config.Camera.imageLimit = 1
-            Gallery.Config.Camera.BottomContainer.backgroundColor = .white
-            Gallery.Config.VideoEditor.savesEditedVideoToLibrary = false
-            Gallery.Config.Camera.recordLocation = false
-            Gallery.Config.VideoEditor.quality = AVAssetExportPresetMediumQuality
-            present(gallery, animated: true, completion: nil)
+           let pickerOne = YPImagePicker(configuration: config)
+
             
+            let picker = YPImagePicker()
+            picker.didFinishPicking { [unowned picker] items, _ in
+                if let photo = items.singlePhoto {
+                    print(photo.fromCamera) // Image source (camera or library)
+                    print(photo.image) // Final image selected by the user
+                    print(photo.originalImage) // original image selected by the user, unfiltered
+                    print(photo.modifiedImage) // Transformed image, can be nil
+                    print(photo.exifMeta) // Print exif meta data of original image.
+                    
+                   
+                    picker.dismiss(animated: true, completion: {
+                        let captionVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: Identifiers.captionVC) as! CaptionVC
+                        captionVC.image = photo.image
+                        let navController = UINavigationController(rootViewController: captionVC)
+                        self.present(navController, animated: true, completion: nil)
+                    })
+
+                }
+            }
+            present(picker, animated: true, completion: nil)
+
             return false
         }
         return true
@@ -220,6 +255,10 @@ extension TabBarController: GalleryControllerDelegate {
                 } else {
                     selectedImage = UIImage(data: imageData)!
                     let filtersVC = FiltersVC(image: selectedImage!)
+                    filtersVC.editButtonItem.isEnabled = true
+                    
+                
+                    
                     controller.dismiss(animated: false, completion: nil)
                     let navController = UINavigationController(rootViewController: filtersVC)
                     self.present(navController, animated: true, completion: nil)
@@ -232,15 +271,6 @@ extension TabBarController: GalleryControllerDelegate {
 }
     
 
-extension TabBarController: UIVideoEditorControllerDelegate {
-    func videoEditorController(_ editor: UIVideoEditorController, didSaveEditedVideoToPath editedVideoPath: String) {
-        print(editedVideoPath)
-    }
-    
-    func videoEditorControllerDidCancel(_ editor: UIVideoEditorController) {
-        print("cancelled")
-    }
-}
 extension PHAsset {
     
     var image : UIImage {

@@ -63,7 +63,8 @@ class CaptionVC: UIViewController, UITextViewDelegate {
     }
     
     override func viewDidLoad() {
-        super.viewDidLoad()//        self.navigationController?.navigationBar.isHidden = false
+        super.viewDidLoad()
+        self.navigationController?.navigationBar.isHidden = false
         
         previewImageView.clipsToBounds = true
         previewImageView.isUserInteractionEnabled = true

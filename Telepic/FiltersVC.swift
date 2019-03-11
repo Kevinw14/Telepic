@@ -9,8 +9,7 @@
 import UIKit
 
 class FiltersVC: UIViewController {
-    
-    
+   
     override var prefersStatusBarHidden: Bool { return true }
     
     var v = FiltersView()
@@ -21,6 +20,8 @@ class FiltersVC: UIViewController {
     var videoURL: URL?
     var didSelectImage: ((UIImage, Bool) -> Void)?
     var isImageFiltered = false
+    
+    
     
     override func loadView() { view = v }
     
@@ -110,10 +111,14 @@ class FiltersVC: UIViewController {
     }
     
     private func handleSelectionColor() {
-        v.filterButton.isSelected ? v.filterButton.setTitleColor(.black, for: .normal) : v.filterButton.setTitleColor(.gray, for: .normal)
-        v.editButton.isSelected ? v.editButton.setTitleColor(.black, for: .normal) : v.filterButton.setTitleColor(.gray, for: .normal)
+        if v.filterButton.isSelected {
+             v.filterButton.setTitleColor(.black, for: .normal)
+            v.editButton.setTitleColor(.gray, for: .normal)
+        } else if v.editButton.isSelected {
+            v.editButton.setTitleColor(.black, for: .normal)
+            v.filterButton.setTitleColor(.gray, for: .normal)
     }
-    
+    }
     @objc private func handleFilterTap() {
         print("Filtered Tapped")
         v.filterButton.isSelected = true
@@ -125,6 +130,7 @@ class FiltersVC: UIViewController {
         print("Edit Tapped")
         v.filterButton.isSelected = false
         v.editButton.isSelected = true
+        
         handleSelectionColor()
     }
     
@@ -144,6 +150,37 @@ class FiltersVC: UIViewController {
     }
 }
 
+//extension FiltersVC: PHContentEditingController {
+//    var shouldShowCancelConfirmation: Bool {
+//        return true
+//    }
+//
+//    func canHandle(_ adjustmentData: PHAdjustmentData) -> Bool {
+//        return false
+//    }
+//
+//    func startContentEditing(with contentEditingInput: PHContentEditingInput, placeholderImage: UIImage) {
+//
+//            self.input = contentEditingInput
+//
+//            if self.input != nil {
+//                originalImage = input!.displaySizeImage!
+//                imageOrientation = input!.fullSizeImageOrientation
+//                 v.imageView.image = originalImage
+//            }
+//        }
+//
+//    func finishContentEditing(completionHandler: @escaping (PHContentEditingOutput?) -> Void) {
+//        print("Test2")
+//
+//    }
+//
+//    func cancelContentEditing() {
+//        print("Test3")
+//
+//    }
+//}
+
 extension FiltersVC: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -158,10 +195,14 @@ extension FiltersVC: UICollectionViewDataSource {
             cell.name.text = filterPreview.name
             if let img = filterPreview.image {
                 cell.imageView.image = img
+                cell.imageView.contentMode = .scaleAspectFill
+
             } else {
                 let filter = self.filters[indexPath.row]
                 let filteredImage = filter.filter(self.thumbImage)
                 cell.imageView.image = filteredImage
+                cell.imageView.contentMode = .scaleAspectFill
+
                 filterPreview.image = filteredImage // Cache
             }
             return cell
