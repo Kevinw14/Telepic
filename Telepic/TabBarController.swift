@@ -10,7 +10,6 @@ import UIKit
 import AVKit
 import SVProgressHUD
 import FirebaseAuth
-import Gallery
 import MobileCoreServices
 import FBSDKShareKit
 import FBSDKCoreKit
@@ -19,8 +18,6 @@ import YPImagePicker
 class TabBarController: UITabBarController, FBSDKAppInviteDialogDelegate {
 
     let zoomTransitioningDelegate = ZoomTransitioningDelegate()
-    var gallery: GalleryController!
-    let editor: VideoEditing = VideoEditor()
     var inviteFriendsAlert = false
     
    
@@ -136,9 +133,13 @@ extension TabBarController: UITabBarControllerDelegate {
             config.startOnScreen = .photo
             config.video.recordingTimeLimit = 10
             config.video.libraryTimeLimit = 20
-            config.showsCrop = .rectangle(ratio: (16/9))
+            config.showsCrop = .rectangle(ratio: (16/16))
             config.wordings.libraryTitle = "Gallery"
             config.hidesStatusBar = false
+            config.bottomMenuItemUnSelectedColour = UIColor.gray
+            config.bottomMenuItemSelectedColour = UIColor.black
+            config.colors.tintColor = UIColor.blue
+            
             
            let pickerOne = YPImagePicker(configuration: config)
 
@@ -159,8 +160,22 @@ extension TabBarController: UITabBarControllerDelegate {
                         let navController = UINavigationController(rootViewController: captionVC)
                         self.present(navController, animated: true, completion: nil)
                     })
-
                 }
+                if let video = items.singleVideo {
+                    print(video.fromCamera)
+                    print(video.thumbnail)
+                    print(video.url)
+                    
+                    picker.dismiss(animated: true, completion: {
+                        let captionVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: Identifiers.captionVC) as! CaptionVC
+                        captionVC.videoURL = video.url
+                        captionVC.thumbnail = video.thumbnail
+                        let navController = UINavigationController(rootViewController: captionVC)
+                        self.present(navController, animated: true, completion: nil)
+                    })
+                }
+
+                picker.dismiss(animated: true, completion: nil)
             }
             present(picker, animated: true, completion: nil)
 
@@ -169,107 +184,6 @@ extension TabBarController: UITabBarControllerDelegate {
         return true
     }
 }
-
-extension TabBarController: GalleryControllerDelegate {
-    func galleryControllerDidCancel(_ controller: GalleryController) {
-        controller.dismiss(animated: true, completion: nil)
-        gallery = nil
-    }
-    
-    func galleryController(_ controller: GalleryController, didSelectVideo video: Video) {
-//        controller.dismiss(animated: true) {
-            SVProgressHUD.setDefaultMaskType(.black)
-            SVProgressHUD.setBackgroundColor(.white)
-            SVProgressHUD.show(withStatus: "Loading video")
-//        }
-        let captionVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: Identifiers.captionVC) as! CaptionVC
-        
-        gallery = nil
-        
-        editor.edit(video: video) { (video, url) in
-            DispatchQueue.main.async {
-                if let tempPath = url {
-                    captionVC.videoURL = tempPath
-                    let thumbnail = self.getThumbnail(forURL: tempPath)
-                    captionVC.thumbnail = thumbnail
-                    controller.dismiss(animated: false, completion: nil)
-                    let navController = UINavigationController(rootViewController: captionVC)
-                    self.present(navController, animated: true, completion: nil)
-//                    let controller = AVPlayerViewController()
-//                    controller.player = AVPlayer(url: tempPath)
-//                    let videoEditorController = UIVideoEditorController()
-//                    videoEditorController.videoMaximumDuration = 30
-//                    videoEditorController.videoPath = tempPath.absoluteString
-//                    videoEditorController.navigationItem.rightBarButtonItem?.title = "Forward"
-//                    self.present(videoEditorController, animated: true, completion: nil)
-                    SVProgressHUD.dismiss()
-                    SVProgressHUD.setDefaultMaskType(.none)
-                    SVProgressHUD.setBackgroundColor(.clear)
-                }
-            }
-        }
-    }
-
-    func getThumbnail(forURL videoURL: URL) -> UIImage? {
-        do {
-            let asset = AVURLAsset(url: videoURL)
-            let imgGenerator = AVAssetImageGenerator(asset: asset)
-            imgGenerator.appliesPreferredTrackTransform = true
-            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
-            let thumbnail = UIImage(cgImage: cgImage)
-            return thumbnail
-        } catch let error {
-            print("Error generating thumbnail: \(error.localizedDescription)")
-            return nil
-        }
-    }
-    
-    func galleryController(_ controller: GalleryController, requestLightbox images: [Image]) {
-        print("no lightbox")
-    }
-    
-    func galleryController(_ controller: GalleryController, didSelectImages images: [Image]) {
-        
-        //        controller.dismiss(animated: true, completion: nil)
-        let captionVC = UIStoryboard(name: "Camera", bundle: nil).instantiateViewController(withIdentifier: Identifiers.captionVC) as! CaptionVC
-        var selectedImage: UIImage?
-        
-        let imageAsset = images[0].asset
-        let image = imageAsset.image
-//        let options = PHContentEditingInputRequestOptions()
-        guard let imageData = image.pngData() else {return}
-        
-       if let imageType = imageAsset.value(forKey: "uniformTypeIdentifier") as? String  {
-                
-                if imageType == (kUTTypeGIF as String) {
-                    debugPrint("This asset is a GIF👍")
-                    if let gif = UIImage.gif(data: imageData) {
-                        selectedImage = gif
-                        captionVC.isGif = true
-                        captionVC.data = imageData
-                        captionVC.image = selectedImage
-                        controller.dismiss(animated: false, completion: nil)
-                        let navController = UINavigationController(rootViewController: captionVC)
-                        self.present(navController, animated: true, completion: nil)
-                    }
-                } else {
-                    selectedImage = UIImage(data: imageData)!
-                    let filtersVC = FiltersVC(image: selectedImage!)
-                    filtersVC.editButtonItem.isEnabled = true
-                    
-                
-                    
-                    controller.dismiss(animated: false, completion: nil)
-                    let navController = UINavigationController(rootViewController: filtersVC)
-                    self.present(navController, animated: true, completion: nil)
-                }
-                self.gallery = nil
-
-                }
-                
-            }
-}
-    
 
 extension PHAsset {
     

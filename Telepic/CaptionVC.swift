@@ -134,6 +134,7 @@ class CaptionVC: UIViewController, UITextViewDelegate {
         } else {
             self.navigationController?.dismiss(animated: true, completion: nil)
         }
+
     }
     
     @objc func done() {
