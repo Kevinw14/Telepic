@@ -64,6 +64,7 @@ class CaptionVC: UIViewController, UITextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.contestOfTheWeekSwitch.isHidden = true
         self.navigationController?.navigationBar.isHidden = false
         
         previewImageView.clipsToBounds = true
@@ -130,6 +131,11 @@ class CaptionVC: UIViewController, UITextViewDelegate {
     
     @objc func goBack() {
         if videoURL == nil {
+            self.navigationController?.popViewController(animated: true)
+        } else {
+            self.navigationController?.dismiss(animated: true, completion: nil)
+        }
+        if image == nil {
             self.navigationController?.popViewController(animated: true)
         } else {
             self.navigationController?.dismiss(animated: true, completion: nil)

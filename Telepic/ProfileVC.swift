@@ -151,14 +151,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     }
     
     @objc func goBack() {
-        if let navCount = navigationController?.viewControllers.count {
-            if navCount >= 2 {
-                let previousVC = self.navigationController?.viewControllers[navCount - 2]
-                if previousVC is MediaViewVC || previousVC is InboxVC {
-                    FirebaseController.shared.isZooming = false
-                }
-            }
-        }
+  
         _ = self.navigationController?.popViewController(animated: true)
         FirebaseController.shared.isZooming = true
     }
@@ -422,14 +415,15 @@ extension ProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ThumbnailCell", for: indexPath) as? ProfileThumbnailCell else { return UICollectionViewCell() }
 
         let upload = uploads[indexPath.row]
-        let urlString = upload.type == "video" ?  upload.thumbnailURL : upload.downloadURL
+        guard let urlString = upload.type == "video" ?  upload.thumbnailURL : upload.downloadURL else { return cell}
+
         
         cell.newFowardLabel.isHidden = !(upload.newFoward ?? false)
-        let url = URL(string: urlString!)
+        let url = URL(string: urlString)
         
         if upload.type == "gif" {
             
-            let gifImage = UIImage.gif(url: urlString!)
+            let gifImage = UIImage.gif(url: urlString)
             cell.thumbnailImageView.image = gifImage
         } else {
             
